@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-26T00:00:00Z",
+  "title": "Design System: PetRoad",
+  "extensions": {
+    "colorMeta": {
+      "track": { "role": "primary", "displayName": "우레탄 트랙 초록", "canonical": "oklch(42.8% 0.074 164.8)", "tonalRamp": ["#001304", "#002E1B", "#084C36", "#2F6B53", "#538E75", "#79B399", "#A4D8C0", "#CDFBE5"] },
+      "on-track": { "role": "primary", "displayName": "트랙 위 흰 글자" },
+      "on-track-muted": { "role": "primary", "displayName": "트랙 위 흐린 글자", "canonical": "oklch(85.6% 0.029 165.3)", "tonalRamp": ["#010F08", "#162921", "#31453C", "#4F635A", "#71867C", "#95ABA0", "#BAD1C6", "#DEF5EA"] },
+      "on-track-veil": { "role": "primary", "displayName": "트랙 위 반투명 면" },
+      "on-track-veil-line": { "role": "primary", "displayName": "트랙 위 반투명 테두리" },
+      "on-track-lane-off": { "role": "primary", "displayName": "트랙 위 꺼진 눈금" },
+      "paint": { "role": "secondary", "displayName": "노면 노랑", "canonical": "oklch(85.4% 0.171 86.9)", "tonalRamp": ["#170700", "#361F00", "#583A00", "#7C5600", "#A67800", "#D29B00", "#FAC10A", "#FFE64E"] },
+      "on-paint": { "role": "secondary", "displayName": "노랑 위 잉크" },
+      "ground": { "role": "neutral", "displayName": "보도 콘크리트", "canonical": "oklch(94.6% 0.006 128.5)", "tonalRamp": ["#0A0C09", "#232522", "#3F403D", "#5D5E5B", "#7F817D", "#A3A5A1", "#C9CBC7", "#EDEFEB"] },
+      "surface": { "role": "neutral", "displayName": "표면" },
+      "raised": { "role": "neutral", "displayName": "떠 있는 면" },
+      "fill": { "role": "neutral", "displayName": "채움" },
+      "ink": { "role": "neutral", "displayName": "아스팔트 잉크", "canonical": "oklch(20.2% 0.004 164.7)", "tonalRamp": ["#0A0C0B", "#222523", "#3E403F", "#5C5E5D", "#7E817F", "#A2A5A4", "#C8CBCA", "#ECEFEE"] },
+      "ink-muted": { "role": "neutral", "displayName": "흐린 잉크" },
+      "hairline": { "role": "neutral", "displayName": "실선" },
+      "tint": { "role": "neutral", "displayName": "틴트 (라이트)" },
+      "tint-dark": { "role": "neutral", "displayName": "틴트 (다크)", "canonical": "oklch(76.2% 0.106 163.5)", "tonalRamp": ["#001205", "#002E1A", "#004D33", "#146E4E", "#36946E", "#5EBA92", "#85E1B7", "#AAFFDB"] },
+      "tile": { "role": "neutral", "displayName": "사진 자리" },
+      "map-tone": { "role": "neutral", "displayName": "지도 블록" },
+      "map-road": { "role": "neutral", "displayName": "지도 길" },
+      "stream": { "role": "neutral", "displayName": "천 띠", "canonical": "oklch(87.9% 0.026 161.9)", "tonalRamp": ["#020F08", "#182820", "#34443B", "#516259", "#73857B", "#97AAA0", "#BCD0C5", "#E0F4E9"] },
+      "ground-dark": { "role": "neutral", "displayName": "보도 콘크리트 (다크)" },
+      "surface-dark": { "role": "neutral", "displayName": "표면 (다크)" },
+      "raised-dark": { "role": "neutral", "displayName": "떠 있는 면 (다크)" },
+      "fill-dark": { "role": "neutral", "displayName": "채움 (다크)" },
+      "ink-dark": { "role": "neutral", "displayName": "아스팔트 잉크 (다크)" },
+      "ink-muted-dark": { "role": "neutral", "displayName": "흐린 잉크 (다크)" },
+      "hairline-dark": { "role": "neutral", "displayName": "실선 (다크)" },
+      "tile-dark": { "role": "neutral", "displayName": "사진 자리 (다크)" },
+      "map-tone-dark": { "role": "neutral", "displayName": "지도 블록 (다크)" },
+      "map-road-dark": { "role": "neutral", "displayName": "지도 길 (다크)" },
+      "stream-dark": { "role": "neutral", "displayName": "천 띠 (다크)" }
+    },
+    "typographyMeta": {
+      "numeral-hero": { "displayName": "거리 표지 숫자", "purpose": "산책 진행 거리(96px), 결과 거리(72px)." },
+      "numeral": { "displayName": "숫자", "purpose": "모든 거리·시간·개수·날짜. 단위는 0.42배 600." },
+      "large-title": { "displayName": "Large Title", "purpose": "iOS 큰 제목." },
+      "title1": { "displayName": "Title 1", "purpose": "화면 인사말 제목." },
+      "title2": { "displayName": "Title 2", "purpose": "히어로 한글 이름." },
+      "title3": { "displayName": "Title 3", "purpose": "시트 제목." },
+      "headline": { "displayName": "Headline", "purpose": "버튼, 섹션 제목, 카드 코스명." },
+      "body": { "displayName": "Body", "purpose": "입력값, 행 제목." },
+      "subhead": { "displayName": "Subhead", "purpose": "보조 설명, 칩, 세그먼트." },
+      "footnote": { "displayName": "Footnote", "purpose": "수치 아래 라벨, 입력 라벨, 그룹 머리말." },
+      "caption": { "displayName": "Caption", "purpose": "사진·지도 자리 안내." }
+    },
+    "shadows": [
+      { "name": "float", "value": "0 2px 10px rgba(0, 0, 0, 0.10)", "purpose": "지도·트랙 면 위에 떠 있는 요소 전용." }
+    ],
+    "motion": [
+      { "name": "sheet-spring", "value": "spring(damping 26, stiffness 260, mass 0.9)", "purpose": "홈 바텀시트 접기/펼치기 스냅." },
+      { "name": "lane-fill", "value": "FadeIn 450ms", "purpose": "거리 눈금 칸이 칠해질 때 한 번. Reduce Motion은 Reanimated 시스템 설정을 따른다." },
+      { "name": "press", "value": "opacity 0.82 (Plate) / 0.7 (Btn) / 0.85 (card)", "purpose": "눌림 피드백은 불투명도만." }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Plate",
+      "kind": "button",
+      "refersTo": "plate",
+      "description": "노면 노랑 주 행동 판. 한 화면에 하나.",
+      "html": "<button class=\"ds-plate\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><circle cx=\"13\" cy=\"4\" r=\"2\"/><path d=\"M9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7\"/></svg>산책 시작하기</button>",
+      "css": ".ds-plate { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 320px; height: 56px; padding: 0 20px; border: none; border-radius: 14px; background: #FFC61A; color: #151716; font: 600 17px/22px -apple-system, system-ui, sans-serif; cursor: pointer; } .ds-plate:hover { opacity: 0.92; } .ds-plate:active { opacity: 0.82; } .ds-plate:focus-visible { outline: 2px solid #1F5C45; outline-offset: 2px; }"
+    },
+    {
+      "name": "Surface Button",
+      "kind": "button",
+      "refersTo": "button-surface",
+      "description": "바탕 위 보조 행동.",
+      "html": "<button class=\"ds-btn-surface\">코스로 등록하여 공유</button>",
+      "css": ".ds-btn-surface { min-height: 50px; padding: 0 16px; border: 1px solid #D3D8D2; border-radius: 12px; background: #FFFFFF; color: #151716; font: 600 17px/22px -apple-system, system-ui, sans-serif; cursor: pointer; } .ds-btn-surface:active { opacity: 0.7; } .ds-btn-surface:focus-visible { outline: 2px solid #1F5C45; outline-offset: 2px; }"
+    },
+    {
+      "name": "On-Track Button",
+      "kind": "button",
+      "refersTo": "button-on-track",
+      "description": "트랙 초록 면 위 보조 행동.",
+      "html": "<div class=\"ds-track-bg\"><button class=\"ds-btn-ontrack\">사진</button></div>",
+      "css": ".ds-track-bg { background: #1F5C45; padding: 20px; border-radius: 20px; } .ds-btn-ontrack { min-height: 50px; width: 100%; padding: 0 16px; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; background: rgba(255, 255, 255, 0.14); color: #FFFFFF; font: 600 17px/22px -apple-system, system-ui, sans-serif; cursor: pointer; } .ds-btn-ontrack:active { opacity: 0.7; } .ds-btn-ontrack:focus-visible { outline: 2px solid #FFC61A; outline-offset: 2px; }"
+    },
+    {
+      "name": "Plain Button",
+      "kind": "button",
+      "refersTo": "button-plain",
+      "description": "약한 행동. 틴트 글자만.",
+      "html": "<button class=\"ds-btn-plain\">기록 버리기</button>",
+      "css": ".ds-btn-plain { min-height: 50px; padding: 0 16px; border: none; background: transparent; color: #1F5C45; font: 600 17px/22px -apple-system, system-ui, sans-serif; cursor: pointer; } .ds-btn-plain:active { opacity: 0.7; } .ds-btn-plain:focus-visible { outline: 2px solid #1F5C45; outline-offset: 2px; }"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "라벨 위 입력칸.",
+      "html": "<label class=\"ds-field\"><span>이름</span><input placeholder=\"콩이\"></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; width: 320px; } .ds-field span { font: 400 13px/18px -apple-system, system-ui, sans-serif; color: #545B57; } .ds-field input { min-height: 50px; padding: 12px 14px; border: 1px solid #D3D8D2; border-radius: 12px; background: #FFFFFF; color: #151716; font: 400 17px/22px -apple-system, system-ui, sans-serif; caret-color: #1F5C45; } .ds-field input::placeholder { color: #545B57; } .ds-field input:focus-visible { outline: none; border-color: #1F5C45; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "선택 칩. 켜짐은 트랙 초록.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-chip-on\">쉬움</button><button class=\"ds-chip\">보통</button></div>",
+      "css": ".ds-chips { display: flex; gap: 8px; } .ds-chip { height: 36px; padding: 0 14px; border: 1px solid #D3D8D2; border-radius: 18px; background: #FFFFFF; color: #151716; font: 400 15px/20px -apple-system, system-ui, sans-serif; cursor: pointer; } .ds-chip-on { background: #1F5C45; border-color: #1F5C45; color: #FFFFFF; font-weight: 600; } .ds-chip:focus-visible { outline: 2px solid #1F5C45; outline-offset: 2px; }"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "산책 / 마이 두 탭.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"ds-tab ds-tab-on\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><circle cx=\"13\" cy=\"4\" r=\"2\"/><path d=\"M9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7\"/></svg>산책</a><a class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><circle cx=\"12\" cy=\"10\" r=\"3.5\"/><path d=\"M5.5 19c1.5-2.5 3.8-3.5 6.5-3.5s5 1 6.5 3.5\"/></svg>마이</a></nav>",
+      "css": ".ds-tabs { display: flex; width: 360px; background: #FFFFFF; border-top: 0.5px solid #D3D8D2; padding: 6px 0; } .ds-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; color: #545B57; font: 500 10px/12px -apple-system, system-ui, sans-serif; cursor: pointer; } .ds-tab-on { color: #1F5C45; } .ds-tab:hover { color: #151716; } .ds-tab-on:hover { color: #1F5C45; }"
+    },
+    {
+      "name": "Course Card",
+      "kind": "card",
+      "refersTo": "course-card",
+      "description": "고정 라벨 그리드: 코스명 / 거리·난이도·좋아요 / 견종·나이.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-cover\">커버 이미지</div><div class=\"ds-card-body\"><strong>중랑천 벚꽃길</strong><div class=\"ds-card-line\"><span class=\"ds-num\">2.4<small>KM</small></span><span class=\"ds-dashes\"><i class=\"on\"></i><i class=\"on\"></i><i></i></span><span class=\"ds-muted\">보통</span><span class=\"ds-spacer\"></span><span class=\"ds-num ds-muted\">128</span></div><span class=\"ds-muted\">포메라니안 · 3살</span></div></article>",
+      "css": ".ds-card { width: 232px; border-radius: 14px; overflow: hidden; background: #FFFFFF; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10); font-family: -apple-system, system-ui, sans-serif; cursor: pointer; } .ds-card:active { opacity: 0.85; } .ds-card-cover { height: 104px; background: #DADFD8; color: #545B57; font-size: 12px; display: flex; align-items: center; justify-content: center; } .ds-card-body { padding: 12px; display: flex; flex-direction: column; gap: 4px; color: #151716; } .ds-card-body strong { font: 600 17px/22px -apple-system, system-ui, sans-serif; } .ds-card-line { display: flex; align-items: center; gap: 10px; } .ds-num { font: 700 22px/1.08 'Barlow Condensed', sans-serif; font-variant-numeric: tabular-nums; } .ds-num small { font-weight: 600; font-size: 13px; color: #545B57; margin-left: 2px; } .ds-dashes { display: flex; gap: 2px; } .ds-dashes i { width: 9px; height: 4px; border-radius: 2px; background: #D3D8D2; } .ds-dashes i.on { background: #151716; } .ds-muted { color: #545B57; font-size: 15px; } .ds-card-line .ds-muted { font-size: 13px; } .ds-card-line .ds-num.ds-muted { font: 600 17px/1.08 'Barlow Condensed', sans-serif; } .ds-spacer { flex: 1; }"
+    },
+    {
+      "name": "Distance Lane",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "시그니처 거리 눈금: 10칸 = 1km, 100m마다 한 칸 노면 노랑.",
+      "html": "<div class=\"ds-lane-panel\"><div class=\"ds-lane-num\">0.43<small>KM</small></div><span class=\"ds-lane-label\">거리</span><div class=\"ds-lane\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class=\"ds-lane-label\">다음 100m 표지까지 70m</span></div>",
+      "css": ".ds-lane-panel { width: 340px; background: #1F5C45; border-radius: 24px 24px 0 0; padding: 20px; display: flex; flex-direction: column; gap: 8px; font-family: -apple-system, system-ui, sans-serif; } .ds-lane-num { font: 700 72px/1.08 'Barlow Condensed', sans-serif; color: #FFFFFF; font-variant-numeric: tabular-nums; } .ds-lane-num small { font-weight: 600; font-size: 28px; color: #BFD6CB; margin-left: 6px; } .ds-lane-label { font-size: 13px; line-height: 18px; color: #BFD6CB; } .ds-lane { display: flex; gap: 6px; margin-top: 10px; } .ds-lane i { flex: 1; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.18); transition: background 450ms; } .ds-lane i.on { background: #FFC61A; } .ds-lane:hover i:nth-child(5) { background: #FFC61A; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "천변 노면 표시",
+    "overview": "앱은 매일 걷는 천변 산책로의 바닥 그 자체다. 우레탄 트랙의 짙은 초록 면 위에 노면 노랑과 흰 선으로 거리 표지가 칠해지고, 그 둘레는 보도 콘크리트처럼 무채색으로 비어 있다. 걸은 거리는 카드 속 숫자가 아니라 트랙 위에 칠한 거리 표지처럼 읽힌다. 파스텔 둥근 카드와 발바닥 아이콘으로 된 펫앱 기본형은 이 세계의 거부 대상이다.\n\n밀도는 iOS 기본을 따르되, 한 손에 리드줄을 쥐고 다른 한 손으로 잠깐 보는 장면에 맞춘다. 주 행동은 엄지 높이에 놓인 폭 전체의 노란 판 하나, 수치는 도로 표지 계열의 콘덴스드 숫자로 크게, 나머지는 시스템 한글 서체와 iOS 인셋 그룹 목록이 조용히 받친다. 라이트와 다크 모두 시스템 설정을 따르고, 트랙·노면 색은 두 모드에서 같다.\n\n지도(`MapPlate`)와 사진(`PhotoTile`)은 react-native-maps / expo-camera / expo-location 연결 전까지의 자리 표시다. 동네 블록 격자와 비스듬한 천(川) 띠로 지도 톤만 내며, 실제 지도가 들어와도 `mapTone`·`stream`·`MeMarker`의 색 관계는 유지한다.",
+    "keyCharacteristics": [
+      "트랙 초록 면 위에 수치가 놓인다: 바텀시트, 산책 진행 패널, 결과 밴드, 로그인 히어로.",
+      "노면 노랑은 주 행동 판 하나와 노면 표시(점선 칸, 기록 점, 중앙선)에만.",
+      "모든 숫자·단위는 Barlow Condensed 고정폭, 한글 UI는 시스템 서체.",
+      "점선(`Lane`)이 진행·단계·난이도를 모두 말한다.",
+      "아이콘은 SF Symbols만."
+    ],
+    "rules": [
+      { "name": "The One Plate Rule", "body": "노란 판(`Plate`)은 한 화면에 하나, 그 화면의 주 행동에만 쓴다. 노랑의 다른 쓰임은 노면 표시(칠해진 눈금 칸, 기록 점, 중앙선)뿐이며 글자색으로는 쓰지 않는다.", "section": "colors" },
+      { "name": "The Colorless Body Rule", "body": "본문과 라벨은 `ink`·`ink-muted`만 쓴다. 색은 트랙 면, 노면 표시, 그리고 `tint`로 칠한 조작 요소(링크성 버튼, 아이콘, 선택 상태)에만 있다.", "section": "colors" },
+      { "name": "The Sign Numeral Rule", "body": "숫자는 반드시 `Num`/`Stat`(Barlow Condensed, 고정폭)으로 쓴다. 걷는 동안 자릿수가 흔들리지 않게 하는 것이 목적이다. 한글에는 이 서체를 쓰지 않는다.", "section": "typography" },
+      { "name": "The Label Beneath Rule", "body": "모든 수치 아래에는 작은 footnote 라벨이 붙는다(`Stat`). 라벨 없는 숫자는 두지 않는다.", "section": "typography" },
+      { "name": "The Float-Over-Map Rule", "body": "그림자는 지도나 트랙 면 위에 떠 있는 요소에만 준다. 바탕 위 목록·입력칸·버튼에는 주지 않는다. 다크에서는 그림자가 거의 보이지 않으므로 `raised-dark`의 밝기로 가장자리를 만든다.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** 트랙 초록 면 위에 수치를 올리고, 그 위 글자는 `on-track` / `on-track-muted`만 쓴다.",
+      "**Do** 모든 숫자를 `Num`/`Stat`(Barlow Condensed, tabular-nums)로 쓰고 아래에 footnote 라벨을 붙인다.",
+      "**Do** 진행·단계·난이도는 `Lane` 계열 점선 칸으로 표현한다.",
+      "**Do** 주 행동은 폭 전체 56px `Plate`로 엄지 높이(지도 위 하단 또는 `BottomBar`)에 둔다.",
+      "**Do** 지도 위에 뜨는 요소는 `raised` + 떠 있음 그림자로 만든다.",
+      "**Do** 새 색은 `palettes.light`와 `palettes.dark` 양쪽에 같은 키로 추가한다."
+    ],
+    "donts": [
+      "**Don't** 한 화면에 노란 판을 두 개 이상 두거나, 노랑을 글자색·장식색으로 쓰지 않는다.",
+      "**Don't** 파스텔 둥근 카드와 발바닥 아이콘 같은 펫앱 기본형을 쓰지 않는다.",
+      "**Don't** SF Symbols 외의 아이콘(이모지, 글리프 문자)을 쓰지 않는다.",
+      "**Don't** 본문 문장에 색을 칠하지 않는다. 색은 트랙 면, 노면 표시, 조작 요소의 `tint`에만.",
+      "**Don't** 바탕 위 일반 목록·버튼·입력칸에 그림자를 주지 않는다."
+    ]
+  }
+}
