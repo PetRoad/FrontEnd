@@ -1,9 +1,5 @@
-import { Text, View } from "react-native";
+import { Tracker } from "@/components/walk/Tracker";
 
-export default function Screen() {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>walk/active</Text>
-    </View>
-  );
+export default function ActiveWalkScreen() {
+  return <Tracker />;
 }
