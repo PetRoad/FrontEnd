@@ -42,3 +42,12 @@ example
 # generated native folders
 /ios
 /android
+
+# claude code / impeccable (machine-local)
+.claude/settings.local.json
+# impeccable 작업 파일만 무시. design.json·surfaces/(디자인 결정 기록)는 커밋한다
+.impeccable/*
+!.impeccable/design.json
+!.impeccable/surfaces/
+# impeccable 실행 바이너리는 첫 실행 때 자동으로 받는다 (OS별, 17MB)
+.claude/skills/impeccable/scripts/bin/
