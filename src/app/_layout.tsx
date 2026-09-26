@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { BarlowCondensed_600SemiBold } from "@expo-google-fonts/barlow-condensed/600SemiBold";
-import { BarlowCondensed_700Bold } from "@expo-google-fonts/barlow-condensed/700Bold";
+import { Nunito_700Bold } from "@expo-google-fonts/nunito/700Bold";
+import { Nunito_800ExtraBold } from "@expo-google-fonts/nunito/800ExtraBold";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -18,7 +18,7 @@ const guarded = { gestureEnabled: false, headerBackVisible: false };
 export default function RootLayout() {
   const onboarded = useUserStore((s) => s.onboarded);
   const stackOptions = useStackOptions();
-  const [loaded, error] = useFonts({ BarlowCondensed_600SemiBold, BarlowCondensed_700Bold });
+  const [loaded, error] = useFonts({ Nunito_700Bold, Nunito_800ExtraBold });
 
   useEffect(() => {
     if (loaded || error) SplashScreen.hideAsync();
@@ -29,7 +29,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryProvider>
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
         <Stack screenOptions={stackOptions}>
           <Stack.Protected guard={!onboarded}>
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />

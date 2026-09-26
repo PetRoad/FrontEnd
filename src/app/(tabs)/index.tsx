@@ -70,8 +70,8 @@ export default function WalkHomeScreen() {
       <MapPlate style={[s.map, { bottom: PEEK - 24 }]} marker />
 
       <View style={[s.topBar, { paddingTop: insets.top + 8 }]}>
-        <View style={[s.regionPill, { backgroundColor: c.raised }, shadow]}>
-          <Icon name={I.pin} size={16} color={c.tint} />
+        <View style={[s.regionPill, { backgroundColor: c.surface }, shadow]}>
+          <Icon name={I.pin} size={16} color={c.inkMuted} />
           <T v="headline" numberOfLines={1}>
             {region || "현재 위치"}
           </T>
@@ -80,15 +80,15 @@ export default function WalkHomeScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="내 위치로 이동"
-          style={({ pressed }) => [s.locate, { backgroundColor: c.raised, opacity: pressed ? 0.7 : 1 }, shadow]}
+          style={({ pressed }) => [s.locate, { backgroundColor: c.surface, opacity: pressed ? 0.7 : 1 }, shadow]}
         >
-          <Icon name={I.locate} size={20} color={c.tint} />
+          <Icon name={I.locate} size={20} color={c.ink} />
         </Pressable>
       </View>
 
       <Plate title="산책 시작하기" icon={I.walk} onPress={startWalk} style={[s.start, { bottom: PEEK + 12 }, shadow]} />
 
-      <Animated.View style={[s.sheet, { backgroundColor: c.track, height: Math.max(0, height - openY) }, sheetStyle]}>
+      <Animated.View style={[s.sheet, { backgroundColor: c.accentSoft, height: Math.max(0, height - openY) }, sheetStyle]}>
         <GestureDetector gesture={Gesture.Race(pan, tap)}>
           <View
             style={s.handle}
@@ -97,11 +97,11 @@ export default function WalkHomeScreen() {
             accessibilityLabel={open ? "추천 코스 접기" : "추천 코스 펼치기"}
             onAccessibilityTap={() => snap(!open)}
           >
-            <View style={[s.grabber, { backgroundColor: c.onTrackMuted }]} />
-            <T v="title3" color={c.onTrack}>
+            <View style={[s.grabber, { backgroundColor: c.inkMuted }]} />
+            <T v="title3">
               우리 동네 추천코스
             </T>
-            <T v="footnote" color={c.onTrackMuted}>
+            <T v="footnote" muted>
               반경 {radius}km 안 {list.length}곳 · 좋아요 많은 순
             </T>
           </View>
@@ -117,7 +117,7 @@ export default function WalkHomeScreen() {
             <CourseCard key={course.id} course={course} width={open ? undefined : 232} />
           ))}
           {list.length === 0 && (
-            <T v="subhead" color={c.onTrackMuted}>
+            <T v="subhead" muted>
               아직 주변에 등록된 코스가 없어요. 첫 코스를 만들어보세요.
             </T>
           )}

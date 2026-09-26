@@ -92,5 +92,5 @@ const s = StyleSheet.create({
   tags: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   map: { height: 220, borderRadius: 16 },
   row: { flexDirection: "row", gap: 10 },
-  like: { height: 56, minWidth: 88, paddingHorizontal: 16, borderRadius: 14, borderWidth: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  like: { height: 56, minWidth: 88, paddingHorizontal: 16, borderRadius: 28, borderWidth: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
 });

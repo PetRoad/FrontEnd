@@ -1,43 +1,20 @@
-// 천변 노면 표시: 우레탄 트랙 초록 면, 노면 노랑 판, 아스팔트 잉크, 보도 콘크리트 바탕
-const road = {
-  track: "#1F5C45",
-  onTrack: "#FFFFFF",
-  onTrackMuted: "#BFD6CB",
-  paint: "#FFC61A",
-  onPaint: "#151716",
+// 햇살 아래 산책: 아이보리 바탕(#FEFFFA), 햇살 노랑 포인트(#FFD374).
+// 글자는 순수 검정 대신 따뜻한 짙은 회갈색으로 무게를 뺀다
+export const palette = {
+  ground: "#FEFFFA",
+  surface: "#FFFFFF",
+  fill: "#F4F2EA",
+  ink: "#3D3A35",
+  inkMuted: "#6E695F",
+  hairline: "#ECE9E0",
+  accent: "#FFD374",
+  onAccent: "#3D3A35",
+  accentSoft: "#FFF3D6", // 수치 패널, 추천코스 시트
+  tint: "#9A6412", // 링크·선택 상태. 바탕 위 대비 4.5:1 이상
+  tile: "#F2EFE6",
+  mapTone: "#F4F2EA",
+  mapRoad: "#FFFFFF",
+  water: "#E3EEF2",
 };
 
-export const palettes = {
-  light: {
-    ...road,
-    ground: "#ECEEEA",
-    surface: "#FFFFFF",
-    raised: "#FFFFFF", // 지도 위 떠 있는 요소, 세그먼트 선택 칸
-    fill: "#E0E4DE",
-    ink: "#151716",
-    inkMuted: "#545B57",
-    hairline: "#D3D8D2",
-    tint: "#1F5C45",
-    tile: "#DADFD8",
-    mapTone: "#E4E8E0",
-    mapRoad: "#F7F8F5",
-    stream: "#C9DDD2",
-  },
-  dark: {
-    ...road,
-    ground: "#0E1110",
-    surface: "#191D1B",
-    raised: "#333A36", // fill·mapTone보다 밝아야 다크 지도 위에서 가장자리가 보인다
-    fill: "#242926",
-    ink: "#EDF0EC",
-    inkMuted: "#9BA39E",
-    hairline: "#2B312E",
-    tint: "#6CC79F",
-    tile: "#232926",
-    mapTone: "#171B19",
-    mapRoad: "#222825",
-    stream: "#1D3329",
-  },
-};
-
-export type Palette = typeof palettes.light;
+export type Palette = typeof palette;

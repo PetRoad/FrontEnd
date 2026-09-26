@@ -7,14 +7,14 @@ import type { Course, Difficulty } from "@/types/course";
 
 const LEVEL: Record<Difficulty, number> = { 쉬움: 1, 보통: 2, 어려움: 3 };
 
-// 난이도: 노면 점선 3칸 중 칠해진 칸 수
+// 난이도: 점 3개 중 채워진 점 수
 export function DifficultyMark({ difficulty }: { difficulty: Difficulty }) {
   const c = useTheme();
   return (
     <View style={s.level} accessibilityLabel={`난이도 ${difficulty}`}>
       <View style={s.dashes}>
         {[1, 2, 3].map((i) => (
-          <View key={i} style={[s.dash, { backgroundColor: i <= LEVEL[difficulty] ? c.ink : c.hairline }]} />
+          <View key={i} style={[s.dash, { backgroundColor: i <= LEVEL[difficulty] ? c.accent : c.fill }]} />
         ))}
       </View>
       <T v="footnote" muted>
@@ -34,7 +34,7 @@ export function CourseCard({ course, width }: { course: Course; width?: number }
       accessibilityRole="button"
       accessibilityLabel={`${course.name}, ${course.distanceKm}킬로미터, ${course.difficulty}, 좋아요 ${course.likes}`}
       onPress={() => router.push({ pathname: "/course/[id]", params: { id: course.id } })}
-      style={({ pressed }) => [s.card, { backgroundColor: c.surface, width, opacity: pressed ? 0.85 : 1 }, shadow]}
+      style={({ pressed }) => [s.card, { backgroundColor: c.surface, borderColor: c.hairline, width, opacity: pressed ? 0.85 : 1 }, shadow]}
     >
       <PhotoTile label={course.cover ?? "커버 이미지"} style={s.cover} />
       <View style={s.body}>
@@ -66,12 +66,12 @@ export function CourseCard({ course, width }: { course: Course; width?: number }
 }
 
 const s = StyleSheet.create({
-  card: { borderRadius: 14, overflow: "hidden" },
+  card: { borderRadius: 18, overflow: "hidden", borderWidth: 1 },
   cover: { height: 104, borderRadius: 0 },
   body: { padding: 12, gap: 4 },
   line: { flexDirection: "row", alignItems: "center", gap: 10 },
   km: { flexDirection: "row", alignItems: "baseline", gap: 2 },
   level: { flexDirection: "row", alignItems: "center", gap: 5 },
   dashes: { flexDirection: "row", gap: 2 },
-  dash: { width: 9, height: 4, borderRadius: 2 },
+  dash: { width: 8, height: 8, borderRadius: 4 },
 });

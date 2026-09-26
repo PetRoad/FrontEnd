@@ -17,10 +17,11 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/hooks/useTheme";
 
-export const NUM_FONT = "BarlowCondensed_600SemiBold";
-export const NUM_FONT_BOLD = "BarlowCondensed_700Bold";
+export const NUM_FONT = "Nunito_700Bold";
+export const NUM_FONT_BOLD = "Nunito_800ExtraBold";
 
-export const shadow = { boxShadow: "0 2px 10px rgba(0, 0, 0, 0.10)" };
+// 검정 그림자 대신 따뜻한 갈색 기운의 옅은 그림자
+export const shadow = { boxShadow: "0 4px 16px rgba(120, 96, 52, 0.10)" };
 
 type IconName = SymbolViewProps["name"];
 
@@ -84,7 +85,7 @@ export function T({ v = "body", muted, color, center, numberOfLines, style, chil
   );
 }
 
-// 수치는 도로 표지 계열 콘덴스드 + 고정폭 숫자: 걷는 중에도 자리가 흔들리지 않는다
+// 수치는 둥근 Nunito + 고정폭 숫자: 걷는 중에도 자리가 흔들리지 않는다
 export function Num({ size = 17, bold, color, style, children }: { size?: number; bold?: boolean; color?: string; style?: StyleProp<TextStyle>; children: ReactNode }) {
   const c = useTheme();
   return (
@@ -93,7 +94,7 @@ export function Num({ size = 17, bold, color, style, children }: { size?: number
         {
           fontFamily: bold ? NUM_FONT_BOLD : NUM_FONT,
           fontSize: size,
-          lineHeight: Math.round(size * 1.08),
+          lineHeight: Math.round(size * 1.2),
           color: color ?? c.ink,
           fontVariant: ["tabular-nums"],
         },
@@ -106,10 +107,10 @@ export function Num({ size = 17, bold, color, style, children }: { size?: number
 }
 
 // 숫자 아래에는 항상 라벨
-export function Stat({ value, unit, label, size = 34, onTrack }: { value: string; unit?: string; label: string; size?: number; onTrack?: boolean }) {
+export function Stat({ value, unit, label, size = 34 }: { value: string; unit?: string; label: string; size?: number }) {
   const c = useTheme();
-  const fg = onTrack ? c.onTrack : c.ink;
-  const sub = onTrack ? c.onTrackMuted : c.inkMuted;
+  const fg = c.ink;
+  const sub = c.inkMuted;
   return (
     <View style={{ gap: 2 }}>
       <View style={{ flexDirection: "row", alignItems: "baseline", gap: 4 }}>
@@ -131,7 +132,7 @@ export function Stat({ value, unit, label, size = 34, onTrack }: { value: string
 
 type PressProps = { title: string; onPress?: () => void; icon?: IconName; disabled?: boolean; style?: StyleProp<ViewStyle> };
 
-// 노면 노랑 판: 한 화면에 하나, 그 화면의 주 행동만
+// 햇살 노랑 주 버튼: 한 화면에 하나, 그 화면의 주 행동만
 export function Plate({ title, onPress, icon, disabled, style }: PressProps) {
   const c = useTheme();
   return (
@@ -140,23 +141,22 @@ export function Plate({ title, onPress, icon, disabled, style }: PressProps) {
       accessibilityState={{ disabled }}
       onPress={onPress}
       disabled={disabled}
-      style={({ pressed }) => [s.plate, { backgroundColor: c.paint, opacity: disabled ? 0.4 : pressed ? 0.82 : 1 }, style]}
+      style={({ pressed }) => [s.plate, { backgroundColor: c.accent, opacity: disabled ? 0.4 : pressed ? 0.82 : 1 }, style]}
     >
-      {icon && <Icon name={icon} size={20} color={c.onPaint} />}
-      <Text style={[TYPE.headline, { color: c.onPaint }]}>{title}</Text>
+      {icon && <Icon name={icon} size={20} color={c.onAccent} />}
+      <Text style={[TYPE.headline, { color: c.onAccent }]}>{title}</Text>
     </Pressable>
   );
 }
 
-type Tone = "surface" | "track" | "onTrack" | "plain";
+type Tone = "surface" | "soft" | "plain";
 
 export function Btn({ title, onPress, icon, disabled, style, tone = "surface" }: PressProps & { tone?: Tone }) {
   const c = useTheme();
   const look = {
     surface: { bg: c.surface, fg: c.ink, line: c.hairline },
-    track: { bg: c.track, fg: c.onTrack, line: c.track },
-    onTrack: { bg: "rgba(255, 255, 255, 0.14)", fg: c.onTrack, line: "rgba(255, 255, 255, 0.3)" },
-    plain: { bg: "transparent", fg: c.tint, line: "transparent" },
+    soft: { bg: c.accentSoft, fg: c.ink, line: c.accentSoft },
+    plain: { bg: "transparent", fg: c.inkMuted, line: "transparent" },
   }[tone];
   return (
     <Pressable
@@ -208,7 +208,7 @@ export function Segmented<V extends string>({ options, value, onChange }: { opti
             accessibilityRole="radio"
             accessibilityState={{ selected: on }}
             onPress={() => onChange(o)}
-            style={[s.segmentItem, on && [{ backgroundColor: c.raised }, shadow]]}
+            style={[s.segmentItem, on && [{ backgroundColor: c.surface }, shadow]]}
           >
             <Text style={[TYPE.subhead, { color: c.ink, fontWeight: on ? "600" : "400" }]}>{o}</Text>
           </Pressable>
@@ -227,9 +227,9 @@ export function Chip({ label, on, onPress }: { label: string; on?: boolean; onPr
       accessibilityState={{ selected: !!on }}
       onPress={onPress}
       hitSlop={4}
-      style={[s.chip, on ? { backgroundColor: c.track, borderColor: c.track } : { backgroundColor: c.surface, borderColor: c.hairline }]}
+      style={[s.chip, on ? { backgroundColor: c.accent, borderColor: c.accent } : { backgroundColor: c.surface, borderColor: c.hairline }]}
     >
-      <Text style={[TYPE.subhead, { color: on ? c.onTrack : c.ink, fontWeight: on ? "600" : "400" }]}>{label}</Text>
+      <Text style={[TYPE.subhead, { color: on ? c.onAccent : c.ink, fontWeight: on ? "600" : "400" }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -238,7 +238,7 @@ export function Chip({ label, on, onPress }: { label: string; on?: boolean; onPr
 export function PhotoTile({ label, icon = I.photo, selected, style }: { label?: string; icon?: IconName; selected?: boolean; style?: StyleProp<ViewStyle> }) {
   const c = useTheme();
   return (
-    <View style={[s.tile, { backgroundColor: c.tile }, selected && { borderWidth: 3, borderColor: c.tint }, style]}>
+    <View style={[s.tile, { backgroundColor: c.tile }, selected && { borderWidth: 3, borderColor: c.accent }, style]}>
       <Icon name={icon} size={22} color={c.inkMuted} />
       {label ? (
         <T v="caption" muted numberOfLines={1}>
@@ -249,7 +249,7 @@ export function PhotoTile({ label, icon = I.photo, selected, style }: { label?: 
   );
 }
 
-// 지도 자리. react-native-maps 연결 전까지 동네 블록과 천(川) 띠로 지도 톤만 낸다
+// 지도 자리. react-native-maps 연결 전까지 동네 블록과 물길로 지도 톤만 낸다
 const ROADS_V = ["16%", "49%", "82%"] as const;
 const ROADS_H = ["24%", "61%", "88%"] as const;
 
@@ -258,7 +258,7 @@ export function MapPlate({ style, marker, children }: { style?: StyleProp<ViewSt
   return (
     <View style={[{ backgroundColor: c.mapTone, overflow: "hidden" }, style]}>
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-        <View style={[s.stream, { backgroundColor: c.stream }]} />
+        <View style={[s.stream, { backgroundColor: c.water }]} />
         {ROADS_V.map((left) => (
           <View key={left} style={[s.roadV, { left, backgroundColor: c.mapRoad }]} />
         ))}
@@ -281,34 +281,34 @@ export function MapPlate({ style, marker, children }: { style?: StyleProp<ViewSt
 export function MeMarker() {
   const c = useTheme();
   return (
-    // 다크 지도에서도 보이도록 틴트(라이트 트랙 초록 / 다크 밝은 초록)로 칠한다
     <View accessibilityLabel="내 위치" style={s.halo}>
-      <View style={[StyleSheet.absoluteFill, { borderRadius: 24, backgroundColor: c.tint, opacity: 0.2 }]} />
-      <View style={[s.dot, { backgroundColor: c.tint, borderColor: c.onTrack }, shadow]} />
+      <View style={[StyleSheet.absoluteFill, { borderRadius: 24, backgroundColor: c.accent, opacity: 0.35 }]} />
+      <View style={[s.dot, { backgroundColor: c.accent, borderColor: c.surface }, shadow]} />
     </View>
   );
 }
 
-// 노면 점선. filled 칸은 노면 노랑으로 칠해진다
-export function Lane({ total, filled = 0, on, off, height = 6 }: { total: number; filled?: number; on: string; off: string; height?: number }) {
+// 발걸음 점. 채워진 점은 햇살 노랑으로 차오른다 (산책에서는 한 점 = 100m)
+export function Dots({ total, filled = 0, size = 12 }: { total: number; filled?: number; size?: number }) {
+  const c = useTheme();
   return (
-    <View style={{ flexDirection: "row", gap: 6 }}>
+    <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 6 }}>
       {Array.from({ length: total }, (_, i) => (
-        <View key={i} style={{ flex: 1, height, borderRadius: height / 2, backgroundColor: off, overflow: "hidden" }}>
-          {i < filled && <Animated.View entering={FadeIn.duration(450)} style={[StyleSheet.absoluteFill, { backgroundColor: on }]} />}
+        <View key={i} style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: c.hairline, overflow: "hidden" }}>
+          {i < filled && <Animated.View entering={FadeIn.duration(450)} style={[StyleSheet.absoluteFill, { backgroundColor: c.accent }]} />}
         </View>
       ))}
     </View>
   );
 }
 
-// 온보딩 단계: 트랙 초록으로 칠해진 점선
+// 온보딩 단계
 export function Steps({ step, total }: { step: number; total: number }) {
   const c = useTheme();
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }} accessibilityLabel={`${total}단계 중 ${step}단계`}>
-      <View style={{ width: 28 * total }}>
-        <Lane total={total} filled={step} on={c.track} off={c.hairline} height={5} />
+      <View style={{ width: 22 * total }}>
+        <Dots total={total} filled={step} size={10} />
       </View>
       <Num size={15} color={c.inkMuted}>
         {step}/{total}
@@ -358,7 +358,7 @@ export function Group({ header, children }: { header?: string; children: ReactNo
           {header}
         </T>
       )}
-      <View style={[s.group, { backgroundColor: c.surface }]}>
+      <View style={[s.group, { backgroundColor: c.surface, borderColor: c.hairline }]}>
         {Children.toArray(children).map((child, i) => (
           <View key={i}>
             {i > 0 && <View style={[s.sep, { backgroundColor: c.hairline }]} />}
@@ -381,7 +381,7 @@ export function Row({ title, sub, icon, left, detail, onPress }: RowProps) {
       onPress={onPress}
       style={({ pressed }) => [s.row, pressed && { backgroundColor: c.fill }]}
     >
-      {left ?? (icon && <Icon name={icon} size={20} color={c.tint} />)}
+      {left ?? (icon && <Icon name={icon} size={20} color={c.inkMuted} />)}
       <View style={{ flex: 1, gap: 2 }}>
         {typeof title === "string" ? <T numberOfLines={1}>{title}</T> : title}
         {sub && (
@@ -427,13 +427,13 @@ export function Empty({ icon, title, body }: { icon: IconName; title: string; bo
 }
 
 const s = StyleSheet.create({
-  plate: { height: 56, borderRadius: 14, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 20 },
-  btn: { minHeight: 50, borderRadius: 12, borderWidth: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 16 },
+  plate: { height: 56, borderRadius: 28, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 20 },
+  btn: { minHeight: 50, borderRadius: 25, borderWidth: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 16 },
   field: { minHeight: 50, borderRadius: 12, borderWidth: 1, paddingHorizontal: 14, paddingVertical: 12 },
-  segment: { flexDirection: "row", borderRadius: 10, padding: 2, height: 40 },
+  segment: { flexDirection: "row", borderRadius: 12, padding: 2, height: 40 },
   segmentItem: { flex: 1, borderRadius: 8, alignItems: "center", justifyContent: "center" },
   chip: { height: 36, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, alignItems: "center", justifyContent: "center" },
-  tile: { borderRadius: 10, alignItems: "center", justifyContent: "center", gap: 4, overflow: "hidden", padding: 6 },
+  tile: { borderRadius: 14, alignItems: "center", justifyContent: "center", gap: 4, overflow: "hidden", padding: 6 },
   stream: { position: "absolute", left: "-20%", right: "-20%", top: "38%", height: 46, transform: [{ rotate: "-14deg" }] },
   roadV: { position: "absolute", top: 0, bottom: 0, width: 9 },
   roadH: { position: "absolute", left: 0, right: 0, height: 9 },
@@ -441,7 +441,7 @@ const s = StyleSheet.create({
   halo: { width: 48, height: 48, borderRadius: 24, alignItems: "center", justifyContent: "center" },
   dot: { width: 20, height: 20, borderRadius: 10, borderWidth: 3 },
   page: { padding: 16, gap: 24, paddingBottom: 48 },
-  group: { borderRadius: 12, overflow: "hidden" },
+  group: { borderRadius: 16, overflow: "hidden", borderWidth: 1 },
   sep: { height: StyleSheet.hairlineWidth, marginLeft: 16 },
   row: { minHeight: 52, flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
   empty: { alignItems: "center", gap: 8, paddingVertical: 56, paddingHorizontal: 24 },

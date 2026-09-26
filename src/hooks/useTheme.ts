@@ -1,14 +1,14 @@
-import { useColorScheme } from "react-native";
-import { palettes, type Palette } from "@/constants/colors";
+import { palette, type Palette } from "@/constants/colors";
 
+// 밝은 테마 하나만 쓴다 (app.json userInterfaceStyle: light)
 export function useTheme(): Palette {
-  return palettes[useColorScheme() === "dark" ? "dark" : "light"];
+  return palette;
 }
 
 export function useStackOptions() {
   const c = useTheme();
   return {
-    headerTintColor: c.tint,
+    headerTintColor: c.ink,
     headerTitleStyle: { color: c.ink },
     headerStyle: { backgroundColor: c.ground },
     headerShadowVisible: false,

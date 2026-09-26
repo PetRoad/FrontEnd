@@ -40,12 +40,12 @@ export default function WalkResultScreen() {
         </T>
       </View>
 
-      <View style={[s.band, { backgroundColor: c.track }]}>
-        <Stat value={walk.distanceKm.toFixed(2)} unit="KM" label="거리" size={72} onTrack />
+      <View style={[s.band, { backgroundColor: c.accentSoft }]}>
+        <Stat value={walk.distanceKm.toFixed(2)} unit="KM" label="거리" size={72} />
         <View style={s.stats}>
-          <Stat value={clock(walk.durationSec)} label="시간" size={30} onTrack />
-          {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={30} onTrack />}
-          <Stat value={String(walk.photos.length)} unit="장" label="사진" size={30} onTrack />
+          <Stat value={clock(walk.durationSec)} label="시간" size={30} />
+          {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={30} />}
+          <Stat value={String(walk.photos.length)} unit="장" label="사진" size={30} />
         </View>
       </View>
 

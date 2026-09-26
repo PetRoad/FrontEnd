@@ -32,10 +32,10 @@ export default function WalkDetailScreen() {
 
       <MapPlate style={s.map} marker />
 
-      <View style={[s.band, { backgroundColor: c.track }]}>
-        <Stat value={walk.distanceKm.toFixed(1)} unit="KM" label="거리" size={40} onTrack />
-        <Stat value={String(Math.round(walk.durationSec / 60))} unit="분" label="시간" size={40} onTrack />
-        {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={40} onTrack />}
+      <View style={[s.band, { backgroundColor: c.accentSoft }]}>
+        <Stat value={walk.distanceKm.toFixed(1)} unit="KM" label="거리" size={40} />
+        <Stat value={String(Math.round(walk.durationSec / 60))} unit="분" label="시간" size={40} />
+        {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={40} />}
       </View>
 
       <Section title="이 산책에서 찍은 사진" hint={`${walk.photos.length}장`}>

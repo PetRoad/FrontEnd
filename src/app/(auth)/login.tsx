@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Btn, Field, Num, Plate, T } from "@/components/common/ui";
+import { Btn, Dots, Field, Num, Plate, T } from "@/components/common/ui";
 import { useTheme } from "@/hooks/useTheme";
 
 // ponytail: 인증 없이 화면 흐름만. services/auth 연결 시 교체
@@ -16,21 +16,16 @@ export default function LoginScreen() {
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets
     >
-      <View style={[s.hero, { backgroundColor: c.track, paddingTop: insets.top + 64 }]}>
-        {/* 노면 문자처럼 세로로 늘인 워드마크 */}
-        <Num size={64} bold color={c.onTrack} style={s.wordmark}>
-          PETROAD
+      <View style={[s.hero, { backgroundColor: c.accentSoft, paddingTop: insets.top + 72 }]}>
+        <Num size={44} bold>
+          PetRoad
         </Num>
-        <T v="title2" color={c.onTrack}>
-          펫로드
-        </T>
-        <T v="subhead" color={c.onTrackMuted}>
+        <T v="title2">펫로드</T>
+        <T v="subhead" muted>
           반려견과 걸은 길과 순간을 기록하고{"\n"}우리 동네의 좋은 산책길을 발견해요
         </T>
-        <View style={s.centerLine}>
-          {Array.from({ length: 6 }, (_, i) => (
-            <View key={i} style={[s.centerDash, { backgroundColor: c.paint }]} />
-          ))}
+        <View style={s.steps}>
+          <Dots total={7} filled={4} size={10} />
         </View>
       </View>
 
@@ -45,9 +40,7 @@ export default function LoginScreen() {
 }
 
 const s = StyleSheet.create({
-  hero: { paddingHorizontal: 24, paddingBottom: 28, gap: 6 },
-  wordmark: { transform: [{ scaleY: 1.22 }], marginBottom: 10, letterSpacing: 1 },
-  centerLine: { flexDirection: "row", justifyContent: "space-between", marginTop: 28 },
-  centerDash: { width: 30, height: 5, borderRadius: 2.5 },
+  hero: { paddingHorizontal: 24, paddingBottom: 32, gap: 6, borderBottomLeftRadius: 32, borderBottomRightRadius: 32 },
+  steps: { width: 132, marginTop: 24 },
   form: { padding: 24, gap: 16 },
 });
