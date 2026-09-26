@@ -1,9 +1,17 @@
-import { Text, View } from "react-native";
+import { router } from "expo-router";
+import { DogForm } from "@/features/dog/DogForm";
+import { useUserStore } from "@/stores/userStore";
 
-export default function Screen() {
+export default function DogProfileScreen() {
+  const dog = useUserStore((s) => s.dog);
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>my/dog</Text>
-    </View>
+    <DogForm
+      initial={dog}
+      submitLabel="저장"
+      onSubmit={(next) => {
+        useUserStore.setState({ dog: next });
+        router.back();
+      }}
+    />
   );
 }

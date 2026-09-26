@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-26T00:00:00Z",
+  "title": "Design System: PetRoad",
+  "extensions": {
+    "colorMeta": {
+      "accent": { "role": "primary", "displayName": "햇살 노랑", "tonalRamp": ["#2A1C00", "#4A3300", "#6E4E00", "#946B0C", "#BC8A2A", "#E2AC4B", "#FFD374", "#FFF3D6"] },
+      "accent-soft": { "role": "primary", "displayName": "옅은 햇살" },
+      "on-accent": { "role": "primary", "displayName": "노랑 위 잉크" },
+      "tint": { "role": "secondary", "displayName": "구운 갈색 틴트", "tonalRamp": ["#1E1100", "#3B2500", "#5A3A00", "#7A4F05", "#9A6412", "#BE8335", "#E2A55A", "#FFD9A8"] },
+      "ground": { "role": "neutral", "displayName": "아이보리 바탕", "tonalRamp": ["#1C1D19", "#353631", "#50514B", "#6D6E68", "#8E8F88", "#B1B2AB", "#D6D7D0", "#FEFFFA"] },
+      "surface": { "role": "neutral", "displayName": "흰 표면" },
+      "fill": { "role": "neutral", "displayName": "채움" },
+      "tile": { "role": "neutral", "displayName": "사진 자리" },
+      "hairline": { "role": "neutral", "displayName": "실선" },
+      "ink": { "role": "neutral", "displayName": "회갈색 잉크", "tonalRamp": ["#151411", "#292723", "#3D3A35", "#57534C", "#6E695F", "#9A958B", "#C6C2B8", "#ECE9E0"] },
+      "ink-muted": { "role": "neutral", "displayName": "흐린 잉크" },
+      "map-tone": { "role": "neutral", "displayName": "지도 톤 (플레이스홀더 전용)" },
+      "map-street": { "role": "neutral", "displayName": "지도 길 (플레이스홀더 전용)" },
+      "water": { "role": "neutral", "displayName": "물길 (플레이스홀더 전용)" }
+    },
+    "typographyMeta": {
+      "numeral-hero": { "displayName": "큰 수치", "purpose": "결과 거리 72, 산책 중 코스 카드 거리 20, Stat 기본 34. Nunito 800 고정폭." },
+      "numeral": { "displayName": "수치", "purpose": "카드 거리, 좋아요 수, 행 수치, 단위, 단계 표시. Nunito 700 고정폭." },
+      "large-title": { "displayName": "Large Title", "purpose": "iOS 큰 제목 단계." },
+      "title1": { "displayName": "Title 1", "purpose": "화면 제목, 코스명." },
+      "title2": { "displayName": "Title 2", "purpose": "로그인 서비스명 등 보조 제목." },
+      "title3": { "displayName": "Title 3", "purpose": "바텀시트 제목." },
+      "headline": { "displayName": "Headline", "purpose": "버튼 글자, 섹션 제목, 카드 코스명." },
+      "body": { "displayName": "Body", "purpose": "행 제목, 입력칸." },
+      "subhead": { "displayName": "Subhead", "purpose": "보조 설명, 칩 글자." },
+      "footnote": { "displayName": "Footnote", "purpose": "수치 라벨, 입력 라벨, 섹션 힌트." },
+      "caption": { "displayName": "Caption", "purpose": "사진 자리 글자, 지도 안내." }
+    },
+    "shadows": [
+      { "name": "warm-lift", "value": "0 4px 16px rgba(120, 96, 52, 0.10)", "purpose": "지도 위 알약과 버튼, 진행 패널, 범례, 코스 카드, 선택된 세그먼트, 내 위치 점." }
+    ],
+    "motion": [
+      { "name": "dot-fill", "value": "FadeIn 450ms", "purpose": "단계 점이 햇살 노랑으로 한 번 차오름." },
+      { "name": "sheet-spring", "value": "spring(damping 26, stiffness 260, mass 0.9)", "purpose": "추천코스 바텀시트 접기·펼치기." },
+      { "name": "press", "value": "opacity 0.82 (주) / 0.7 (보조), 비활성 0.4", "purpose": "터치 눌림 피드백. 호버 없음." }
+    ]
+  },
+  "components": [
+    {
+      "name": "햇살 노랑 주 버튼",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "화면당 하나, 그 화면의 주 행동. 알약, 높이 56.",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"13\" cy=\"4\" r=\"2\"/><path d=\"M9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7\"/></svg>산책 시작하기</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 56px; padding: 0 20px; border: none; border-radius: 9999px; background: #FFD374; color: #3D3A35; font: 600 17px/22px -apple-system, system-ui, sans-serif; cursor: pointer; transition: opacity 0.15s; } .ds-btn-primary:hover { opacity: 0.92; } .ds-btn-primary:active { opacity: 0.82; } .ds-btn-primary:focus-visible { outline: 2px solid #9A6412; outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.4; }"
+    },
+    {
+      "name": "표면 버튼",
+      "kind": "button",
+      "refersTo": "button-surface",
+      "description": "보조 행동. 흰 표면 + 실선 알약.",
+      "html": "<button class=\"ds-btn-surface\">코스로 등록하여 공유</button>",
+      "css": ".ds-btn-surface { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; padding: 0 16px; border: 1px solid #ECE9E0; border-radius: 9999px; background: #FFFFFF; color: #3D3A35; font: 600 17px/22px -apple-system, system-ui, sans-serif; cursor: pointer; transition: opacity 0.15s; } .ds-btn-surface:active { opacity: 0.7; } .ds-btn-surface:focus-visible { outline: 2px solid #9A6412; outline-offset: 2px; }"
+    },
+    {
+      "name": "부드러운 버튼",
+      "kind": "button",
+      "refersTo": "button-soft",
+      "description": "주 버튼 옆 짝 행동. 옅은 햇살 알약.",
+      "html": "<button class=\"ds-btn-soft\">사진</button>",
+      "css": ".ds-btn-soft { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; padding: 0 16px; border: 1px solid #FFF3D6; border-radius: 9999px; background: #FFF3D6; color: #3D3A35; font: 600 17px/22px -apple-system, system-ui, sans-serif; cursor: pointer; transition: opacity 0.15s; } .ds-btn-soft:active { opacity: 0.7; } .ds-btn-soft:focus-visible { outline: 2px solid #9A6412; outline-offset: 2px; }"
+    },
+    {
+      "name": "칩",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "태그·선택지. 선택되면 햇살 노랑.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\">그늘 많음</button><button class=\"ds-chip ds-chip-on\" aria-pressed=\"true\">물가</button></div>",
+      "css": ".ds-chips { display: flex; gap: 8px; } .ds-chip { height: 36px; padding: 0 14px; border: 1px solid #ECE9E0; border-radius: 9999px; background: #FFFFFF; color: #3D3A35; font: 400 15px/20px -apple-system, system-ui, sans-serif; cursor: pointer; } .ds-chip-on { background: #FFD374; border-color: #FFD374; font-weight: 600; } .ds-chip:focus-visible { outline: 2px solid #9A6412; outline-offset: 2px; }"
+    },
+    {
+      "name": "입력칸",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "흐린 라벨 + 흰 표면 입력칸, 반경 12.",
+      "html": "<label class=\"ds-field\"><span>이메일</span><input placeholder=\"name@example.com\"></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font-family: -apple-system, system-ui, sans-serif; } .ds-field span { font-size: 13px; line-height: 18px; color: #6E695F; } .ds-field input { min-height: 50px; padding: 12px 14px; border: 1px solid #ECE9E0; border-radius: 12px; background: #FFFFFF; color: #3D3A35; font-size: 17px; caret-color: #9A6412; } .ds-field input::placeholder { color: #6E695F; } .ds-field input:focus-visible { outline: 2px solid #9A6412; outline-offset: 1px; }"
+    },
+    {
+      "name": "코스 카드",
+      "kind": "card",
+      "refersTo": "course-card",
+      "description": "커버 / 코스명 / 거리·난이도·좋아요 / 견종·나이의 고정 라벨 그리드.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-cover\">커버 이미지</div><div class=\"ds-card-body\"><strong>안양천 벚꽃길</strong><div class=\"ds-card-line\"><span class=\"ds-km\">2.4<small>KM</small></span><span class=\"ds-level\"><i class=\"on\"></i><i></i><i></i> 쉬움</span><span class=\"ds-likes\">12</span></div><p>말티즈 · 3살</p></div></article>",
+      "css": ".ds-card { width: 232px; border: 1px solid #ECE9E0; border-radius: 18px; overflow: hidden; background: #FFFFFF; box-shadow: 0 4px 16px rgba(120, 96, 52, 0.10); font-family: -apple-system, system-ui, sans-serif; color: #3D3A35; transition: opacity 0.15s; } .ds-card:active { opacity: 0.85; } .ds-card-cover { height: 104px; background: #F2EFE6; color: #6E695F; font-size: 12px; display: flex; align-items: center; justify-content: center; } .ds-card-body { padding: 12px; display: flex; flex-direction: column; gap: 4px; } .ds-card-body strong { font-size: 17px; font-weight: 600; } .ds-card-line { display: flex; align-items: center; gap: 10px; } .ds-km { font: 800 22px/1.2 Nunito, system-ui; font-variant-numeric: tabular-nums; } .ds-km small { font: 700 13px Nunito, system-ui; color: #6E695F; margin-left: 2px; } .ds-level { display: flex; align-items: center; gap: 2px; font-size: 13px; color: #6E695F; } .ds-level i { width: 8px; height: 8px; border-radius: 4px; background: #F4F2EA; } .ds-level i.on { background: #FFD374; } .ds-likes { margin-left: auto; font: 700 17px Nunito, system-ui; color: #6E695F; } .ds-card-body p { margin: 0; font-size: 15px; color: #6E695F; }"
+    },
+    {
+      "name": "단계 점",
+      "kind": "custom",
+      "refersTo": "footstep-dots",
+      "description": "시그니처. 10개 = 1km, 100m마다 하나씩 햇살 노랑으로 차오르고 아래에 남은 거리 문구가 붙는다.",
+      "html": "<div class=\"ds-dots-wrap\"><div class=\"ds-dots\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p>다음 100m까지 42m</p></div>",
+      "css": ".ds-dots-wrap { width: 320px; display: flex; flex-direction: column; gap: 8px; font-family: -apple-system, system-ui, sans-serif; } .ds-dots { display: flex; justify-content: space-between; gap: 6px; } .ds-dots i { width: 12px; height: 12px; border-radius: 6px; background: #ECE9E0; } .ds-dots i.on { background: #FFD374; animation: ds-fill 450ms ease-out; } @keyframes ds-fill { from { opacity: 0; } } @media (prefers-reduced-motion: reduce) { .ds-dots i.on { animation: none; } } .ds-dots-wrap p { margin: 0; font-size: 13px; line-height: 18px; color: #6E695F; }"
+    },
+    {
+      "name": "수치 패널",
+      "kind": "custom",
+      "refersTo": "stat-band",
+      "description": "결과·일지 상세의 옅은 햇살 패널. 큰 Nunito 수치 + 아래 라벨.",
+      "html": "<section class=\"ds-band\"><div class=\"ds-stat\"><b>1.82<small>KM</small></b><span>거리</span></div><div class=\"ds-stat ds-sm\"><b>00:31:07</b><span>시간</span></div></section>",
+      "css": ".ds-band { display: flex; flex-direction: column; gap: 18px; padding: 20px; border-radius: 20px; background: #FFF3D6; color: #3D3A35; font-family: -apple-system, system-ui, sans-serif; } .ds-stat { display: flex; flex-direction: column; gap: 2px; } .ds-stat b { font: 800 72px/1.2 Nunito, system-ui; font-variant-numeric: tabular-nums; } .ds-stat small { font: 700 30px Nunito, system-ui; color: #6E695F; margin-left: 4px; } .ds-sm b { font-size: 30px; } .ds-stat span { font-size: 13px; line-height: 18px; color: #6E695F; }"
+    },
+    {
+      "name": "탭바",
+      "kind": "nav",
+      "refersTo": "tab-bar",
+      "description": "산책·마이 2탭. 활성은 갈색 틴트.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"on\" aria-current=\"page\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"13\" cy=\"4\" r=\"2\"/><path d=\"M9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7\"/></svg>산책</a><a><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 4a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm0 14a8 8 0 0 1-6-2.7c.9-1.7 3.4-2.8 6-2.8s5.1 1.1 6 2.8A8 8 0 0 1 12 20Z\"/></svg>마이</a></nav>",
+      "css": ".ds-tabs { display: flex; width: 320px; background: #FFFFFF; border-top: 1px solid #ECE9E0; font-family: -apple-system, system-ui, sans-serif; } .ds-tabs a { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 0; font-size: 10px; color: #6E695F; cursor: pointer; } .ds-tabs a.on { color: #9A6412; } .ds-tabs a:focus-visible { outline: 2px solid #9A6412; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "햇살 아래 동네 산책",
+    "overview": "펫로드는 밝고 가벼운 아이보리 바탕 위에서 걸음이 햇살 노랑으로 차오르는 앱이다. 한 손에 리드줄을 쥔 채 한낮 햇빛 아래에서 짧게 보는 화면이므로, 면은 밝게, 글자는 순수 검정 대신 따뜻한 짙은 회갈색으로 무게를 덜고, 행동은 엄지 자리의 알약 버튼 하나로 모은다.\n\n구조는 iOS 기본 문법을 따른다. 시스템 서체의 텍스트 스타일 단계, 인셋 그룹 목록, 네이티브 스택 헤더와 2탭 탭바, SF Symbols 아이콘을 그대로 쓰고, 브랜드는 색과 숫자 서체, 산책 중 노란 코스 카드에서 나온다. 수치는 둥근 Nunito 고정폭 숫자로 크게 쓰고, 모든 수치 아래에는 작은 라벨이 붙는다.\n\n사용자가 확정한 거부: 초록 무드, 도로·노면 표시 이미지(\"산책이지 도로가 아니다\"), 어두운 스포츠 기록 앱 톤, 다크 모드. 앱은 라이트 모드 하나만 쓴다(app.json `userInterfaceStyle: light`, 상태바 dark).",
+    "keyCharacteristics": [
+      "아이보리 바탕, 흰 표면, 옅은 노랑 패널의 세 겹 밝은 면",
+      "햇살 노랑은 주 버튼, 선택 상태, 채워진 단계 점, 내 위치 마커에만",
+      "순수 검정 없음: 글자는 따뜻한 회갈색, 그림자도 갈색 기운",
+      "숫자는 둥근 Nunito 고정폭, 한글 UI는 시스템 서체",
+      "모든 버튼과 칩은 알약형",
+      "시그니처: 10개(=1km)의 둥근 단계 점이 100m마다 하나씩 노랗게 차오름"
+    ],
+    "rules": [
+      { "name": "The No Black Rule", "body": "순수 검정(#000)과 검정 기반 그림자를 쓰지 않는다. 가장 어두운 값은 회갈색 잉크다.", "section": "colors" },
+      { "name": "The One Sun Rule", "body": "햇살 노랑 면은 한 화면의 주 행동 하나와 상태 표시(선택, 채워진 점, 내 위치)에만 쓴다. 장식 띠나 배경 면으로 넓게 깔지 않는다. 넓은 노랑 면이 필요하면 옅은 햇살을 쓴다.", "section": "colors" },
+      { "name": "The No Green Rule", "body": "초록 계열 색은 팔레트 어디에도 없다. 성공·완료 상태도 노랑과 갈색 틴트로 표현한다.", "section": "colors" },
+      { "name": "The Labeled Number Rule", "body": "모든 수치 아래에는 흐린 잉크 Footnote 라벨이 붙는다(거리, 시간, 사진). 단위는 수치 크기의 약 0.42배, 흐린 잉크로 기준선에 맞춘다.", "section": "typography" },
+      { "name": "The Steady Digits Rule", "body": "수치는 항상 Nunito 고정폭 숫자(`tabular-nums`)로 쓴다. 걷는 중 값이 바뀌어도 자리가 흔들리지 않아야 한다. 수치가 아닌 한글 문장에는 Nunito를 쓰지 않는다.", "section": "typography" },
+      { "name": "The Warm Shadow Rule", "body": "그림자는 위의 따뜻한 갈색 한 가지뿐이다. 회색·검정 그림자나 단단한 오프셋 그림자를 쓰지 않는다.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** 모든 색을 `useTheme()`가 돌려주는 `palette`에서 가져온다. 화면에 hex를 직접 쓰지 않는다.",
+      "**Do** 한 화면의 주 행동 하나만 햇살 노랑 알약(높이 56)으로 두고, 짝 행동은 Soft, 보조는 Surface, 가장 약한 행동은 Plain으로 내린다.",
+      "**Do** 수치는 Nunito 고정폭으로 쓰고 아래에 흐린 Footnote 라벨을 붙인다.",
+      "**Do** 진행·단계·난이도는 둥근 점으로 표시하고, 점 옆이나 아래에 글자 정보를 함께 둔다.",
+      "**Do** 그림자가 필요하면 따뜻한 떠 있음(`0 4px 16px rgba(120, 96, 52, 0.10)`) 하나만 쓴다.",
+      "**Do** 되돌릴 수 없는 행동은 하단 고정 영역에 두고 확인을 거친다."
+    ],
+    "donts": [
+      "**Don't** 초록 계열 색을 쓰지 않는다(사용자 지정).",
+      "**Don't** 도로·노면 표시 이미지(차선, 노면 페인트, 도로 표지식 숫자, 트랙)를 쓰지 않는다. 펫로드는 산책이지 도로가 아니다(사용자 지정). 지도 플레이스홀더의 길은 지도 안에서만 허용된다.",
+      "**Don't** 순수 검정 글자, 검정 그림자, 어두운 전면 배경을 쓰지 않는다.",
+      "**Don't** 다크 모드나 색 반전 테마를 만들지 않는다. 앱은 라이트 모드 하나다.",
+      "**Don't** 햇살 노랑을 글자색으로 쓰지 않는다. 밝은 바탕 위에서 읽히지 않는다. 노랑 계열 글자가 필요하면 갈색 틴트를 쓴다.",
+      "**Don't** 버튼과 칩을 각진 사각형으로 만들지 않는다."
+    ]
+  }
+}
