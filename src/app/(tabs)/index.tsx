@@ -15,6 +15,7 @@ import { useWalkStore } from "@/stores/walkStore";
 
 const PEEK = 304; // 반쯤 열린 시트가 보이는 높이 (가로 코스 카드까지)
 const MIN = 84; // 닫힌 시트: 제목 줄만 남는다
+const OPEN_RATIO = 0.75; // 전체로 열어도 화면의 75%까지만 덮는다
 const SPRING = { damping: 26, stiffness: 260, mass: 0.9 };
 
 type Snap = "open" | "peek" | "closed";
@@ -29,7 +30,7 @@ export default function WalkHomeScreen() {
   const [height, setHeight] = useState(0);
   const [state, setState] = useState<Snap>("peek");
   const open = state === "open";
-  const points = { open: insets.top + 8, peek: height - PEEK, closed: height - MIN };
+  const points = { open: Math.round(height * (1 - OPEN_RATIO)), peek: height - PEEK, closed: height - MIN };
   const y = useSharedValue(10000);
   const startY = useSharedValue(0);
 
@@ -75,7 +76,7 @@ export default function WalkHomeScreen() {
       onLayout={(e) => {
         const h = e.nativeEvent.layout.height;
         setHeight(h);
-        y.set(state === "open" ? insets.top + 8 : h - (state === "closed" ? MIN : PEEK));
+        y.set(state === "open" ? Math.round(h * (1 - OPEN_RATIO)) : h - (state === "closed" ? MIN : PEEK));
       }}
     >
       <MapPlate style={s.map} marker />
