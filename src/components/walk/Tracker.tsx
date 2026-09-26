@@ -2,14 +2,16 @@ import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Btn, Dots, I, MapPlate, Num, Plate, Stat, T, shadow } from "@/components/common/ui";
+import { Btn, I, MapPlate, Num, Plate, T, shadow } from "@/components/common/ui";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
 import type { Course } from "@/types/course";
 import { confirm } from "@/utils/confirm";
 import { clock } from "@/utils/format";
 
-// 자유 산책 / 코스 따라 걷기 공용 진행 화면. 100m마다 발걸음 점이 하나씩 채워진다
+const BAR = 80; // 하단 버튼 영역 높이 (안전영역 제외)
+
+// 자유 산책 / 코스 따라 걷기 공용 진행 화면. 지도가 화면 전체, 위에 코스 정보 카드
 export function Tracker({ course }: { course?: Course }) {
   const c = useTheme();
   const insets = useSafeAreaInsets();
@@ -21,10 +23,6 @@ export function Tracker({ course }: { course?: Course }) {
   }, []);
 
   if (!walk) return null;
-
-  const meters = Math.floor(walk.distanceKm * 1000);
-  const passedKm = Math.floor(meters / 1000);
-  const toNext = 100 - (meters % 100);
 
   const end = () =>
     confirm({
@@ -38,65 +36,66 @@ export function Tracker({ course }: { course?: Course }) {
       },
     });
 
+  const walked = `${walk.distanceKm.toFixed(2)}km`;
+
   return (
     <View style={{ flex: 1, backgroundColor: c.ground }}>
-      <MapPlate style={{ flex: 1 }} marker>
-        <View style={[s.top, { paddingTop: insets.top + 8 }]}>
-          <View style={[s.pill, { backgroundColor: c.surface }, shadow]}>
-            <View style={[s.rec, { backgroundColor: c.accent }]} />
-            <T v="subhead" numberOfLines={1} style={{ fontWeight: "600", flexShrink: 1 }}>
-              {course ? course.name : "자유 산책"}
-            </T>
-            <T v="subhead" muted>
-              기록 중
-            </T>
-          </View>
-        </View>
-        {course && <Legend />}
-      </MapPlate>
+      <MapPlate style={StyleSheet.absoluteFill} marker />
 
-      <View style={[s.panel, { backgroundColor: c.surface, paddingBottom: insets.bottom + 16 }, shadow]}>
-        <View>
-          <View style={s.distance}>
-            <Num size={88} bold>
-              {walk.distanceKm.toFixed(2)}
-            </Num>
-            <Num size={28} color={c.inkMuted}>
-              KM
-            </Num>
-          </View>
-          <T v="footnote" muted>
-            거리
+      {/* 코스 이름 · 걸은 거리 | 코스 전체 길이. 자유 산책은 남은 거리가 없으니 걸은 거리만 */}
+      <View
+        accessible
+        accessibilityLabel={
+          course
+            ? `${course.name}, ${course.distanceKm}킬로미터 중 ${walk.distanceKm.toFixed(2)}킬로미터 걸었어요`
+            : `자유 산책, ${walk.distanceKm.toFixed(2)}킬로미터 걸었어요`
+        }
+        style={[s.banner, { top: insets.top + 8, backgroundColor: c.accent }, shadow]}
+      >
+        <View style={{ flex: 1, gap: 2 }}>
+          <T v="headline" color={c.onAccent} numberOfLines={1}>
+            {course ? course.name : "자유 산책"}
+          </T>
+          <T v="footnote" color={c.onAccent}>
+            산책 중 · {clock(walk.durationSec)}
           </T>
         </View>
-
-        <View style={{ gap: 8 }}>
-          <Dots total={10} filled={Math.floor(meters / 100) % 10} />
-          <T v="footnote" muted>
-            {passedKm > 0 ? `${passedKm}km 걸었어요 · ` : ""}다음 100m까지 {toNext}m
-          </T>
+        <View style={s.distance}>
+          <Num size={20} bold color={c.onAccent}>
+            {walked}
+          </Num>
+          {course && (
+            <>
+              <View style={[s.divider, { backgroundColor: c.onAccent }]} />
+              <Num size={20} color={c.onAccent}>
+                {course.distanceKm.toFixed(2)}km
+              </Num>
+            </>
+          )}
         </View>
+      </View>
 
-        <View style={s.stats}>
-          <Stat value={clock(walk.durationSec)} label="시간" />
-          <Stat value={String(walk.photos.length)} unit="장" label="사진" />
-          {course && <Stat value={course.distanceKm.toFixed(1)} unit="KM" label="코스 거리" />}
-        </View>
+      {course && <Legend bottom={insets.bottom + BAR + 16} />}
 
-        <View style={s.actions}>
-          {/* ponytail: 사진 자리만 추가. expo-camera 촬영으로 교체 */}
-          <Btn tone="soft" title="사진" icon={I.camera} onPress={useWalkStore.getState().addPhoto} style={s.half} />
-          <Plate title="종료" icon={I.stop} onPress={end} style={s.half} />
-        </View>
+      <View style={[s.bar, { backgroundColor: c.surface, paddingBottom: insets.bottom + 12 }, shadow]}>
+        {/* ponytail: 사진 자리만 추가. expo-camera 촬영으로 교체 */}
+        <Btn
+          tone="soft"
+          title={walk.photos.length ? `사진 ${walk.photos.length}` : "사진"}
+          icon={I.camera}
+          onPress={useWalkStore.getState().addPhoto}
+          style={s.half}
+        />
+        <Plate title="종료" icon={I.stop} onPress={end} style={s.half} />
       </View>
     </View>
   );
 }
 
-function Legend() {
+function Legend({ bottom }: { bottom: number }) {
   const c = useTheme();
   return (
-    <View style={[s.legend, { backgroundColor: c.surface }, shadow]}>
+    <View style={[s.legend, { bottom, backgroundColor: c.surface }, shadow]}>
       <View style={s.legendRow}>
         <View style={s.swatch}>
           {[0, 1, 2].map((i) => (
@@ -120,15 +119,33 @@ function Legend() {
 }
 
 const s = StyleSheet.create({
-  top: { paddingHorizontal: 16, alignItems: "flex-start" },
-  pill: { flexDirection: "row", alignItems: "center", gap: 8, paddingHorizontal: 14, height: 40, borderRadius: 20, maxWidth: "100%" },
-  rec: { width: 10, height: 10, borderRadius: 5 },
-  panel: { borderTopLeftRadius: 28, borderTopRightRadius: 28, marginTop: -28, paddingTop: 22, paddingHorizontal: 22, gap: 18 },
-  distance: { flexDirection: "row", alignItems: "baseline", gap: 6 },
-  stats: { flexDirection: "row", gap: 28 },
-  actions: { flexDirection: "row", gap: 10 },
+  banner: {
+    position: "absolute",
+    left: 16,
+    right: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 20,
+  },
+  distance: { flexDirection: "row", alignItems: "center", gap: 10 },
+  divider: { width: 1.5, height: 18, borderRadius: 1, opacity: 0.5 },
+  bar: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: "row",
+    gap: 10,
+    paddingTop: 12,
+    paddingHorizontal: 16,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+  },
   half: { flex: 1, height: 56 },
-  legend: { position: "absolute", left: 16, bottom: 40, borderRadius: 12, padding: 12, gap: 8 },
+  legend: { position: "absolute", left: 16, borderRadius: 14, padding: 12, gap: 8 },
   legendRow: { flexDirection: "row", alignItems: "center", gap: 10 },
   swatch: { width: 28, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   swatchDash: { width: 6, height: 6, borderRadius: 3 },
