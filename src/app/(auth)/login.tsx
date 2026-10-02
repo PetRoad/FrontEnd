@@ -1,7 +1,7 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Btn, Dots, Field, Num, Plate, T } from "@/components/common/ui";
+import { BigField, Logo, Num, PasswordField, Plate, T } from "@/components/common/ui";
 import { useTheme } from "@/hooks/useTheme";
 
 // ponytail: 인증 없이 화면 흐름만. services/auth 연결 시 교체
@@ -12,35 +12,41 @@ export default function LoginScreen() {
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: c.ground }}
-      contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
+      contentContainerStyle={[s.page, { paddingTop: insets.top + 72, paddingBottom: insets.bottom + 24 }]}
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets
     >
-      <View style={[s.hero, { backgroundColor: c.accentSoft, paddingTop: insets.top + 72 }]}>
-        <Num size={44} bold>
-          PetRoad
-        </Num>
-        <T v="title2">펫로드</T>
-        <T v="subhead" muted>
-          반려견과 걸은 길과 순간을 기록하고{"\n"}우리 동네의 좋은 산책길을 발견해요
-        </T>
-        <View style={s.steps}>
-          <Dots total={7} filled={4} size={10} />
+      <View style={s.form}>
+        <View style={s.brand}>
+          <View style={{ marginBottom: 8 }}>
+            <Logo size={72} />
+          </View>
+          <Num size={40} bold>
+            PetRoad
+          </Num>
+          <T v="subhead" muted>
+            반려견과 걷는 우리 동네 산책길
+          </T>
         </View>
+        <BigField placeholder="이메일" keyboardType="email-address" autoCapitalize="none" autoComplete="email" />
+        <PasswordField placeholder="비밀번호" autoComplete="password" />
       </View>
 
-      <View style={s.form}>
-        <Field label="이메일" placeholder="name@example.com" keyboardType="email-address" autoCapitalize="none" autoComplete="email" />
-        <Field label="비밀번호" placeholder="비밀번호" secureTextEntry autoComplete="password" />
-        <Plate title="로그인" onPress={() => router.push("/region")} style={{ marginTop: 8 }} />
-        <Btn tone="plain" title="처음이신가요? 회원가입" onPress={() => router.push("/signup")} />
+      <View style={s.actions}>
+        <Plate title="로그인" onPress={() => router.push("/region")} />
+        <Pressable accessibilityRole="link" onPress={() => router.push("/signup")} hitSlop={8}>
+          <T v="footnote" center>
+            회원가입
+          </T>
+        </Pressable>
       </View>
     </ScrollView>
   );
 }
 
 const s = StyleSheet.create({
-  hero: { paddingHorizontal: 24, paddingBottom: 32, gap: 6, borderBottomLeftRadius: 32, borderBottomRightRadius: 32 },
-  steps: { width: 132, marginTop: 24 },
-  form: { padding: 24, gap: 16 },
+  page: { flexGrow: 1, justifyContent: "space-between", paddingHorizontal: 24, gap: 48 },
+  brand: { alignItems: "center", gap: 6, marginBottom: 32 },
+  form: { gap: 12 },
+  actions: { gap: 20 },
 });
