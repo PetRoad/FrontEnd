@@ -1,4 +1,4 @@
-import { Children, type ReactNode } from "react";
+import { Children, useState, type ReactNode } from "react";
 import {
   Pressable,
   ScrollView,
@@ -12,6 +12,7 @@ import {
   type TextStyle,
   type ViewStyle,
 } from "react-native";
+import { Image } from "expo-image";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -41,6 +42,8 @@ export const I = {
   album: { ios: "photo.on.rectangle", android: "photo_library" },
   map: { ios: "map", android: "map" },
   pin: { ios: "mappin", android: "location_on" },
+  eye: { ios: "eye", android: "visibility" },
+  eyeSlash: { ios: "eye.slash", android: "visibility_off" },
 } satisfies Record<string, IconName>;
 
 export function Icon({ name, size = 22, color }: { name: IconName; size?: number; color?: ColorValue }) {
@@ -48,6 +51,20 @@ export function Icon({ name, size = 22, color }: { name: IconName; size?: number
   // 웹은 안드로이드와 같은 Material Symbols 이름을 쓴다
   const n = typeof name === "string" ? name : { ...name, web: name.web ?? name.android };
   return <SymbolView name={n} size={size} tintColor={color ?? c.ink} />;
+}
+
+// 서비스 로고(발바닥 + 발자국). 투명 PNG라 tintColor로 색을 바꾼다
+export function Logo({ size = 24, color }: { size?: number; color?: ColorValue }) {
+  const c = useTheme();
+  return (
+    <Image
+      source={require("@/assets/images/logo.png")}
+      tintColor={String(color ?? c.ink)}
+      contentFit="contain"
+      accessibilityLabel="펫로드 로고"
+      style={{ width: size, height: Math.round((size * 567) / 624) }}
+    />
+  );
 }
 
 /* 글자: iOS 텍스트 스타일 단계 */
@@ -192,6 +209,30 @@ export function Field({ label, style, ...props }: TextInputProps & { label?: str
         {...props}
         style={[TYPE.body, s.field, { backgroundColor: c.surface, borderColor: c.hairline, color: c.ink }, style]}
       />
+    </View>
+  );
+}
+
+// 로그인·회원가입의 큰 입력칸: 라벨 없이 플레이스홀더만
+export function BigField({ style, ...props }: TextInputProps) {
+  return <Field {...props} style={[s.bigField, style]} />;
+}
+
+export function PasswordField(props: TextInputProps) {
+  const c = useTheme();
+  const [hidden, setHidden] = useState(true);
+  return (
+    <View>
+      <BigField {...props} secureTextEntry={hidden} style={{ paddingRight: 52 }} />
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={hidden ? "비밀번호 보기" : "비밀번호 숨기기"}
+        onPress={() => setHidden(!hidden)}
+        hitSlop={8}
+        style={s.eye}
+      >
+        <Icon name={hidden ? I.eyeSlash : I.eye} size={20} color={c.inkMuted} />
+      </Pressable>
     </View>
   );
 }
@@ -430,6 +471,8 @@ const s = StyleSheet.create({
   plate: { height: 56, borderRadius: 28, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 20 },
   btn: { minHeight: 50, borderRadius: 25, borderWidth: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 16 },
   field: { minHeight: 50, borderRadius: 12, borderWidth: 1, paddingHorizontal: 14, paddingVertical: 12 },
+  bigField: { minHeight: 60, borderRadius: 16, paddingHorizontal: 18 },
+  eye: { position: "absolute", right: 18, top: 0, bottom: 0, justifyContent: "center" },
   segment: { flexDirection: "row", borderRadius: 12, padding: 2, height: 40 },
   segmentItem: { flex: 1, borderRadius: 8, alignItems: "center", justifyContent: "center" },
   chip: { height: 36, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, alignItems: "center", justifyContent: "center" },
