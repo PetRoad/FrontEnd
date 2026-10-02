@@ -5,7 +5,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
-import { I, Icon, MapPlate, Plate, T, shadow } from "@/components/common/ui";
+import { I, Icon, Logo, MapPlate, Plate, T, shadow } from "@/components/common/ui";
 import { CourseCard } from "@/components/course/CourseCard";
 import { recommend } from "@/features/course/recommend";
 import { useTheme } from "@/hooks/useTheme";
@@ -99,7 +99,7 @@ export default function WalkHomeScreen() {
       </View>
 
       <Animated.View style={[s.start, startStyle]}>
-        <Plate title="산책 시작하기" icon={I.walk} onPress={startWalk} style={shadow} />
+        <Plate title="산책 시작하기" icon={<Logo size={18} color={c.onAccent} />} onPress={startWalk} style={shadow} />
       </Animated.View>
 
       <Animated.View style={[s.sheet, { backgroundColor: c.accentSoft, height: Math.max(0, height - points.open) }, sheetStyle]}>

@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { I, Icon } from "@/components/common/ui";
+import { I, Icon, Logo } from "@/components/common/ui";
 import { useTheme } from "@/hooks/useTheme";
 
 export default function TabsLayout() {
@@ -16,7 +16,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: "산책", tabBarIcon: ({ color }) => <Icon name={I.walk} size={24} color={color} /> }}
+        options={{ title: "산책", tabBarIcon: ({ color }) => <Logo size={22} color={color} /> }}
       />
       <Tabs.Screen
         name="my"

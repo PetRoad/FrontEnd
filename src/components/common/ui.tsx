@@ -1,4 +1,4 @@
-import { Children, useState, type ReactNode } from "react";
+import { Children, isValidElement, useState, type ReactElement, type ReactNode } from "react";
 import {
   Pressable,
   ScrollView,
@@ -146,7 +146,7 @@ export function Stat({ value, unit, label, size = 34 }: { value: string; unit?: 
   );
 }
 
-type PressProps = { title: string; onPress?: () => void; icon?: IconName; disabled?: boolean; style?: StyleProp<ViewStyle> };
+type PressProps = { title: string; onPress?: () => void; icon?: IconName | ReactElement; disabled?: boolean; style?: StyleProp<ViewStyle> };
 
 // 햇살 노랑 주 버튼: 한 화면에 하나, 그 화면의 주 행동만
 export function Plate({ title, onPress, icon, disabled, style }: PressProps) {
@@ -159,7 +159,7 @@ export function Plate({ title, onPress, icon, disabled, style }: PressProps) {
       disabled={disabled}
       style={({ pressed }) => [s.plate, { backgroundColor: c.accent, opacity: disabled ? 0.4 : pressed ? 0.82 : 1 }, style]}
     >
-      {icon && <Icon name={icon} size={20} color={c.onAccent} />}
+      {isValidElement(icon) ? icon : icon && <Icon name={icon} size={20} color={c.onAccent} />}
       <Text style={[TYPE.headline, { color: c.onAccent }]}>{title}</Text>
     </Pressable>
   );
@@ -186,7 +186,7 @@ export function Btn({ title, onPress, icon, disabled, style, tone = "surface" }:
         style,
       ]}
     >
-      {icon && <Icon name={icon} size={18} color={look.fg} />}
+      {isValidElement(icon) ? icon : icon && <Icon name={icon} size={18} color={look.fg} />}
       <Text style={[TYPE.headline, { color: look.fg }]}>{title}</Text>
     </Pressable>
   );
