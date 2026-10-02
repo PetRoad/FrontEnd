@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
-import Animated, { FadeIn } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -329,27 +328,15 @@ export function MeMarker() {
   );
 }
 
-// 발걸음 점. 채워진 점은 햇살 노랑으로 차오른다 (산책에서는 한 점 = 100m)
-export function Dots({ total, filled = 0, size = 12 }: { total: number; filled?: number; size?: number }) {
-  const c = useTheme();
-  return (
-    <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 6 }}>
-      {Array.from({ length: total }, (_, i) => (
-        <View key={i} style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: c.hairline, overflow: "hidden" }}>
-          {i < filled && <Animated.View entering={FadeIn.duration(450)} style={[StyleSheet.absoluteFill, { backgroundColor: c.accent }]} />}
-        </View>
-      ))}
-    </View>
-  );
-}
-
-// 온보딩 단계
+// 온보딩 단계: 단계마다 한 칸씩 햇살 노랑으로 채워지는 가로 바 + "n/N"
 export function Steps({ step, total }: { step: number; total: number }) {
   const c = useTheme();
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }} accessibilityLabel={`${total}단계 중 ${step}단계`}>
-      <View style={{ width: 22 * total }}>
-        <Dots total={total} filled={step} size={10} />
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }} accessibilityLabel={`${total}단계 중 ${step}단계`}>
+      <View style={{ flex: 1, flexDirection: "row", gap: 6 }}>
+        {Array.from({ length: total }, (_, i) => (
+          <View key={i} style={[s.track, { backgroundColor: i < step ? c.accent : c.hairline }]} />
+        ))}
       </View>
       <Num size={15} color={c.inkMuted}>
         {step}/{total}
@@ -471,6 +458,7 @@ const s = StyleSheet.create({
   plate: { height: 56, borderRadius: 28, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 20 },
   btn: { minHeight: 50, borderRadius: 25, borderWidth: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 16 },
   field: { minHeight: 50, borderRadius: 12, borderWidth: 1, paddingHorizontal: 14, paddingVertical: 12 },
+  track: { flex: 1, height: 6, borderRadius: 3 },
   bigField: { minHeight: 60, borderRadius: 16, paddingHorizontal: 18 },
   eye: { position: "absolute", right: 18, top: 0, bottom: 0, justifyContent: "center" },
   segment: { flexDirection: "row", borderRadius: 12, padding: 2, height: 40 },
