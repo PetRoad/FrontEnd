@@ -1,6 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { router } from "expo-router";
-import { BottomBar, Btn, I, MapPlate, Page, Plate, Section, Stat, T } from "@/components/common/ui";
+import { MapPlate } from "@/components/common/MapPlate";
+import { BottomBar, Btn, I, Page, Plate, Section, Stat, T } from "@/components/common/ui";
 import { PhotoGrid } from "@/components/walk/PhotoGrid";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
@@ -50,7 +51,7 @@ export default function WalkResultScreen() {
       </View>
 
       <Section title="걸은 경로">
-        <MapPlate style={s.map} marker />
+        <MapPlate style={s.map} route={walk.route} />
       </Section>
 
       <Section title="산책 중 찍은 사진" hint={`${walk.photos.length}장`}>

@@ -1,3 +1,5 @@
+import type { LatLng } from "react-native-maps";
+
 export type Walk = {
   id: string;
   title: string;
@@ -7,4 +9,5 @@ export type Walk = {
   photos: string[];
   courseId?: string; // 따라 걷기한 코스
   completion?: number; // 완주율 %
+  route?: LatLng[]; // 걸은 길 (GPS 점)
 };

@@ -8,9 +8,11 @@
     "scheme": "frontendpetroad",
     "userInterfaceStyle": "light",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.petroad.app"
     },
     "android": {
+      "package": "com.petroad.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -34,7 +36,13 @@
         }
       ],
       "expo-secure-store",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "산책 경로를 기록하고 내 위치를 지도에 보여주려고 위치를 사용해요."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

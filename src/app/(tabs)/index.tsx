@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import type MapView from "react-native-maps";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
-import { I, Icon, Logo, MapPlate, Plate, T, shadow } from "@/components/common/ui";
+import { MapPlate } from "@/components/common/MapPlate";
+import { I, Icon, Logo, Plate, T, shadow } from "@/components/common/ui";
 import { CourseCard } from "@/components/course/CourseCard";
 import { recommend } from "@/features/course/recommend";
 import { useTheme } from "@/hooks/useTheme";
 import { useCourseStore } from "@/stores/courseStore";
 import { useUserStore } from "@/stores/userStore";
 import { useWalkStore } from "@/stores/walkStore";
+import { here } from "@/utils/location";
 
 const PEEK = 304; // 반쯤 열린 시트가 보이는 높이 (가로 코스 카드까지)
 const MIN = 84; // 닫힌 시트: 제목 줄만 남는다
@@ -25,10 +28,11 @@ export default function WalkHomeScreen() {
   const insets = useSafeAreaInsets();
   const region = useUserStore((s) => s.region);
   const courses = useCourseStore((s) => s.courses);
+  const map = useRef<MapView>(null);
   const { radius, list } = recommend(courses);
 
   const [height, setHeight] = useState(0);
-  const [state, setState] = useState<Snap>("peek");
+  const [state, setState] = useState<Snap>("closed");
   const open = state === "open";
   const points = { open: Math.round(height * (1 - OPEN_RATIO)), peek: height - PEEK, closed: height - MIN };
   const y = useSharedValue(10000);
@@ -65,6 +69,11 @@ export default function WalkHomeScreen() {
   // 산책 시작 버튼은 시트 바로 위를 따라다닌다
   const startStyle = useAnimatedStyle(() => ({ transform: [{ translateY: y.get() - 56 - 12 }] }));
 
+  const locate = async () => {
+    const p = await here();
+    if (p) map.current?.animateToRegion({ ...p, latitudeDelta: 0.008, longitudeDelta: 0.008 });
+  };
+
   const startWalk = () => {
     useWalkStore.getState().start(`${region.split(" ").pop() ?? ""} 산책`);
     router.push("/walk/active");
@@ -79,7 +88,7 @@ export default function WalkHomeScreen() {
         y.set(state === "open" ? Math.round(h * (1 - OPEN_RATIO)) : h - (state === "closed" ? MIN : PEEK));
       }}
     >
-      <MapPlate style={s.map} marker />
+      <MapPlate ref={map} style={s.map} marker />
 
       <View style={[s.topBar, { paddingTop: insets.top + 8 }]}>
         <View style={[s.regionPill, { backgroundColor: c.surface }, shadow]}>
@@ -88,10 +97,10 @@ export default function WalkHomeScreen() {
             {region || "현재 위치"}
           </T>
         </View>
-        {/* ponytail: 위치 재설정은 react-native-maps 연결 시 animateToRegion으로 */}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="내 위치로 이동"
+          onPress={locate}
           style={({ pressed }) => [s.locate, { backgroundColor: c.surface, opacity: pressed ? 0.7 : 1 }, shadow]}
         >
           <Icon name={I.locate} size={20} color={c.ink} />
