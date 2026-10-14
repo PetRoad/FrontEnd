@@ -50,7 +50,7 @@ MVP 성공 기준 5가지:
 - 후기 기능은 전체 삭제(작성·목록·좋아요·권한 없음).
 - 기술: React Native + Expo SDK 57 + TypeScript, Expo Router, Zustand, TanStack Query. 지도 react-native-maps, GPS expo-location, 화면 켜짐 expo-keep-awake, 사진 expo-camera / expo-image-picker.
 - MVP는 포그라운드 위치 기록만(백그라운드 GPS 없음). 개발·테스트는 Windows → iPhone Expo Go.
-- 현재 구현은 흐름 확인용 흑백 스케치. 지도·GPS·카메라는 플레이스홀더/가짜 값.
+- 현재 구현은 흐름 확인용 흑백 스케치. 지도·GPS는 실제 연결(iOS), 카메라는 플레이스홀더.
 
 ## Brand Commitments
 
