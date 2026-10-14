@@ -32,7 +32,7 @@ export default function WalkHomeScreen() {
   const { radius, list } = recommend(courses);
 
   const [height, setHeight] = useState(0);
-  const [state, setState] = useState<Snap>("peek");
+  const [state, setState] = useState<Snap>("closed");
   const open = state === "open";
   const points = { open: Math.round(height * (1 - OPEN_RATIO)), peek: height - PEEK, closed: height - MIN };
   const y = useSharedValue(10000);
