@@ -1,6 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { Empty, I, MapPlate, Num, Page, Section, Stat, T } from "@/components/common/ui";
+import { MapPlate } from "@/components/common/MapPlate";
+import { Empty, I, Num, Page, Section, Stat, T } from "@/components/common/ui";
 import { PhotoGrid } from "@/components/walk/PhotoGrid";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
@@ -30,7 +31,7 @@ export default function WalkDetailScreen() {
         </T>
       </View>
 
-      <MapPlate style={s.map} marker />
+      <MapPlate style={s.map} route={walk.route} />
 
       <View style={[s.band, { backgroundColor: c.accentSoft }]}>
         <Stat value={walk.distanceKm.toFixed(1)} unit="KM" label="거리" size={40} />

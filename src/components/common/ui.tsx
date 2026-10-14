@@ -289,45 +289,6 @@ export function PhotoTile({ label, icon = I.photo, selected, style }: { label?: 
   );
 }
 
-// 지도 자리. react-native-maps 연결 전까지 동네 블록과 물길로 지도 톤만 낸다
-const ROADS_V = ["16%", "49%", "82%"] as const;
-const ROADS_H = ["24%", "61%", "88%"] as const;
-
-export function MapPlate({ style, marker, children }: { style?: StyleProp<ViewStyle>; marker?: boolean; children?: ReactNode }) {
-  const c = useTheme();
-  return (
-    <View style={[{ backgroundColor: c.mapTone, overflow: "hidden" }, style]}>
-      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-        <View style={[s.stream, { backgroundColor: c.water }]} />
-        {ROADS_V.map((left) => (
-          <View key={left} style={[s.roadV, { left, backgroundColor: c.mapRoad }]} />
-        ))}
-        {ROADS_H.map((top) => (
-          <View key={top} style={[s.roadH, { top, backgroundColor: c.mapRoad }]} />
-        ))}
-      </View>
-      {/* 위쪽은 화면마다 떠 있는 버튼이 덮으므로, 안내 문구는 마커 바로 아래에 둔다 */}
-      <View pointerEvents="none" style={[StyleSheet.absoluteFill, s.center]}>
-        {marker && <MeMarker />}
-        <T v="caption" muted>
-          지도 연결 예정
-        </T>
-      </View>
-      {children}
-    </View>
-  );
-}
-
-export function MeMarker() {
-  const c = useTheme();
-  return (
-    <View accessibilityLabel="내 위치" style={s.halo}>
-      <View style={[StyleSheet.absoluteFill, { borderRadius: 24, backgroundColor: c.accent, opacity: 0.35 }]} />
-      <View style={[s.dot, { backgroundColor: c.accent, borderColor: c.surface }, shadow]} />
-    </View>
-  );
-}
-
 // 온보딩 단계: 단계마다 한 칸씩 햇살 노랑으로 채워지는 가로 바 + "n/N"
 export function Steps({ step, total }: { step: number; total: number }) {
   const c = useTheme();
@@ -465,12 +426,6 @@ const s = StyleSheet.create({
   segmentItem: { flex: 1, borderRadius: 8, alignItems: "center", justifyContent: "center" },
   chip: { height: 36, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, alignItems: "center", justifyContent: "center" },
   tile: { borderRadius: 14, alignItems: "center", justifyContent: "center", gap: 4, overflow: "hidden", padding: 6 },
-  stream: { position: "absolute", left: "-20%", right: "-20%", top: "38%", height: 46, transform: [{ rotate: "-14deg" }] },
-  roadV: { position: "absolute", top: 0, bottom: 0, width: 9 },
-  roadH: { position: "absolute", left: 0, right: 0, height: 9 },
-  center: { alignItems: "center", justifyContent: "center", gap: 2 },
-  halo: { width: 48, height: 48, borderRadius: 24, alignItems: "center", justifyContent: "center" },
-  dot: { width: 20, height: 20, borderRadius: 10, borderWidth: 3 },
   page: { padding: 16, gap: 24, paddingBottom: 48 },
   group: { borderRadius: 16, overflow: "hidden", borderWidth: 1 },
   sep: { height: StyleSheet.hairlineWidth, marginLeft: 16 },

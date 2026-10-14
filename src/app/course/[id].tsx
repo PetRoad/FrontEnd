@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { BottomBar, Chip, Empty, Group, I, Icon, MapPlate, Num, Page, PhotoTile, Plate, Row, Section, T } from "@/components/common/ui";
+import { MapPlate } from "@/components/common/MapPlate";
+import { BottomBar, Chip, Empty, Group, I, Icon, Num, Page, PhotoTile, Plate, Row, Section, T } from "@/components/common/ui";
 import { DifficultyMark } from "@/components/course/CourseCard";
 import { useTheme } from "@/hooks/useTheme";
 import { useCourseStore } from "@/stores/courseStore";
