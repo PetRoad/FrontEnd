@@ -49,5 +49,5 @@ example
 .impeccable/*
 !.impeccable/design.json
 !.impeccable/surfaces/
-# impeccable 실행 바이너리는 첫 실행 때 자동으로 받는다 (OS별, 17MB)
-.claude/skills/impeccable/scripts/bin/
+# 로컬 Claude 스킬 (impeccable 등). 각자 설치하며, 커밋하면 GitHub 언어 통계가 JS로 잡힌다
+.claude/skills/
