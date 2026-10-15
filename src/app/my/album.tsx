@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
-import { Btn, Empty, I, Num, Page, PhotoTile, T, shadow } from "@/components/common/ui";
+import { Btn, Empty, I, Num, Page, PhotoTile, T } from "@/components/common/ui";
+import { grid } from "@/components/walk/PhotoGrid";
+import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
 import type { Walk } from "@/types/walk";
@@ -34,28 +36,28 @@ export default function AlbumScreen() {
   return (
     <Page>
       {sel && (
-        <View style={[s.panel, { backgroundColor: c.surface }, shadow]}>
+        <View style={[s.panel, { backgroundColor: c.surface, borderColor: c.borderSubtle }]}>
           <PhotoTile label={sel.photo} style={s.big} />
-          <View style={{ padding: 16, gap: 4 }}>
-            <Num size={22} bold>
+          <View style={s.info}>
+            <Num size={20} bold>
               {dotDate(sel.walk.date)}
             </Num>
-            <T v="headline">{sel.walk.title}</T>
-            <T v="subhead" muted>
+            <T w="semibold">{sel.walk.title}</T>
+            <T v="bodySmall" muted>
               {km(sel.walk.distanceKm)} · {minutes(sel.walk.durationSec)}
             </T>
             <Btn
               title="산책일지 보기"
               onPress={() => router.push({ pathname: "/my/walk/[id]", params: { id: sel.walk.id } })}
-              style={{ marginTop: 10 }}
+              style={{ marginTop: space.md }}
             />
           </View>
         </View>
       )}
       {[...months].map(([month, items]) => (
-        <View key={month} style={{ gap: 10 }}>
-          <T v="title3">{month}</T>
-          <View style={s.grid}>
+        <View key={month} style={{ gap: space.md }}>
+          <T v="bodyMain">{month}</T>
+          <View style={grid.wrap}>
             {items.map((it) => (
               <Pressable
                 key={it.walk.id + it.photo}
@@ -63,9 +65,9 @@ export default function AlbumScreen() {
                 accessibilityLabel={`${dotDate(it.walk.date)} ${it.walk.title} ${it.photo}`}
                 accessibilityState={{ selected: isSel(it) }}
                 onPress={() => setSel(it)}
-                style={s.cell}
+                style={grid.cell}
               >
-                <PhotoTile label={it.photo} selected={isSel(it)} style={s.square} />
+                <PhotoTile label={it.photo} selected={isSel(it)} style={grid.square} />
               </Pressable>
             ))}
           </View>
@@ -76,9 +78,7 @@ export default function AlbumScreen() {
 }
 
 const s = StyleSheet.create({
-  panel: { borderRadius: 16, overflow: "hidden" },
-  big: { height: 240, borderRadius: 0 },
-  grid: { flexDirection: "row", flexWrap: "wrap", gap: 4 },
-  cell: { width: "32.2%" },
-  square: { aspectRatio: 1, borderRadius: 6 },
+  panel: { borderRadius: radius.card, borderWidth: 1, padding: space.xs },
+  big: { height: 240, borderRadius: radius.image },
+  info: { paddingHorizontal: space.md, paddingTop: space.md, paddingBottom: space.md, gap: space.xs },
 });

@@ -1,8 +1,9 @@
 import { StyleSheet, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { MapPlate } from "@/components/common/MapPlate";
-import { Empty, I, Num, Page, Section, Stat, T } from "@/components/common/ui";
+import { Empty, I, Page, Section, Stat, T } from "@/components/common/ui";
 import { PhotoGrid } from "@/components/walk/PhotoGrid";
+import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
 import { dotDate } from "@/utils/format";
@@ -22,21 +23,19 @@ export default function WalkDetailScreen() {
 
   return (
     <Page>
-      <View style={{ gap: 4 }}>
-        <Num size={34} bold>
-          {dotDate(walk.date)}
-        </Num>
-        <T v="subhead" muted>
+      <View style={{ gap: space.xs }}>
+        <T v="titleLG">{dotDate(walk.date)}</T>
+        <T v="bodySmall" muted>
           {walk.title}
         </T>
       </View>
 
       <MapPlate style={s.map} route={walk.route} />
 
-      <View style={[s.band, { backgroundColor: c.accentSoft }]}>
-        <Stat value={walk.distanceKm.toFixed(1)} unit="KM" label="거리" size={40} />
-        <Stat value={String(Math.round(walk.durationSec / 60))} unit="분" label="시간" size={40} />
-        {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={40} />}
+      <View style={[s.band, { backgroundColor: c.primarySoft }]}>
+        <Stat value={walk.distanceKm.toFixed(1)} unit="km" label="거리" size={32} />
+        <Stat value={String(Math.round(walk.durationSec / 60))} unit="분" label="산책 시간" size={32} />
+        {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={32} />}
       </View>
 
       <Section title="이 산책에서 찍은 사진" hint={`${walk.photos.length}장`}>
@@ -47,6 +46,6 @@ export default function WalkDetailScreen() {
 }
 
 const s = StyleSheet.create({
-  map: { height: 220, borderRadius: 16 },
-  band: { borderRadius: 20, padding: 20, flexDirection: "row", flexWrap: "wrap", gap: 32 },
+  map: { height: 220, borderRadius: radius.card },
+  band: { borderRadius: radius.card, padding: space.xl, flexDirection: "row", flexWrap: "wrap", gap: space.xxxl },
 });
