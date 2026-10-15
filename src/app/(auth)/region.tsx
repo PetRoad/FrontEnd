@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import { router } from "expo-router";
 import { MapPlate } from "@/components/common/MapPlate";
 import { Btn, Field, I, Page, Plate, Steps, T } from "@/components/common/ui";
+import { radius, space } from "@/constants/theme";
 import { useUserStore } from "@/stores/userStore";
 import { here } from "@/utils/location";
 
@@ -27,14 +28,14 @@ export default function RegionScreen() {
   return (
     <Page>
       <Steps step={1} total={2} />
-      <View style={{ gap: 6 }}>
-        <T v="title1">우리 동네를 알려주세요</T>
-        <T v="subhead" muted>
+      <View style={{ gap: space.sm }}>
+        <T v="titleLG">우리 동네를 알려주세요</T>
+        <T muted>
           추천 코스는 이 동네 기준으로 보여드려요.
         </T>
       </View>
       <MapPlate style={s.map} marker />
-      <View style={{ gap: 16 }}>
+      <View style={{ gap: space.lg }}>
         <Btn title="현재 위치로 설정" icon={I.locate} onPress={locate} />
         <Field label="동네" value={region} onChangeText={setRegion} placeholder="서울시 성북구" />
       </View>
@@ -44,5 +45,5 @@ export default function RegionScreen() {
 }
 
 const s = StyleSheet.create({
-  map: { height: 200, borderRadius: 16 },
+  map: { height: 200, borderRadius: radius.card },
 });
