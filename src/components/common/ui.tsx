@@ -1,5 +1,7 @@
 import { Children, isValidElement, useState, type ReactElement, type ReactNode } from "react";
 import {
+  ActivityIndicator,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -10,26 +12,24 @@ import {
   type StyleProp,
   type TextInputProps,
   type TextStyle,
+  type ViewProps,
   type ViewStyle,
 } from "react-native";
+import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { font, glass, gutter, radius, shadow, space, typography, type Weight } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
-
-export const NUM_FONT = "Nunito_700Bold";
-export const NUM_FONT_BOLD = "Nunito_800ExtraBold";
-
-// 검정 그림자 대신 따뜻한 갈색 기운의 옅은 그림자
-export const shadow = { boxShadow: "0 4px 16px rgba(120, 96, 52, 0.10)" };
 
 type IconName = SymbolViewProps["name"];
 
+// 아웃라인이 기본. 채운 모양은 상태(좋아요 켜짐, 선택됨)와 정지 기호에만
 export const I = {
   walk: { ios: "figure.walk", android: "directions_walk" },
   person: { ios: "person.crop.circle", android: "account_circle" },
-  locate: { ios: "location.fill", android: "my_location" },
-  camera: { ios: "camera.fill", android: "photo_camera" },
+  locate: { ios: "location", android: "my_location" },
+  camera: { ios: "camera", android: "photo_camera" },
   stop: { ios: "stop.fill", android: "stop" },
   heart: { ios: "heart", android: "favorite" },
   heartFill: { ios: "heart.fill", android: "favorite" },
@@ -41,6 +41,7 @@ export const I = {
   album: { ios: "photo.on.rectangle", android: "photo_library" },
   map: { ios: "map", android: "map" },
   pin: { ios: "mappin", android: "location_on" },
+  paw: { ios: "pawprint", android: "pets" },
   eye: { ios: "eye", android: "visibility" },
   eyeSlash: { ios: "eye.slash", android: "visibility_off" },
 } satisfies Record<string, IconName>;
@@ -49,7 +50,7 @@ export function Icon({ name, size = 22, color }: { name: IconName; size?: number
   const c = useTheme();
   // 웹은 안드로이드와 같은 Material Symbols 이름을 쓴다
   const n = typeof name === "string" ? name : { ...name, web: name.web ?? name.android };
-  return <SymbolView name={n} size={size} tintColor={color ?? c.ink} />;
+  return <SymbolView name={n} size={size} tintColor={color ?? c.textPrimary} />;
 }
 
 // 서비스 로고(발바닥 + 발자국). 투명 PNG라 tintColor로 색을 바꾼다
@@ -58,7 +59,7 @@ export function Logo({ size = 24, color }: { size?: number; color?: ColorValue }
   return (
     <Image
       source={require("@/assets/images/logo.png")}
-      tintColor={String(color ?? c.ink)}
+      tintColor={String(color ?? c.textPrimary)}
       contentFit="contain"
       accessibilityLabel="펫로드 로고"
       style={{ width: size, height: Math.round((size * 567) / 624) }}
@@ -66,21 +67,9 @@ export function Logo({ size = 24, color }: { size?: number; color?: ColorValue }
   );
 }
 
-/* 글자: iOS 텍스트 스타일 단계 */
-const TYPE = {
-  largeTitle: { fontSize: 34, lineHeight: 41, fontWeight: "700" },
-  title1: { fontSize: 28, lineHeight: 34, fontWeight: "700" },
-  title2: { fontSize: 22, lineHeight: 28, fontWeight: "700" },
-  title3: { fontSize: 20, lineHeight: 25, fontWeight: "600" },
-  headline: { fontSize: 17, lineHeight: 22, fontWeight: "600" },
-  body: { fontSize: 17, lineHeight: 22 },
-  subhead: { fontSize: 15, lineHeight: 20 },
-  footnote: { fontSize: 13, lineHeight: 18 },
-  caption: { fontSize: 12, lineHeight: 16 },
-} satisfies Record<string, TextStyle>;
-
 type TProps = {
-  v?: keyof typeof TYPE;
+  v?: keyof typeof typography;
+  w?: Weight; // 단계 기본 굵기를 바꿀 때만 (예: Caption Medium)
   muted?: boolean;
   color?: string;
   center?: boolean;
@@ -89,29 +78,36 @@ type TProps = {
   children: ReactNode;
 };
 
-export function T({ v = "body", muted, color, center, numberOfLines, style, children }: TProps) {
+export function T({ v = "body", w, muted, color, center, numberOfLines, style, children }: TProps) {
   const c = useTheme();
   return (
     <Text
       numberOfLines={numberOfLines}
-      style={[TYPE[v], { color: color ?? (muted ? c.inkMuted : c.ink) }, center && { textAlign: "center" }, style]}
+      style={[
+        typography[v],
+        w && { fontFamily: font[w] },
+        { color: color ?? (muted ? c.textSecondary : c.textPrimary) },
+        center && { textAlign: "center" },
+        style,
+      ]}
     >
       {children}
     </Text>
   );
 }
 
-// 수치는 둥근 Nunito + 고정폭 숫자: 걷는 중에도 자리가 흔들리지 않는다
-export function Num({ size = 17, bold, color, style, children }: { size?: number; bold?: boolean; color?: string; style?: StyleProp<TextStyle>; children: ReactNode }) {
+// 수치는 고정폭 숫자: 걷는 중 값이 바뀌어도 자리가 흔들리지 않는다
+export function Num({ size = 16, bold, color, style, children }: { size?: number; bold?: boolean; color?: string; style?: StyleProp<TextStyle>; children: ReactNode }) {
   const c = useTheme();
   return (
     <Text
       style={[
         {
-          fontFamily: bold ? NUM_FONT_BOLD : NUM_FONT,
+          fontFamily: bold ? font.bold : font.semibold,
           fontSize: size,
-          lineHeight: Math.round(size * 1.2),
-          color: color ?? c.ink,
+          lineHeight: Math.round(size * 1.25),
+          letterSpacing: size >= 28 ? size * -0.02 : 0,
+          color: color ?? c.textPrimary,
           fontVariant: ["tabular-nums"],
         },
         style,
@@ -123,97 +119,111 @@ export function Num({ size = 17, bold, color, style, children }: { size?: number
 }
 
 // 숫자 아래에는 항상 라벨
-export function Stat({ value, unit, label, size = 34 }: { value: string; unit?: string; label: string; size?: number }) {
+export function Stat({ value, unit, label, size = 32 }: { value: string; unit?: string; label: string; size?: number }) {
   const c = useTheme();
-  const fg = c.ink;
-  const sub = c.inkMuted;
   return (
     <View style={{ gap: 2 }}>
-      <View style={{ flexDirection: "row", alignItems: "baseline", gap: 4 }}>
-        <Num size={size} bold color={fg}>
+      <View style={{ flexDirection: "row", alignItems: "baseline", gap: 3 }}>
+        <Num size={size} bold>
           {value}
         </Num>
         {unit && (
-          <Num size={Math.round(size * 0.42)} color={sub}>
+          <Num size={Math.max(12, Math.round(size * 0.45))} color={c.textSecondary}>
             {unit}
           </Num>
         )}
       </View>
-      <T v="footnote" color={sub}>
+      <T v="bodySmall" muted>
         {label}
       </T>
     </View>
   );
 }
 
-type PressProps = { title: string; onPress?: () => void; icon?: IconName | ReactElement; disabled?: boolean; style?: StyleProp<ViewStyle> };
+type PressProps = {
+  title: string;
+  onPress?: () => void;
+  icon?: IconName | ReactElement;
+  disabled?: boolean;
+  loading?: boolean;
+  style?: StyleProp<ViewStyle>;
+};
+type Tone = "primary" | "secondary" | "plain";
 
-// 햇살 노랑 주 버튼: 한 화면에 하나, 그 화면의 주 행동만
-export function Plate({ title, onPress, icon, disabled, style }: PressProps) {
-  const c = useTheme();
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ disabled }}
-      onPress={onPress}
-      disabled={disabled}
-      style={({ pressed }) => [s.plate, { backgroundColor: c.accent, opacity: disabled ? 0.4 : pressed ? 0.82 : 1 }, style]}
-    >
-      {isValidElement(icon) ? icon : icon && <Icon name={icon} size={20} color={c.onAccent} />}
-      <Text style={[TYPE.headline, { color: c.onAccent }]}>{title}</Text>
-    </Pressable>
-  );
-}
-
-type Tone = "surface" | "soft" | "plain";
-
-export function Btn({ title, onPress, icon, disabled, style, tone = "surface" }: PressProps & { tone?: Tone }) {
+// primary: 화면당 하나뿐인 주 행동 / secondary: 보조 행동 / plain: 가장 약한 행동(버리기, 전환)
+export function Btn({ title, onPress, icon, disabled, loading, style, tone = "secondary" }: PressProps & { tone?: Tone }) {
   const c = useTheme();
   const look = {
-    surface: { bg: c.surface, fg: c.ink, line: c.hairline },
-    soft: { bg: c.accentSoft, fg: c.ink, line: c.accentSoft },
-    plain: { bg: "transparent", fg: c.inkMuted, line: "transparent" },
+    primary: { bg: c.primary, fg: c.onPrimary, h: 56, text: typography.bodyMain },
+    secondary: { bg: c.surfaceMuted, fg: c.textPrimary, h: 52, text: typography.bodyMain },
+    plain: { bg: "transparent", fg: c.textSecondary, h: 44, text: [typography.body, { fontFamily: font.medium }] },
   }[tone];
+  const bg = disabled && tone !== "plain" ? c.surfaceMuted : look.bg;
+  const fg = disabled ? c.textTertiary : look.fg;
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityState={{ disabled }}
+      accessibilityState={{ disabled: disabled || loading, busy: loading }}
       onPress={onPress}
-      disabled={disabled}
-      style={({ pressed }) => [
-        s.btn,
-        { backgroundColor: look.bg, borderColor: look.line, opacity: disabled ? 0.4 : pressed ? 0.7 : 1 },
-        style,
-      ]}
+      disabled={disabled || loading}
+      style={({ pressed }) => [s.btn, { minHeight: look.h, backgroundColor: bg, opacity: pressed ? 0.8 : 1 }, style]}
     >
-      {isValidElement(icon) ? icon : icon && <Icon name={icon} size={18} color={look.fg} />}
-      <Text style={[TYPE.headline, { color: look.fg }]}>{title}</Text>
+      {loading ? <ActivityIndicator color={fg} /> : isValidElement(icon) ? icon : icon && <Icon name={icon} size={20} color={fg} />}
+      <Text style={[look.text, { color: fg }]}>{title}</Text>
     </Pressable>
   );
 }
 
-export function Field({ label, style, ...props }: TextInputProps & { label?: string }) {
+// Chew Yellow 주 버튼
+export function Plate(props: PressProps) {
+  return <Btn {...props} tone="primary" />;
+}
+
+export function Field({ label, error, style, onFocus, onBlur, ...props }: TextInputProps & { label?: string; error?: string }) {
   const c = useTheme();
+  const [focused, setFocused] = useState(false);
   return (
-    <View style={{ gap: 6 }}>
+    <View style={{ gap: space.sm }}>
       {label && (
-        <T v="footnote" muted>
+        <T v="bodySmall" w="medium" muted>
           {label}
         </T>
       )}
       <TextInput
-        placeholderTextColor={c.inkMuted}
-        selectionColor={c.tint}
-        cursorColor={c.tint}
+        accessibilityLabel={label}
+        placeholderTextColor={c.textSecondary}
+        selectionColor={c.textPrimary}
+        cursorColor={c.textPrimary}
         {...props}
-        style={[TYPE.body, s.field, { backgroundColor: c.surface, borderColor: c.hairline, color: c.ink }, style]}
+        onFocus={(e) => {
+          setFocused(true);
+          onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocused(false);
+          onBlur?.(e);
+        }}
+        style={[
+          s.field,
+          {
+            color: c.textPrimary,
+            backgroundColor: focused ? c.surface : c.surfaceMuted,
+            borderColor: error ? c.error : focused ? c.textPrimary : "transparent",
+          },
+          style,
+        ]}
       />
+      {error && (
+        <T v="caption" color={c.error}>
+          {error}
+        </T>
+      )}
     </View>
   );
 }
 
 // 로그인·회원가입의 큰 입력칸: 라벨 없이 플레이스홀더만
-export function BigField({ style, ...props }: TextInputProps) {
+export function BigField({ style, ...props }: TextInputProps & { error?: string }) {
   return <Field {...props} style={[s.bigField, style]} />;
 }
 
@@ -227,10 +237,9 @@ export function PasswordField(props: TextInputProps) {
         accessibilityRole="button"
         accessibilityLabel={hidden ? "비밀번호 보기" : "비밀번호 숨기기"}
         onPress={() => setHidden(!hidden)}
-        hitSlop={8}
         style={s.eye}
       >
-        <Icon name={hidden ? I.eyeSlash : I.eye} size={20} color={c.inkMuted} />
+        <Icon name={hidden ? I.eyeSlash : I.eye} size={20} color={c.textSecondary} />
       </Pressable>
     </View>
   );
@@ -239,7 +248,7 @@ export function PasswordField(props: TextInputProps) {
 export function Segmented<V extends string>({ options, value, onChange }: { options: readonly V[]; value: V; onChange: (v: V) => void }) {
   const c = useTheme();
   return (
-    <View accessibilityRole="radiogroup" style={[s.segment, { backgroundColor: c.fill }]}>
+    <View accessibilityRole="radiogroup" style={[s.segment, { backgroundColor: c.surfaceMuted }]}>
       {options.map((o) => {
         const on = o === value;
         return (
@@ -248,9 +257,11 @@ export function Segmented<V extends string>({ options, value, onChange }: { opti
             accessibilityRole="radio"
             accessibilityState={{ selected: on }}
             onPress={() => onChange(o)}
-            style={[s.segmentItem, on && [{ backgroundColor: c.surface }, shadow]]}
+            style={[s.segmentItem, on && [{ backgroundColor: c.surface }, shadow.subtle]]}
           >
-            <Text style={[TYPE.subhead, { color: c.ink, fontWeight: on ? "600" : "400" }]}>{o}</Text>
+            <T v="bodySmall" w={on ? "semibold" : "medium"} muted={!on}>
+              {o}
+            </T>
           </Pressable>
         );
       })}
@@ -258,19 +269,33 @@ export function Segmented<V extends string>({ options, value, onChange }: { opti
   );
 }
 
-export function Chip({ label, on, onPress }: { label: string; on?: boolean; onPress?: () => void }) {
+// 고를 수 있는 칩. 선택되면 Chew Yellow
+export function Chip({ label, on, onPress }: { label: string; on?: boolean; onPress: () => void }) {
   const c = useTheme();
   return (
     <Pressable
-      disabled={!onPress}
-      accessibilityRole={onPress ? "button" : "text"}
+      accessibilityRole="button"
       accessibilityState={{ selected: !!on }}
       onPress={onPress}
       hitSlop={4}
-      style={[s.chip, on ? { backgroundColor: c.accent, borderColor: c.accent } : { backgroundColor: c.surface, borderColor: c.hairline }]}
+      style={({ pressed }) => [s.chip, { backgroundColor: on ? c.primary : c.surfaceMuted, opacity: pressed ? 0.8 : 1 }]}
     >
-      <Text style={[TYPE.subhead, { color: on ? c.onAccent : c.ink, fontWeight: on ? "600" : "400" }]}>{label}</Text>
+      <T v="bodySmall" w={on ? "semibold" : "medium"} color={on ? c.onPrimary : c.textPrimary}>
+        {label}
+      </T>
     </Pressable>
+  );
+}
+
+// 읽기 전용 태그. 중요한 태그(난이도)만 soft = Cream Beige
+export function Tag({ label, soft }: { label: string; soft?: boolean }) {
+  const c = useTheme();
+  return (
+    <View style={[s.tag, { backgroundColor: soft ? c.primarySoft : c.surfaceMuted }]}>
+      <T v="caption" w="medium">
+        {label}
+      </T>
+    </View>
   );
 }
 
@@ -278,8 +303,8 @@ export function Chip({ label, on, onPress }: { label: string; on?: boolean; onPr
 export function PhotoTile({ label, icon = I.photo, selected, style }: { label?: string; icon?: IconName; selected?: boolean; style?: StyleProp<ViewStyle> }) {
   const c = useTheme();
   return (
-    <View style={[s.tile, { backgroundColor: c.tile }, selected && { borderWidth: 3, borderColor: c.accent }, style]}>
-      <Icon name={icon} size={22} color={c.inkMuted} />
+    <View style={[s.tile, { backgroundColor: c.surfaceMuted }, selected && { borderWidth: 3, borderColor: c.primary }, style]}>
+      <Icon name={icon} size={22} color={c.textTertiary} />
       {label ? (
         <T v="caption" muted numberOfLines={1}>
           {label}
@@ -289,20 +314,58 @@ export function PhotoTile({ label, icon = I.photo, selected, style }: { label?: 
   );
 }
 
-// 온보딩 단계: 단계마다 한 칸씩 햇살 노랑으로 채워지는 가로 바 + "n/N"
+// 온보딩 단계: 단계마다 한 칸씩 Chew Yellow로 채워지는 가로 바 + "n/N"
 export function Steps({ step, total }: { step: number; total: number }) {
   const c = useTheme();
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }} accessibilityLabel={`${total}단계 중 ${step}단계`}>
+    <View style={{ flexDirection: "row", alignItems: "center", gap: space.md }} accessibilityLabel={`${total}단계 중 ${step}단계`}>
       <View style={{ flex: 1, flexDirection: "row", gap: 6 }}>
         {Array.from({ length: total }, (_, i) => (
-          <View key={i} style={[s.track, { backgroundColor: i < step ? c.accent : c.hairline }]} />
+          <View key={i} style={[s.track, { backgroundColor: i < step ? c.primary : c.borderSubtle }]} />
         ))}
       </View>
-      <Num size={15} color={c.inkMuted}>
+      <Num size={14} color={c.textSecondary}>
         {step}/{total}
       </Num>
     </View>
+  );
+}
+
+// 지도 위 오버레이 전용 유리 면. iOS만 실제 블러, 나머지는 더 불투명한 흰 면으로 대신한다
+export function Glass({ r = radius.card, style, children, ...rest }: ViewProps & { r?: number }) {
+  const blur = Platform.OS === "ios";
+  return (
+    <View
+      {...rest}
+      style={[{ borderRadius: r, borderWidth: 1, borderColor: glass.border, backgroundColor: blur ? glass.bg : glass.bgSolid }, shadow.float, style]}
+    >
+      {blur && <BlurView intensity={glass.blur} tint="light" style={[StyleSheet.absoluteFill, { borderRadius: r, overflow: "hidden" }]} />}
+      {children}
+    </View>
+  );
+}
+
+// 지도 위 원형 버튼. 블러가 깨지지 않도록 눌림은 투명도 대신 크기로 보여준다
+export function FloatButton({ icon, label, onPress, size = 48, badge }: { icon: IconName; label: string; onPress: () => void; size?: number; badge?: number }) {
+  const c = useTheme();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={({ pressed }) => ({ transform: [{ scale: pressed ? 0.94 : 1 }] })}
+    >
+      <Glass r={size / 2} style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
+        <Icon name={icon} size={Math.round(size * 0.42)} />
+      </Glass>
+      {!!badge && (
+        <View style={[s.badge, { backgroundColor: c.primary, borderColor: c.surface }]}>
+          <Num size={12} bold color={c.onPrimary}>
+            {badge}
+          </Num>
+        </View>
+      )}
+    </Pressable>
   );
 }
 
@@ -310,7 +373,7 @@ export function Page({ children, contentStyle }: { children: ReactNode; contentS
   const c = useTheme();
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: c.ground }}
+      style={{ flex: 1, backgroundColor: c.background }}
       contentContainerStyle={[s.page, contentStyle]}
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets
@@ -323,11 +386,11 @@ export function Page({ children, contentStyle }: { children: ReactNode; contentS
 
 export function Section({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
   return (
-    <View style={{ gap: 10 }}>
+    <View style={{ gap: space.md }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "baseline" }}>
-        <T v="headline">{title}</T>
+        <T v="bodyMain">{title}</T>
         {hint && (
-          <T v="footnote" muted>
+          <T v="bodySmall" muted>
             {hint}
           </T>
         )}
@@ -337,20 +400,20 @@ export function Section({ title, hint, children }: { title: string; hint?: strin
   );
 }
 
-// iOS 인셋 그룹 목록
+// 묶음 목록: 흰 면 + 실선, 그림자 없음
 export function Group({ header, children }: { header?: string; children: ReactNode }) {
   const c = useTheme();
   return (
-    <View style={{ gap: 8 }}>
+    <View style={{ gap: space.sm }}>
       {header && (
-        <T v="footnote" muted style={{ paddingHorizontal: 16 }}>
+        <T v="bodySmall" w="medium" muted style={{ paddingHorizontal: space.xs }}>
           {header}
         </T>
       )}
-      <View style={[s.group, { backgroundColor: c.surface, borderColor: c.hairline }]}>
+      <View style={[s.group, { backgroundColor: c.surface, borderColor: c.borderSubtle }]}>
         {Children.toArray(children).map((child, i) => (
           <View key={i}>
-            {i > 0 && <View style={[s.sep, { backgroundColor: c.hairline }]} />}
+            {i > 0 && <View style={[s.sep, { backgroundColor: c.borderSubtle }]} />}
             {child}
           </View>
         ))}
@@ -368,25 +431,25 @@ export function Row({ title, sub, icon, left, detail, onPress }: RowProps) {
       disabled={!onPress}
       accessibilityRole={onPress ? "button" : undefined}
       onPress={onPress}
-      style={({ pressed }) => [s.row, pressed && { backgroundColor: c.fill }]}
+      style={({ pressed }) => [s.row, pressed && { backgroundColor: c.surfaceMuted }]}
     >
-      {left ?? (icon && <Icon name={icon} size={20} color={c.inkMuted} />)}
+      {left ?? (icon && <Icon name={icon} size={20} />)}
       <View style={{ flex: 1, gap: 2 }}>
         {typeof title === "string" ? <T numberOfLines={1}>{title}</T> : title}
         {sub && (
-          <T v="subhead" muted numberOfLines={1}>
+          <T v="bodySmall" muted numberOfLines={1}>
             {sub}
           </T>
         )}
       </View>
       {typeof detail === "string" || typeof detail === "number" ? (
-        <Num size={20} color={c.inkMuted}>
+        <Num size={16} color={c.textSecondary}>
           {detail}
         </Num>
       ) : (
         detail
       )}
-      {onPress && <Icon name={I.chevron} size={14} color={c.inkMuted} />}
+      {onPress && <Icon name={I.chevron} size={14} color={c.textTertiary} />}
     </Pressable>
   );
 }
@@ -396,7 +459,9 @@ export function BottomBar({ children }: { children: ReactNode }) {
   const c = useTheme();
   const insets = useSafeAreaInsets();
   return (
-    <View style={[s.bar, { paddingBottom: insets.bottom + 12, backgroundColor: c.ground, borderTopColor: c.hairline }]}>{children}</View>
+    <View style={[s.bar, { paddingBottom: insets.bottom + space.md, backgroundColor: c.background, borderTopColor: c.borderSubtle }]}>
+      {children}
+    </View>
   );
 }
 
@@ -404,11 +469,11 @@ export function Empty({ icon, title, body }: { icon: IconName; title: string; bo
   const c = useTheme();
   return (
     <View style={s.empty}>
-      <Icon name={icon} size={40} color={c.inkMuted} />
-      <T v="headline" center>
+      <Icon name={icon} size={40} color={c.textTertiary} />
+      <T v="bodyMain" center>
         {title}
       </T>
-      <T v="subhead" muted center>
+      <T v="bodySmall" muted center>
         {body}
       </T>
     </View>
@@ -416,20 +481,22 @@ export function Empty({ icon, title, body }: { icon: IconName; title: string; bo
 }
 
 const s = StyleSheet.create({
-  plate: { height: 56, borderRadius: 28, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 20 },
-  btn: { minHeight: 50, borderRadius: 25, borderWidth: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 16 },
-  field: { minHeight: 50, borderRadius: 12, borderWidth: 1, paddingHorizontal: 14, paddingVertical: 12 },
+  btn: { borderRadius: radius.button, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space.sm, paddingHorizontal: space.xl },
+  // 한 줄 입력칸에 lineHeight를 주면 iOS에서 글자가 위아래로 밀려 크기·자간만 준다
+  field: { minHeight: 52, borderRadius: radius.input, borderWidth: 1.5, paddingHorizontal: space.lg, paddingVertical: space.md, fontFamily: font.regular, fontSize: 16, letterSpacing: -0.2 },
+  bigField: { minHeight: 56 },
+  eye: { position: "absolute", right: 4, top: 6, width: 44, height: 44, alignItems: "center", justifyContent: "center" },
+  segment: { flexDirection: "row", borderRadius: radius.input, padding: 3, height: 44 },
+  segmentItem: { flex: 1, borderRadius: radius.input - 3, alignItems: "center", justifyContent: "center" },
+  chip: { height: 40, paddingHorizontal: 14, borderRadius: radius.chip, alignItems: "center", justifyContent: "center" },
+  tag: { height: 24, paddingHorizontal: space.sm, borderRadius: radius.chip, justifyContent: "center" },
+  tile: { borderRadius: radius.thumb, alignItems: "center", justifyContent: "center", gap: space.xs, overflow: "hidden", padding: 6 },
   track: { flex: 1, height: 6, borderRadius: 3 },
-  bigField: { minHeight: 60, borderRadius: 16, paddingHorizontal: 18 },
-  eye: { position: "absolute", right: 18, top: 0, bottom: 0, justifyContent: "center" },
-  segment: { flexDirection: "row", borderRadius: 12, padding: 2, height: 40 },
-  segmentItem: { flex: 1, borderRadius: 8, alignItems: "center", justifyContent: "center" },
-  chip: { height: 36, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, alignItems: "center", justifyContent: "center" },
-  tile: { borderRadius: 14, alignItems: "center", justifyContent: "center", gap: 4, overflow: "hidden", padding: 6 },
-  page: { padding: 16, gap: 24, paddingBottom: 48 },
-  group: { borderRadius: 16, overflow: "hidden", borderWidth: 1 },
-  sep: { height: StyleSheet.hairlineWidth, marginLeft: 16 },
-  row: { minHeight: 52, flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
-  empty: { alignItems: "center", gap: 8, paddingVertical: 56, paddingHorizontal: 24 },
-  bar: { position: "absolute", left: 0, right: 0, bottom: 0, gap: 10, paddingTop: 12, paddingHorizontal: 16, borderTopWidth: StyleSheet.hairlineWidth },
+  badge: { position: "absolute", top: -4, right: -4, minWidth: 22, height: 22, paddingHorizontal: 5, borderRadius: 11, borderWidth: 2, alignItems: "center", justifyContent: "center" },
+  page: { padding: gutter, gap: space.xxl, paddingBottom: space.huge },
+  group: { borderRadius: radius.card, overflow: "hidden", borderWidth: 1 },
+  sep: { height: StyleSheet.hairlineWidth, marginLeft: space.lg },
+  row: { minHeight: 56, flexDirection: "row", alignItems: "center", gap: space.md, paddingHorizontal: space.lg, paddingVertical: space.md },
+  empty: { alignItems: "center", gap: space.sm, paddingVertical: 56, paddingHorizontal: space.xxl },
+  bar: { position: "absolute", left: 0, right: 0, bottom: 0, gap: space.md, paddingTop: space.md, paddingHorizontal: gutter, borderTopWidth: StyleSheet.hairlineWidth },
 });
