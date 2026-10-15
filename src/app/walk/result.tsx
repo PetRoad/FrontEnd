@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { MapPlate } from "@/components/common/MapPlate";
 import { BottomBar, Btn, I, Page, Plate, Section, Stat, T } from "@/components/common/ui";
 import { PhotoGrid } from "@/components/walk/PhotoGrid";
+import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
 import { confirm } from "@/utils/confirm";
@@ -32,46 +33,46 @@ export default function WalkResultScreen() {
     });
 
   return (
-    <View style={{ flex: 1 }}>
-    <Page contentStyle={{ paddingBottom: 260 }}>
-      <View style={{ gap: 6 }}>
-        <T v="title1">오늘도 잘 걸었어요</T>
-        <T v="subhead" muted>
-          {dotDate(walk.date)} · {walk.title}
-        </T>
-      </View>
-
-      <View style={[s.band, { backgroundColor: c.accentSoft }]}>
-        <Stat value={walk.distanceKm.toFixed(2)} unit="KM" label="거리" size={72} />
-        <View style={s.stats}>
-          <Stat value={clock(walk.durationSec)} label="시간" size={30} />
-          {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={30} />}
-          <Stat value={String(walk.photos.length)} unit="장" label="사진" size={30} />
+    <View style={{ flex: 1, backgroundColor: c.background }}>
+      <Page contentStyle={{ paddingBottom: 260 }}>
+        <View style={{ gap: space.xs }}>
+          <T v="titleLG">오늘도 잘 걸었어요</T>
+          <T v="bodySmall" muted>
+            {dotDate(walk.date)} · {walk.title}
+          </T>
         </View>
-      </View>
 
-      <Section title="걸은 경로">
-        <MapPlate style={s.map} route={walk.route} />
-      </Section>
+        {/* 거리를 가장 크게, 산책 시간은 아랫줄 맨 앞 */}
+        <View style={[s.band, { backgroundColor: c.primarySoft }]}>
+          <Stat value={walk.distanceKm.toFixed(2)} unit="km" label="거리" size={56} />
+          <View style={[s.stats, { borderTopColor: c.borderStrong }]}>
+            <Stat value={clock(walk.durationSec)} label="산책 시간" size={28} />
+            {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={28} />}
+            <Stat value={String(walk.photos.length)} unit="장" label="사진" size={28} />
+          </View>
+        </View>
 
-      <Section title="산책 중 찍은 사진" hint={`${walk.photos.length}장`}>
-        <PhotoGrid photos={walk.photos} />
-      </Section>
+        <Section title="걸은 경로">
+          <MapPlate style={s.map} route={walk.route} />
+        </Section>
 
-    </Page>
+        <Section title="산책 중 찍은 사진" hint={`${walk.photos.length}장`}>
+          <PhotoGrid photos={walk.photos} />
+        </Section>
+      </Page>
 
-    <BottomBar>
-      <Plate title="기록 저장" onPress={save} />
-      {/* 남의 코스를 따라 걸은 기록은 내 코스로 등록하지 않음 (스케치 흐름 그대로 유지) */}
-      {!walk.courseId && <Btn title="코스로 등록하여 공유" icon={I.map} onPress={() => router.push("/walk/register")} />}
-      <Btn tone="plain" title="기록 버리기" onPress={discard} />
-    </BottomBar>
+      <BottomBar>
+        <Plate title="기록 저장" onPress={save} />
+        {/* 남의 코스를 따라 걸은 기록은 내 코스로 등록하지 않음 (스케치 흐름 그대로 유지) */}
+        {!walk.courseId && <Btn title="코스로 등록하여 공유" icon={I.map} onPress={() => router.push("/walk/register")} />}
+        <Btn tone="plain" title="기록 버리기" onPress={discard} />
+      </BottomBar>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  band: { borderRadius: 20, padding: 20, gap: 18 },
-  stats: { flexDirection: "row", flexWrap: "wrap", gap: 28 },
-  map: { height: 200, borderRadius: 16 },
+  band: { borderRadius: radius.cardLg, padding: space.xl, gap: space.xl },
+  stats: { flexDirection: "row", flexWrap: "wrap", columnGap: space.xxl, rowGap: space.md, paddingTop: space.lg, borderTopWidth: StyleSheet.hairlineWidth },
+  map: { height: 200, borderRadius: radius.card },
 });

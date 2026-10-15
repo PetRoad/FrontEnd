@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Alert, Platform, Pressable, StyleSheet, View } from "react-native";
 import DateTimePicker, { DateTimePickerAndroid, type DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { Field, I, Num, Page, PhotoTile, Plate, Segmented, T } from "@/components/common/ui";
+import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import type { Dog, DogSize } from "@/types/dog";
 import { dotDate, isoDate } from "@/utils/format";
@@ -48,15 +49,15 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
       <View style={s.avatarWrap}>
         {/* ponytail: 이미지 자리만. expo-image-picker 연결 시 교체 */}
         <PhotoTile icon={I.addPhoto} style={s.avatar} />
-        <T v="footnote" muted>
+        <T v="bodySmall" w="medium" muted>
           프로필 사진
         </T>
       </View>
-      <View style={{ gap: 16 }}>
+      <View style={{ gap: space.lg }}>
         <Field label="이름" value={name} onChangeText={setName} placeholder="콩이" />
         <Field label="견종" value={breed} onChangeText={setBreed} placeholder="포메라니안" />
-        <View style={{ gap: 6 }}>
-          <T v="footnote" muted>
+        <View style={{ gap: space.sm }}>
+          <T v="bodySmall" w="medium" muted>
             크기
           </T>
           <Segmented options={SIZES} value={size} onChange={setSize} />
@@ -65,17 +66,17 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
           // 웹에는 시스템 날짜 선택기가 없다
           <Field label="생년월일" value={birth} onChangeText={setBirth} placeholder="2023-05-01" maxLength={10} />
         ) : (
-          <View style={{ gap: 6 }}>
-            <T v="footnote" muted>
+          <View style={{ gap: space.sm }}>
+            <T v="bodySmall" w="medium" muted>
               생년월일
             </T>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={birth ? `생년월일 ${dotDate(birth)}, 변경` : "생년월일 선택"}
               onPress={openPicker}
-              style={[s.dateField, { backgroundColor: c.surface, borderColor: picking ? c.tint : c.hairline }]}
+              style={[s.dateField, { backgroundColor: picking ? c.surface : c.surfaceMuted, borderColor: picking ? c.textPrimary : "transparent" }]}
             >
-              {birth ? <Num size={20}>{dotDate(birth)}</Num> : <T muted>날짜를 선택해주세요</T>}
+              {birth ? <Num size={16}>{dotDate(birth)}</Num> : <T muted>날짜를 선택해주세요</T>}
             </Pressable>
             {picking && (
               <DateTimePicker
@@ -84,7 +85,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
                 display="inline"
                 locale="ko-KR"
                 maximumDate={new Date()}
-                accentColor={c.tint}
+                accentColor={c.textPrimary}
                 onChange={onPick}
               />
             )}
@@ -97,7 +98,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
 }
 
 const s = StyleSheet.create({
-  avatarWrap: { alignItems: "center", gap: 8 },
-  avatar: { width: 112, height: 112, borderRadius: 56 },
-  dateField: { minHeight: 50, borderRadius: 12, borderWidth: 1, paddingHorizontal: 14, justifyContent: "center" },
+  avatarWrap: { alignItems: "center", gap: space.sm },
+  avatar: { width: 112, height: 112, borderRadius: radius.pill },
+  dateField: { minHeight: 52, borderRadius: radius.input, borderWidth: 1.5, paddingHorizontal: space.lg, justifyContent: "center" },
 });

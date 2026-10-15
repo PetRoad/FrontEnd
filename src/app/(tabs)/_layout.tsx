@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import { I, Icon, Logo } from "@/components/common/ui";
+import { font } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 
 export default function TabsLayout() {
@@ -8,10 +9,11 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: c.tint,
-        tabBarInactiveTintColor: c.inkMuted,
-        tabBarStyle: { backgroundColor: c.surface, borderTopColor: c.hairline },
-        sceneStyle: { backgroundColor: c.ground },
+        tabBarActiveTintColor: c.textPrimary,
+        tabBarInactiveTintColor: c.textTertiary,
+        tabBarLabelStyle: { fontFamily: font.medium },
+        tabBarStyle: { backgroundColor: c.surface, borderTopColor: c.borderSubtle },
+        sceneStyle: { backgroundColor: c.background },
       }}
     >
       <Tabs.Screen

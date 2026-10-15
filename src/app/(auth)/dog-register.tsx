@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import { Steps, T } from "@/components/common/ui";
+import { space } from "@/constants/theme";
 import { DogForm } from "@/features/dog/DogForm";
 import { useUserStore } from "@/stores/userStore";
 
@@ -12,9 +13,9 @@ export default function DogRegisterScreen() {
       header={
         <>
           <Steps step={2} total={2} />
-          <View style={{ gap: 6 }}>
-            <T v="title1">반려견을 소개해주세요</T>
-            <T v="subhead" muted>
+          <View style={{ gap: space.sm }}>
+            <T v="titleLG">반려견을 소개해주세요</T>
+            <T muted>
               공유한 코스에 견종과 나이가 함께 표시돼요.
             </T>
           </View>

@@ -1,7 +1,8 @@
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Group, I, Icon, Page, Row, T, shadow } from "@/components/common/ui";
+import { Group, I, Icon, Page, Row, Stat, T } from "@/components/common/ui";
+import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useCourseStore } from "@/stores/courseStore";
 import { useUserStore } from "@/stores/userStore";
@@ -20,39 +21,45 @@ export default function MyScreen() {
 
   return (
     // iOS는 contentInsetAdjustmentBehavior가 상단 안전영역을 자동으로 더해준다
-    <Page contentStyle={{ paddingTop: Platform.OS === "ios" ? 8 : insets.top + 8 }}>
-      <T v="largeTitle">마이</T>
+    <Page contentStyle={{ paddingTop: Platform.OS === "ios" ? space.sm : insets.top + space.sm }}>
+      <T v="titleXL">마이</T>
 
+      {/* 큰 프로필 카드 하나 + 함께 걸은 기록 두 칸 */}
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`${dog?.name ?? "반려견"} 프로필 수정`}
         onPress={() => router.push("/my/dog")}
-        style={({ pressed }) => [s.profile, { backgroundColor: c.surface, opacity: pressed ? 0.85 : 1 }, shadow]}
+        style={({ pressed }) => [s.profile, { backgroundColor: c.surface, borderColor: c.borderSubtle, opacity: pressed ? 0.85 : 1 }]}
       >
-        {/* 프로필 사진 연결 전까지 iOS 연락처처럼 이름 첫 글자 */}
-        <View style={[s.avatar, { backgroundColor: c.tile }]}>
-          <T v="title2" muted>
-            {dog?.name.slice(0, 1)}
-          </T>
-        </View>
-        <View style={{ flex: 1, gap: 2 }}>
-          <T v="title3" numberOfLines={1}>
-            {dog?.name}
-          </T>
-          <T v="subhead" muted numberOfLines={1}>
-            {dog?.breed} · {dog?.size} · {dog ? ageFromBirth(dog.birth) : 0}살
-          </T>
-          <View style={s.region}>
-            <Icon name={I.pin} size={12} color={c.inkMuted} />
-            <T v="footnote" muted numberOfLines={1}>
-              {region}
-            </T>
+        <View style={s.head}>
+          {/* 프로필 사진 연결 전까지 iOS 연락처처럼 이름 첫 글자 */}
+          <View style={[s.avatar, { backgroundColor: c.primarySoft }]}>
+            <T v="heading">{dog?.name.slice(0, 1)}</T>
           </View>
-          <T v="footnote" muted>
-            {walks.length}번, {totalKm.toFixed(1)}km 함께 걸었어요
-          </T>
+          <View style={{ flex: 1, gap: 2 }}>
+            <T v="heading" numberOfLines={1}>
+              {dog?.name}
+            </T>
+            <T v="bodySmall" muted numberOfLines={1}>
+              {dog?.breed} · {dog?.size} · {dog ? ageFromBirth(dog.birth) : 0}살
+            </T>
+            <View style={s.region}>
+              <Icon name={I.pin} size={12} color={c.textSecondary} />
+              <T v="caption" muted numberOfLines={1}>
+                {region}
+              </T>
+            </View>
+          </View>
+          <Icon name={I.chevron} size={14} color={c.textTertiary} />
         </View>
-        <Icon name={I.chevron} size={14} color={c.inkMuted} />
+        <View style={s.bento}>
+          <View style={[s.cell, { backgroundColor: c.surfaceMuted }]}>
+            <Stat value={String(walks.length)} unit="번" label="함께 걸은 횟수" size={24} />
+          </View>
+          <View style={[s.cell, { backgroundColor: c.surfaceMuted }]}>
+            <Stat value={totalKm.toFixed(1)} unit="km" label="함께 걸은 거리" size={24} />
+          </View>
+        </View>
       </Pressable>
 
       <Group header="내 산책">
@@ -66,7 +73,10 @@ export default function MyScreen() {
 }
 
 const s = StyleSheet.create({
-  profile: { flexDirection: "row", alignItems: "center", gap: 14, padding: 16, borderRadius: 16 },
+  profile: { borderRadius: radius.cardLg, borderWidth: 1, padding: space.xl, gap: space.lg },
+  head: { flexDirection: "row", alignItems: "center", gap: space.lg },
   avatar: { width: 64, height: 64, borderRadius: 32, alignItems: "center", justifyContent: "center" },
-  region: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 2 },
+  region: { flexDirection: "row", alignItems: "center", gap: space.xs, marginTop: 2 },
+  bento: { flexDirection: "row", gap: space.sm },
+  cell: { flex: 1, borderRadius: radius.button, padding: space.lg },
 });

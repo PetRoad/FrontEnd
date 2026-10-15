@@ -1,30 +1,22 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
-import { I, Icon, Num, PhotoTile, T, shadow } from "@/components/common/ui";
+import { I, Icon, Num, PhotoTile, T, Tag } from "@/components/common/ui";
+import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useCourseStore } from "@/stores/courseStore";
 import type { Course, Difficulty } from "@/types/course";
 
-const LEVEL: Record<Difficulty, number> = { 쉬움: 1, 보통: 2, 어려움: 3 };
-
-// 난이도: 점 3개 중 채워진 점 수
+// 난이도는 카드에서 가장 중요한 태그라 Cream Beige로 둔다
 export function DifficultyMark({ difficulty }: { difficulty: Difficulty }) {
-  const c = useTheme();
   return (
-    <View style={s.level} accessibilityLabel={`난이도 ${difficulty}`}>
-      <View style={s.dashes}>
-        {[1, 2, 3].map((i) => (
-          <View key={i} style={[s.dash, { backgroundColor: i <= LEVEL[difficulty] ? c.accent : c.fill }]} />
-        ))}
-      </View>
-      <T v="footnote" muted>
-        {difficulty}
-      </T>
+    <View accessible accessibilityLabel={`난이도 ${difficulty}`}>
+      <Tag label={difficulty} soft />
     </View>
   );
 }
 
-// 모든 카드가 같은 라벨 그리드: 코스명 / 거리·난이도·좋아요 / 견종·나이
+// 모든 카드가 같은 순서: 커버 / 코스명 / 거리·난이도·좋아요 / 견종·나이
+// 가로 카드(width 지정) 높이 228 = 테두리 2 + 안쪽 여백 8 + 커버 112 + 본문 106. 바뀌면 산책 홈 PEEK도 맞춘다
 export function CourseCard({ course, width }: { course: Course; width?: number }) {
   const c = useTheme();
   const liked = useCourseStore((s) => s.liked.includes(course.id));
@@ -32,32 +24,32 @@ export function CourseCard({ course, width }: { course: Course; width?: number }
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${course.name}, ${course.distanceKm}킬로미터, ${course.difficulty}, 좋아요 ${course.likes}`}
+      accessibilityLabel={`${course.name}, ${course.distanceKm}킬로미터, 난이도 ${course.difficulty}, 좋아요 ${course.likes}`}
       onPress={() => router.push({ pathname: "/course/[id]", params: { id: course.id } })}
-      style={({ pressed }) => [s.card, { backgroundColor: c.surface, borderColor: c.hairline, width, opacity: pressed ? 0.85 : 1 }, shadow]}
+      style={({ pressed }) => [s.card, { backgroundColor: c.surface, borderColor: c.borderSubtle, width, opacity: pressed ? 0.85 : 1 }]}
     >
-      <PhotoTile label={course.cover ?? "커버 이미지"} style={s.cover} />
+      <PhotoTile label={course.cover ?? "커버 이미지"} style={[s.cover, { height: width ? 112 : 160 }]} />
       <View style={s.body}>
-        <T v="headline" numberOfLines={1}>
+        <T v="bodyMain" numberOfLines={1}>
           {course.name}
         </T>
         <View style={s.line}>
           <View style={s.km}>
-            <Num size={22} bold>
+            <Num size={16} bold>
               {course.distanceKm.toFixed(1)}
             </Num>
-            <Num size={13} color={c.inkMuted}>
-              KM
+            <Num size={13} color={c.textSecondary}>
+              km
             </Num>
           </View>
           <DifficultyMark difficulty={course.difficulty} />
           <View style={{ flex: 1 }} />
-          <Icon name={liked ? I.heartFill : I.heart} size={14} color={liked ? c.tint : c.inkMuted} />
-          <Num size={17} color={c.inkMuted}>
+          <Icon name={liked ? I.heartFill : I.heart} size={14} color={liked ? c.textPrimary : c.textSecondary} />
+          <Num size={14} color={c.textSecondary}>
             {course.likes}
           </Num>
         </View>
-        <T v="subhead" muted numberOfLines={1}>
+        <T v="bodySmall" muted numberOfLines={1}>
           {course.breed} · {course.dogAge}살
         </T>
       </View>
@@ -66,12 +58,9 @@ export function CourseCard({ course, width }: { course: Course; width?: number }
 }
 
 const s = StyleSheet.create({
-  card: { borderRadius: 18, overflow: "hidden", borderWidth: 1 },
-  cover: { height: 104, borderRadius: 0 },
-  body: { padding: 12, gap: 4 },
-  line: { flexDirection: "row", alignItems: "center", gap: 10 },
+  card: { borderRadius: radius.card, borderWidth: 1, padding: space.xs },
+  cover: { borderRadius: radius.image },
+  body: { paddingHorizontal: space.md, paddingVertical: space.md, gap: 6 },
+  line: { flexDirection: "row", alignItems: "center", gap: space.sm, height: 24 },
   km: { flexDirection: "row", alignItems: "baseline", gap: 2 },
-  level: { flexDirection: "row", alignItems: "center", gap: 5 },
-  dashes: { flexDirection: "row", gap: 2 },
-  dash: { width: 8, height: 8, borderRadius: 4 },
 });

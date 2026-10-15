@@ -1,6 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { Empty, Group, I, Num, Page, PhotoTile, Row, T } from "@/components/common/ui";
+import { radius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
 import { dotDate } from "@/utils/format";
@@ -21,18 +22,18 @@ export default function WalksScreen() {
               left={<PhotoTile icon={w.photos.length ? I.photo : I.walk} style={s.thumb} />}
               title={
                 <View style={{ gap: 2 }}>
-                  <Num size={20} bold>
-                    {dotDate(w.date)}
-                  </Num>
-                  <T v="subhead" muted numberOfLines={1}>
+                  <Num size={16}>{dotDate(w.date)}</Num>
+                  <T v="bodySmall" muted numberOfLines={1}>
                     {w.title}
                   </T>
                 </View>
               }
               detail={
                 <View style={s.detail}>
-                  <Num size={20}>{w.distanceKm.toFixed(1)} KM</Num>
-                  <Num size={15} color={c.inkMuted}>
+                  <Num size={16} bold>
+                    {w.distanceKm.toFixed(1)}km
+                  </Num>
+                  <Num size={13} color={c.textSecondary}>
                     {Math.round(w.durationSec / 60)}분
                   </Num>
                 </View>
@@ -47,6 +48,6 @@ export default function WalksScreen() {
 }
 
 const s = StyleSheet.create({
-  thumb: { width: 56, height: 56, borderRadius: 8, padding: 0 },
+  thumb: { width: 52, height: 52, borderRadius: radius.thumb, padding: 0 },
   detail: { alignItems: "flex-end", gap: 2 },
 });

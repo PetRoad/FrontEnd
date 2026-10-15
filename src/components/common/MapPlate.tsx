@@ -28,7 +28,7 @@ export function MapPlate({ style, marker, follow, route, ref }: Props) {
   }, [marker]);
 
   return (
-    <View style={[{ backgroundColor: c.mapTone, overflow: "hidden" }, style]}>
+    <View style={[{ backgroundColor: c.surfaceMuted, overflow: "hidden" }, style]}>
       <MapView
         ref={map}
         style={StyleSheet.absoluteFill}
@@ -44,7 +44,7 @@ export function MapPlate({ style, marker, follow, route, ref }: Props) {
           map.current?.animateToRegion({ latitude: p.latitude, longitude: p.longitude, ...NEAR });
         }}
       >
-        {route && route.length > 1 && <Polyline coordinates={route} strokeColor={c.tint} strokeWidth={5} />}
+        {route && route.length > 1 && <Polyline coordinates={route} strokeColor={c.route} strokeWidth={5} />}
       </MapView>
     </View>
   );

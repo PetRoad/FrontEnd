@@ -2,299 +2,283 @@
 name: PetRoad
 description: 반려견과 걸은 길과 순간을 기록하고, 우리 동네의 좋은 산책길을 발견하는 iOS 앱
 colors:
-  accent: "#FFD374"
-  accent-soft: "#FFF3D6"
-  on-accent: "#3D3A35"
-  tint: "#9A6412"
-  ground: "#FEFFFA"
+  primary: "#FFD374"
+  on-primary: "#232323"
+  primary-soft: "#FFF3D6"
+  background: "#FEFFFA"
   surface: "#FFFFFF"
-  fill: "#F4F2EA"
-  tile: "#F2EFE6"
-  hairline: "#ECE9E0"
-  ink: "#3D3A35"
-  ink-muted: "#6E695F"
-  map-tone: "#F4F2EA"
-  map-street: "#FFFFFF"
-  water: "#E3EEF2"
+  surface-muted: "#F5F5F5"
+  text-primary: "#232323"
+  text-secondary: "#616160"
+  text-tertiary: "#ADADAD"
+  border-strong: "#CCCCCC"
+  border-subtle: "#EFEFEF"
+  error: "#D93636"
+  route: "#9A6412"
+  map-water: "#E3EEF2"
 typography:
-  numeral-hero:
-    fontFamily: "Nunito_800ExtraBold, Nunito, system-ui"
-    fontSize: "72px"
-    fontWeight: 800
-    lineHeight: 1.2
-    fontFeature: "tnum"
-  numeral:
-    fontFamily: "Nunito_700Bold, Nunito, system-ui"
-    fontSize: "17px"
-    fontWeight: 700
-    lineHeight: 1.2
-    fontFeature: "tnum"
-  large-title:
-    fontFamily: "-apple-system, system-ui"
+  title-xl:
+    fontFamily: "Pretendard-Bold"
     fontSize: "34px"
-    fontWeight: 700
-    lineHeight: "41px"
-  title1:
-    fontFamily: "-apple-system, system-ui"
+    lineHeight: "44px"
+    letterSpacing: "-0.7px"
+  title-lg:
+    fontFamily: "Pretendard-Bold"
     fontSize: "28px"
-    fontWeight: 700
-    lineHeight: "34px"
-  title2:
-    fontFamily: "-apple-system, system-ui"
+    lineHeight: "36px"
+    letterSpacing: "-0.6px"
+  heading:
+    fontFamily: "Pretendard-SemiBold"
     fontSize: "22px"
-    fontWeight: 700
-    lineHeight: "28px"
-  title3:
-    fontFamily: "-apple-system, system-ui"
-    fontSize: "20px"
-    fontWeight: 600
-    lineHeight: "25px"
-  headline:
-    fontFamily: "-apple-system, system-ui"
-    fontSize: "17px"
-    fontWeight: 600
-    lineHeight: "22px"
+    lineHeight: "30px"
+    letterSpacing: "-0.4px"
+  body-strong:
+    fontFamily: "Pretendard-Bold"
+    fontSize: "19px"
+    lineHeight: "26px"
+    letterSpacing: "-0.2px"
+  body-main:
+    fontFamily: "Pretendard-SemiBold"
+    fontSize: "18px"
+    lineHeight: "26px"
+    letterSpacing: "-0.2px"
   body:
-    fontFamily: "-apple-system, system-ui"
-    fontSize: "17px"
-    fontWeight: 400
-    lineHeight: "22px"
-  subhead:
-    fontFamily: "-apple-system, system-ui"
-    fontSize: "15px"
-    fontWeight: 400
+    fontFamily: "Pretendard-Regular"
+    fontSize: "16px"
+    lineHeight: "24px"
+    letterSpacing: "-0.2px"
+  body-small:
+    fontFamily: "Pretendard-Regular"
+    fontSize: "14px"
     lineHeight: "20px"
-  footnote:
-    fontFamily: "-apple-system, system-ui"
-    fontSize: "13px"
-    fontWeight: 400
-    lineHeight: "18px"
+    letterSpacing: "-0.1px"
   caption:
-    fontFamily: "-apple-system, system-ui"
+    fontFamily: "Pretendard-Regular"
     fontSize: "12px"
-    fontWeight: 400
     lineHeight: "16px"
+  numeral:
+    fontFamily: "Pretendard-SemiBold / Pretendard-Bold"
+    fontFeature: "tnum"
 rounded:
-  field: "12px"
-  tile: "14px"
-  container: "16px"
-  card: "18px"
-  band: "20px"
+  chip: "8px"
+  thumb: "12px"
+  input: "14px"
+  button: "16px"
+  image: "16px"
+  card: "20px"
+  card-lg: "24px"
   sheet: "24px"
-  panel: "28px"
   pill: "9999px"
 spacing:
-  inline: "8px"
-  stack: "10px"
-  row: "12px"
-  gutter: "16px"
-  band: "20px"
-  section: "24px"
+  xs: "4px"
+  sm: "8px"
+  md: "12px"
+  lg: "16px"
+  xl: "20px"
+  xxl: "24px"
+  xxxl: "32px"
+  huge: "40px"
 components:
   button-primary:
-    backgroundColor: "{colors.accent}"
-    textColor: "{colors.on-accent}"
-    typography: "{typography.headline}"
-    rounded: "{rounded.pill}"
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.body-main}"
+    rounded: "{rounded.button}"
     height: "56px"
-    padding: "0 20px"
-  button-surface:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    typography: "{typography.headline}"
-    rounded: "{rounded.pill}"
-    height: "50px"
-    padding: "0 16px"
-  button-soft:
-    backgroundColor: "{colors.accent-soft}"
-    textColor: "{colors.ink}"
-    typography: "{typography.headline}"
-    rounded: "{rounded.pill}"
-    height: "50px"
-    padding: "0 16px"
+  button-secondary:
+    backgroundColor: "{colors.surface-muted}"
+    textColor: "{colors.text-primary}"
+    typography: "{typography.body-main}"
+    rounded: "{rounded.button}"
+    height: "52px"
   button-plain:
-    textColor: "{colors.ink-muted}"
-    typography: "{typography.headline}"
-    rounded: "{rounded.pill}"
-    height: "50px"
-  chip:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    typography: "{typography.subhead}"
-    rounded: "{rounded.pill}"
-    height: "36px"
-    padding: "0 14px"
-  chip-selected:
-    backgroundColor: "{colors.accent}"
-    textColor: "{colors.on-accent}"
-  field:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
+    textColor: "{colors.text-secondary}"
     typography: "{typography.body}"
-    rounded: "{rounded.field}"
-    height: "50px"
-    padding: "12px 14px"
+    height: "44px"
+  chip:
+    backgroundColor: "{colors.surface-muted}"
+    textColor: "{colors.text-primary}"
+    rounded: "{rounded.chip}"
+    height: "40px"
+  chip-selected:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
+  tag:
+    backgroundColor: "{colors.surface-muted}"
+    typography: "{typography.caption}"
+    rounded: "{rounded.chip}"
+    height: "24px"
+  tag-soft:
+    backgroundColor: "{colors.primary-soft}"
+  field:
+    backgroundColor: "{colors.surface-muted}"
+    textColor: "{colors.text-primary}"
+    rounded: "{rounded.input}"
+    height: "52px"
   course-card:
     backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
     rounded: "{rounded.card}"
-    padding: "12px"
+    padding: "4px"
   stat-band:
-    backgroundColor: "{colors.accent-soft}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.band}"
+    backgroundColor: "{colors.primary-soft}"
+    rounded: "{rounded.card-lg}"
     padding: "20px"
-  recommend-sheet:
-    backgroundColor: "{colors.accent-soft}"
-    rounded: "{rounded.sheet}"
+  glass:
+    backgroundColor: "rgba(255, 255, 255, 0.72)"
+    border: "1px solid rgba(255, 255, 255, 0.5)"
+    blur: "20"
 ---
 
 # Design System: PetRoad
 
 ## Overview
 
-**Creative North Star: "햇살 아래 동네 산책"**
+**PetRoad = Warm Minimal + Subtle Glass.**
 
-펫로드는 밝고 가벼운 아이보리 바탕 위에서 걸음이 햇살 노랑으로 차오르는 앱이다. 한 손에 리드줄을 쥔 채 한낮 햇빛 아래에서 짧게 보는 화면이므로, 면은 밝게, 글자는 순수 검정 대신 따뜻한 짙은 회갈색으로 무게를 덜고, 행동은 엄지 자리의 알약 버튼 하나로 모은다.
+화면 전체는 장식을 덜어낸 따뜻한 미니멀(Tese White 바탕, Hunt Black 글자, Pretendard), 지도 위에 떠 있는 몇 개의 요소만 옅은 유리(Glass)다. 한 손에 리드줄을 쥔 채 야외에서 짧게 보는 화면이라 대비는 높게, 행동은 엄지 자리의 큰 버튼 하나로 모은다.
 
-구조는 iOS 기본 문법을 따른다. 시스템 서체의 텍스트 스타일 단계, 인셋 그룹 목록, 네이티브 스택 헤더와 2탭 탭바, SF Symbols 아이콘을 그대로 쓰고, 브랜드는 색과 숫자 서체, 산책 중 노란 코스 카드에서 나온다. 수치는 둥근 Nunito 고정폭 숫자로 크게 쓰고, 모든 수치 아래에는 작은 라벨이 붙는다.
+화면마다 정보 계층이 다르다.
+- 산책 홈: 지도 중심 탐색. 위에는 유리 동네 알약과 내 위치 버튼, 아래에는 Tese White 추천 코스 시트.
+- 산책 진행: 실시간 수치와 조작. 유리 패널에 시간·거리, 아래에 원형 카메라 버튼과 종료 버튼.
+- 코스 상세: 콘텐츠와 정보. 커버, 코스명, 거리·난이도, 반려견, 경로.
+- 마이: 개인 데이터 정리. 큰 프로필 카드 + 함께 걸은 기록 두 칸 + 메뉴 묶음.
+- 로그인·온보딩: 입력과 진행. 넓은 여백, 채운 입력칸, 하단 주 버튼.
 
-사용자가 확정한 거부: 초록 무드, 도로·노면 표시 이미지("산책이지 도로가 아니다"), 어두운 스포츠 기록 앱 톤, 다크 모드. 앱은 라이트 모드 하나만 쓴다(app.json `userInterfaceStyle: light`, 상태바 dark).
-
-**Key Characteristics:**
-- 아이보리 바탕, 흰 표면, 옅은 노랑 패널의 세 겹 밝은 면
-- 햇살 노랑은 주 버튼, 선택 상태, 단계 바의 채움, 내 위치 마커에만
-- 순수 검정 없음: 글자는 따뜻한 회갈색, 그림자도 갈색 기운
-- 숫자는 둥근 Nunito 고정폭, 한글 UI는 시스템 서체
-- 모든 버튼과 칩은 알약형
-- 시그니처: 산책 중 지도 위에 떠 있는 햇살 노랑 코스 카드(코스명 · 걸은 거리 | 전체 길이)
+모든 값은 `src/constants/theme.ts` 하나에서 나온다. 화면 코드에 hex를 쓰지 않는다. 앱은 라이트 모드 하나만 쓴다(app.json `userInterfaceStyle: light`).
 
 ## Colors
 
-밝은 아이보리 바탕 위에 햇살 노랑 하나, 나머지는 따뜻한 회갈색 계열 중립색으로 짠 한 가지 강조색 팔레트다. 모든 값은 `src/constants/colors.ts`의 `palette` 하나에서 나온다.
-
-### Primary
-- **햇살 노랑** (accent): 화면의 주 행동 버튼, 산책 중 상단 코스 카드, 선택된 칩, 단계 바의 채움, 난이도 점, 내 위치 마커, 선택된 사진 테두리. 글자색으로는 쓰지 않는다.
-- **노랑 위 잉크** (on-accent): 햇살 노랑 면 위의 글자와 아이콘. 본문 잉크와 같은 회갈색이다.
-- **옅은 햇살** (accent-soft): 수치 패널(결과·일지 상세), 추천코스 바텀시트, 보조 '부드러운' 버튼 바탕.
-
-### Secondary
-- **구운 갈색 틴트** (tint): 링크성 강조와 선택 상태의 글자·아이콘(탭바 활성, 좋아요 켜짐, 선택 체크, 입력 커서, 따라 걷기 '내가 걸은 길'). 바탕 위 대비 4.5:1 이상을 확보한 유일한 유색 글자색이다.
+### Brand
+- **Chew Yellow** (primary `#FFD374`): 주 버튼, 선택된 칩, 단계 바 채움, 사진 수 배지, 산책 중 표시 점. 글자색으로 쓰지 않는다.
+- **Cream Beige** (primarySoft `#FFF3D6`): 통계 카드(결과·일지 상세), 난이도 태그, 좋아요 켜진 버튼, 마이 아바타.
+- **Tese White** (background `#FEFFFA`): 모든 화면, 스택 헤더, 하단 고정 영역, 추천 코스 시트.
+- **Hunt Black** (textPrimary `#232323`): 본문, 제목, 아이콘, 선택·커서 색. Chew Yellow 위 글자(onPrimary)도 같은 값.
 
 ### Neutral
-- **아이보리 바탕** (ground): 모든 화면, 스택 헤더, 하단 고정 행동 영역의 바탕.
-- **흰 표면** (surface): 카드, 인셋 그룹, 입력칸, 지도 위 떠 있는 알약, 산책 진행 하단 버튼 영역, 탭바.
-- **채움** (fill): 세그먼트 트랙, 눌린 행, 꺼진 난이도 점.
-- **사진 자리** (tile): 사진·커버 플레이스홀더 면.
-- **실선** (hairline): 카드·그룹·입력칸 테두리, 구분선, 단계 바의 트랙.
-- **회갈색 잉크** (ink): 본문과 제목, 큰 수치.
-- **흐린 잉크** (ink-muted): 라벨, 보조 문구, 단위, 비활성 탭, 화살표.
-- **지도 톤 / 지도 길 / 물길** (map-tone, map-street, water): 웹 지도 플레이스홀더 전용. 지도 밖 UI에는 쓰지 않는다.
+- textSecondary `#616160`: 보조 정보, 라벨, 단위, 플레이스홀더.
+- textTertiary `#ADADAD`: 비활성 탭, 화살표, 사진 자리 아이콘.
+- borderStrong `#CCCCCC`: 시트 손잡이, 통계 카드 안 구분선.
+- borderSubtle `#EFEFEF`: 카드·그룹 테두리, 행 구분선, 탭바 위 선.
+- surfaceMuted `#F5F5F5`: 입력칸, 보조 버튼, 칩·태그, 사진 자리, 세그먼트 트랙.
+- surface `#FFFFFF`: 카드, 그룹 목록, 탭바, 포커스된 입력칸.
+
+### 기능 색
+- error `#D93636`: 입력 오류 테두리와 문구.
+- route `#9A6412`: 지도 위 내가 걸은 길(두께 5). 원래 코스(노랑)와 구분되도록 기존 색을 유지한다. 지도 밖 UI에는 쓰지 않는다.
+- mapWater `#E3EEF2`: 웹 지도 자리 전용.
 
 ### Named Rules
-**The No Black Rule.** 순수 검정(#000)과 검정 기반 그림자를 쓰지 않는다. 가장 어두운 값은 회갈색 잉크다.
+**The One Sun Rule.** Chew Yellow 면은 한 화면의 주 행동 하나와 상태 표시에만. 넓은 강조 면이 필요하면 Cream Beige.
 
-**The One Sun Rule.** 햇살 노랑 면은 한 화면의 주 행동 하나와 상태 표시(선택, 채워진 점, 내 위치)에만 쓴다. 장식 띠나 배경 면으로 넓게 깔지 않는다. 넓은 노랑 면이 필요하면 옅은 햇살을 쓴다. 예외는 사용자가 지정한 산책 중 상단 코스 카드 하나다.
+**The No Green Rule.** 초록 계열(Foxtail Green, Bean Green)과 Jelly Orange는 쓰지 않는다.
 
-**The No Green Rule.** 초록 계열 색은 팔레트 어디에도 없다. 성공·완료 상태도 노랑과 갈색 틴트로 표현한다.
+**The Route Rule.** 지도 위 경로는 브랜드 노랑으로 통일하지 않는다. 원래 코스는 노랑 점선, 내가 걸은 길은 route 실선.
 
 ## Typography
 
-**Display Font:** Nunito 700 / 800 (`@expo-google-fonts/nunito`, 수치 전용)
-**Body Font:** iOS 시스템 서체 (SF Pro / Apple SD Gothic Neo)
+**Pretendard** 하나 (`assets/fonts`, Regular·Medium·SemiBold·Bold, SIL OFL 1.1). Expo Go에서 쓰기 위해 `useFonts`로 실행 중에 불러온다. 굵기는 `fontWeight`가 아니라 `fontFamily`로 고른다.
 
-**Character:** 둥근 Nunito 숫자가 걸음의 가벼움을 맡고, 한글 UI는 시스템 서체의 iOS 텍스트 스타일 단계를 그대로 따라 익숙하게 읽힌다.
+| 단계 | 크기/행간 | 굵기 | 쓰임 |
+|---|---|---|---|
+| titleXL | 34/44 | Bold | 마이 제목, 로그인 서비스명 |
+| titleLG | 28/36 | Bold | 화면 제목(오늘도 잘 걸었어요, 코스명, 온보딩 질문, 일지 날짜) |
+| heading | 22/30 | SemiBold | 시트 제목, 반려견 이름 |
+| bodyStrong | 19/26 | Bold | 강조 문장 |
+| bodyMain | 18/26 | SemiBold | 섹션 제목, 카드 코스명, 버튼 |
+| body | 16/24 | Regular | 행 제목, 입력, 설명 |
+| bodySmall | 14/20 | Regular | 보조 정보, 수치 라벨, 입력 라벨(Medium) |
+| caption | 12/16 | Regular | 태그(Medium), 범례, 사진 자리 |
 
-### Hierarchy
-- **Numeral Hero** (800, 72px, 1.2, 고정폭): 결과 화면 거리. 결과·일지 보조 수치는 30px, 기본 Stat은 34px. 산책 중 코스 카드의 거리는 20px(걸은 거리 800, 전체 길이 700).
-- **Numeral** (700, 13~22px, 1.2, 고정폭): 카드 거리, 좋아요 수, 행 오른쪽 수치, 단위(KM, 장, %), 온보딩 단계 표시.
-- **Large Title / Title1 / Title2 / Title3** (700/700/700/600; 34/28/22/20px): 화면 제목(Title1: "오늘도 잘 걸었어요", 코스명), 시트 제목(Title3).
-- **Headline** (600, 17px, 22px): 버튼 글자, 섹션 제목, 카드 코스명, 동네 이름 알약.
-- **Body** (400, 17px, 22px): 행 제목, 입력칸.
-- **Subhead / Footnote / Caption** (400; 15/13/12px): 보조 설명, 수치 라벨과 입력 라벨, 사진 자리 글자.
+자간은 제목 약 -2%, 본문 약 -1%.
 
-### Named Rules
-**The Labeled Number Rule.** 모든 수치 아래에는 흐린 잉크 Footnote 라벨이 붙는다(거리, 시간, 사진). 단위는 수치 크기의 약 0.42배, 흐린 잉크로 기준선에 맞춘다.
+**The Steady Digits Rule.** 거리·시간·개수는 `Num`(SemiBold/Bold + `tabular-nums`)으로 쓴다. 걷는 중 값이 바뀌어도 자리가 흔들리지 않는다. 28 이상은 자간 -2%.
 
-**The Steady Digits Rule.** 수치는 항상 Nunito 고정폭 숫자(`tabular-nums`)로 쓴다. 걷는 중 값이 바뀌어도 자리가 흔들리지 않아야 한다. 수치가 아닌 한글 문장에는 Nunito를 쓰지 않는다.
+**The Labeled Number Rule.** 큰 수치 아래에는 bodySmall 라벨, 단위는 수치의 약 0.45배 textSecondary.
 
 ## Layout
 
-한 열 모바일 레이아웃. 페이지 여백 16px, 섹션 간격 24px, 섹션 안 간격 10px, 페이지 하단 여백 48px. 되돌릴 수 없는 행동과 주 행동은 하단 고정 행동 영역(아이보리 바탕, 위쪽 머리카락 실선, 안전영역 + 12px)에 엄지 높이로 둔다. 하단 고정 영역이 있는 화면은 스크롤 내용 하단 여백을 그만큼 늘린다.
+- 4pt 단위: 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40.
+- 화면 좌우 여백 20(`gutter`), 지도 위 떠 있는 요소는 가장자리 16(`mapEdge`).
+- 섹션 간격 24, 섹션 안 제목–내용 12, 카드 간격 12, 카드 안쪽 16~20.
+- 누를 수 있는 것은 최소 44×44.
+- 주 행동과 되돌릴 수 없는 행동은 하단 고정 영역(`BottomBar`: Tese White, 위쪽 실선, 안전영역 + 12, 버튼 간격 12).
+- 제목·정보는 왼쪽 정렬. 가운데 정렬은 로그인 브랜드 블록과 빈 상태에만.
 
-산책 홈과 산책 진행은 지도가 화면 대부분을 차지하고, 그 위에 흰 알약(높이 40~44)이 안전영역 아래 떠 있다. 산책 홈은 옅은 햇살 바텀시트가 세 단계로 멈춘다: 닫힘(제목 줄 84만 남음), 반(304, 가로 코스 카드 폭 232), 전체(화면의 75%까지만, 세로 목록). 처음 들어오면 닫힘이라 지도가 넓게 보인다. 산책 시작 버튼은 시트 바로 위를 따라다닌다. 산책 진행은 지도가 화면 전체이고, 위에 햇살 노랑 코스 카드(반경 20: 코스명·"산책 중 · 시간" / 걸은 거리 | 전체 길이, 자유 산책은 걸은 거리만), 아래에 흰 버튼 영역(상단 모서리 28)에 사진·종료 두 버튼만 둔다. 러닝 앱처럼 큰 수치 패널을 두지 않는다.
-
-목록은 iOS 인셋 그룹(흰 표면, 행 최소 높이 52, 좌측 16 들여 쓴 머리카락 구분선)을 쓴다.
-
-## Elevation & Depth
-
-기본은 평면이다. 면의 층은 아이보리 바탕 → 흰 표면 → 옅은 햇살의 밝기 차와 실선 테두리로 나눈다. 그림자는 지도 위에 떠 있는 요소와 코스 카드, 선택된 세그먼트에만 쓴다.
-
-### Shadow Vocabulary
-- **따뜻한 떠 있음** (`box-shadow: 0 4px 16px rgba(120, 96, 52, 0.10)`): 지도 위 알약·내 위치 버튼·산책 시작 버튼, 산책 진행 코스 카드와 하단 버튼 영역, 따라 걷기 범례, 코스 카드, 선택된 세그먼트 칸, 내 위치 점.
-
-### Named Rules
-**The Warm Shadow Rule.** 그림자는 위의 따뜻한 갈색 한 가지뿐이다. 회색·검정 그림자나 단단한 오프셋 그림자를 쓰지 않는다.
+산책 홈 시트는 세 단계로 멈춘다: 닫힘(손잡이·제목·부제 91), 반(가로 코스 카드 한 줄, 카드 폭 232), 전체(화면의 75%). 처음엔 닫힘. 산책 시작 버튼은 시트 바로 위를 따라다닌다. 코스 카드나 시트 머리 높이를 바꾸면 `MIN`/`PEEK` 상수도 맞춘다.
 
 ## Shapes
 
-둥근 형태 하나로 통일한다. 누를 수 있는 것(버튼, 칩, 지도 위 알약, 내 위치 버튼)은 모두 높이의 절반 반경의 알약이고, 상태 점(난이도 점)은 완전한 원이고, 단계 바는 양 끝이 둥글다. 담는 면은 크기가 클수록 반경도 커진다: 입력칸·세그먼트 12, 사진 자리 14, 지도·커버·그룹 16, 코스 카드 18, 수치 패널·산책 중 코스 카드 20, 바텀시트 상단 24, 산책 진행 하단 버튼 영역 상단 28. 반려견 프로필 사진과 마이 아바타는 원이다. 카드 안 커버는 반경 0으로 카드 모서리에 잘린다.
+칩·태그 8, 썸네일·사진 그리드 12, 입력칸 14, 버튼 16, 카드 안 커버 16, 카드 20, 큰 카드(프로필·결과 통계) 24, 바텀시트 상단 24. 원: 아바타, 지도 위 원형 버튼, 배지. 알약: 지도 위 동네 표시.
+
+코스 카드와 앨범 패널은 안쪽 여백 4 안에 반경 16 커버를 넣어 바깥 20과 동심원이 되게 한다.
+
+## Elevation & Depth
+
+기본은 평면이다. 바탕 → 흰 카드 → 테두리로 층을 나누고, 그림자는 두 단계뿐이다.
+- **Level 1 subtle** `0 4px 12px rgba(35,35,35,0.06)`: 선택된 세그먼트 칸, 웹 지도 내 위치 점.
+- **Level 2 float** `0 8px 24px rgba(35,35,35,0.08)`: 지도 위 유리 요소, 산책 시작 버튼, 추천 코스 시트.
+
+카드·그룹·통계 카드에는 그림자를 주지 않는다.
+
+## Glass
+
+지도 위 오버레이에만 쓴다: 산책 홈 동네 알약·내 위치 버튼, 산책 진행 시간·거리 패널·카메라 버튼·범례.
+- 바탕 `rgba(255,255,255,0.72)`, 테두리 1px `rgba(255,255,255,0.5)`, 블러 20(`expo-blur`, tint light), Level 2 그림자.
+- iOS만 실제 블러. 안드로이드는 `BlurTargetView` 없이 블러가 되지 않아 바탕을 0.94로 올려 가독성을 지킨다(웹도 같음).
+- 유리 버튼의 눌림은 투명도 대신 크기(0.94)로 보여준다. 블러 뷰의 투명도를 바꾸면 효과가 깨진다.
+- 금지: 코스 카드, 긴 텍스트, 입력칸, 마이 카드, 산책일지, 앨범.
 
 ## Components
 
-### Buttons
-알약형, 가볍게 눌린다.
-- **Shape:** 알약(높이의 절반).
-- **Primary (햇살 노랑 주 버튼):** 햇살 노랑 바탕, 노랑 위 잉크 Headline, 높이 56, 좌우 20, 선택적 아이콘 20. 화면당 하나, 그 화면의 주 행동(산책 시작하기, 로그인, 기록 저장, 이 코스 따라 걷기, 종료)에만.
-- **Surface:** 흰 표면 + 실선 테두리, 잉크 글자, 최소 높이 50. 보조 행동(코스로 등록하여 공유).
-- **Soft:** 옅은 햇살 바탕, 잉크 글자. 주 버튼 옆 짝 행동(산책 중 사진).
-- **Plain:** 투명, 흐린 잉크 글자. 가장 약한 행동(기록 버리기, 회원가입 전환).
-- **Pressed / Disabled:** 눌림은 투명도 0.82(주) / 0.7(보조), 비활성은 0.4. 호버 상태는 없다(터치 전용).
+### Buttons (`Btn`, `Plate`)
+- **primary (`Plate`)**: Chew Yellow, Hunt Black bodyMain, 높이 56, 반경 16, 선택 아이콘 20. 화면당 하나.
+- **secondary**: surfaceMuted, Hunt Black, 높이 52.
+- **plain**: 투명, textSecondary body Medium, 높이 44. 가장 약한 행동(기록 버리기).
+- 상태: 눌림 투명도 0.8, 비활성 surfaceMuted 바탕 + textTertiary 글자, 로딩은 아이콘 자리에 스피너 + 누를 수 없음.
 
-### Chips
-- **Style:** 알약, 높이 36, 좌우 14, 흰 표면 + 실선 테두리, Subhead 잉크.
-- **State:** 선택되면 햇살 노랑 면 + 노랑 위 잉크, 굵기 600. 읽기 전용 태그(코스 상세)도 같은 모양.
+### Inputs (`Field`, `BigField`, `PasswordField`)
+- surfaceMuted 채운 칸, 반경 14, 최소 높이 52(로그인 56), 테두리 없음. 위에 bodySmall Medium 라벨.
+- 포커스: 흰 바탕 + Hunt Black 1.5px 테두리. 오류(`error`): error 테두리 + 아래 caption 문구.
+- 플레이스홀더는 textSecondary(야외 가독성).
 
-### Cards / Containers
-- **Corner Style:** 코스 카드 18, 인셋 그룹 16, 수치 패널 20.
-- **Background:** 카드·그룹은 흰 표면, 수치 패널은 옅은 햇살.
-- **Shadow Strategy:** 코스 카드만 따뜻한 떠 있음. 그룹과 패널은 평면.
-- **Border:** 카드·그룹은 실선 1px. 패널은 테두리 없음.
-- **Internal Padding:** 카드 본문 12, 수치 패널 20.
-- **코스 카드 라벨 그리드:** 커버(높이 104) / 코스명 / 거리(Nunito 22 + KM)·난이도 점·좋아요 / 견종·나이. 모든 카드가 같은 순서.
+### Chips & Tags
+- **Chip**: 고를 수 있는 칩. 높이 40, 반경 8, surfaceMuted → 선택 시 Chew Yellow + SemiBold.
+- **Tag**: 읽기 전용. 높이 24, 반경 8, caption Medium. 난이도만 `soft`(Cream Beige), 나머지 특징 태그는 surfaceMuted.
 
-### Inputs / Fields
-- **Style:** 흰 표면, 실선 1px, 반경 12, 최소 높이 50, Body 잉크, 위에 Footnote 흐린 라벨.
-- **Focus:** 선택·커서 색은 갈색 틴트. 별도 포커스 테두리는 없다.
-- **Segmented:** 채움 트랙(반경 12, 높이 40) 안에서 선택 칸만 흰 표면 + 따뜻한 떠 있음.
+### Cards
+- **CourseCard**: 흰 면, borderSubtle 1px, 반경 20, 안쪽 4. 커버(가로 카드 112 / 세로 160, 반경 16) / 코스명 bodyMain / 거리 Num + 난이도 Tag + 좋아요 / 견종·나이 bodySmall. 그림자 없음.
+- **통계 카드**: Cream Beige, 반경 24(결과) / 20(일지 상세), 안쪽 20.
+- **Group / Row**: 흰 면, 반경 20, 행 최소 높이 56, 좌측 16 들여 쓴 구분선, 아이콘 20 Hunt Black, 화살표 textTertiary.
+
+### Map overlay (`Glass`, `FloatButton`)
+- FloatButton: 원형 유리 버튼(기본 48, 산책 진행 카메라 56), 아이콘은 지름의 0.42. 사진 수는 Chew Yellow 배지.
+- 산책 진행 패널: 반경 24, 안쪽 20. 위에 산책 중 점 + 코스명(자유 산책), 아래에 시간 | 거리(28 Bold) 두 칸. 따라 걷기는 거리 라벨에 코스 전체 길이.
 
 ### Navigation
-- **스택 헤더:** 아이보리 바탕, 그림자 없음, 잉크 제목, 뒤로 버튼은 최소 표시. 걷는 중·결과 화면은 스와이프 뒤로가기를 막는다.
-- **탭바:** 산책·마이 2탭, 흰 표면 + 실선, 활성 갈색 틴트, 비활성 흐린 잉크, 아이콘 24(산책 탭은 서비스 로고 22, 마이 탭은 SF Symbols).
+- 스택 헤더: Tese White, 그림자 없음, Pretendard SemiBold 제목, 뒤로 버튼 최소 표시. 걷는 중·결과 화면은 스와이프 뒤로가기를 막는다.
+- 탭바: 산책·마이 2탭, 흰 면 + borderSubtle, 활성 Hunt Black, 비활성 textTertiary, 라벨 Pretendard Medium.
 
-### Steps
-온보딩 단계 표시. 남는 폭을 단계 수만큼 6 간격으로 나눈 높이 6 가로 바(지난·현재 칸은 햇살 노랑, 남은 칸은 실선 색, 칸마다 양 끝 둥글게) 오른쪽에 Nunito "n/N"을 둔다. 난이도는 8px 점 3개(꺼진 점은 채움 색, 켜진 점은 햇살 노랑)로 표시한다. 바나 점만으로 정보를 전하지 않고 글자를 함께 둔다.
+### Icons
+SF Symbols(`expo-symbols`), 안드로이드·웹은 Material Symbols. 아웃라인이 기본이고 채운 모양은 상태(좋아요 켜짐, 선택 체크)와 정지 기호에만. 기본 색 Hunt Black.
 
-### 산책 중 코스 카드 (시그니처)
-지도 위 안전영역 아래 좌우 16에 떠 있는 햇살 노랑 카드(반경 20, 따뜻한 떠 있음). 왼쪽: 코스명(Headline) + "산책 중 · 00:00:00"(Footnote), 오른쪽: 걸은 거리(Nunito 800 20) | 전체 길이(Nunito 700 20), 사이에 반투명 세로 선. 자유 산책은 남은 거리 개념이 없으므로 걸은 거리만 둔다. 글자는 모두 노랑 위 잉크.
+## Motion
 
-### Map Placeholder
-앱은 실제 지도(iOS Apple 지도, react-native-maps)에 시스템 내 위치 점을 띄우고, 걸은 길은 갈색 틴트 실선(두께 5)으로 그린다. 웹은 지도를 지원하지 않아 지도 톤 블록, 흰 길, 비스듬한 물길로 동네 지도 느낌만 내고, 내 위치는 햇살 노랑 원(흰 테두리 3)과 옅은 노랑 후광 48. 따라 걷기 범례: 원래 코스는 노랑 점선(점 3개), 내가 걸은 길은 갈색 틴트 실선, 내 위치는 노랑 점 + 틴트 테두리.
+- 버튼 눌림: 투명도 0.8, 유리 버튼은 크기 0.94.
+- 추천 코스 시트: spring(damping 26, stiffness 260, mass 0.9), 큰 바운스 없음.
+- 좋아요: 누를 때만 하트가 ZoomIn 180ms로 바뀐다. 화면을 처음 열 때는 움직이지 않는다.
+- 화면 전환은 네이티브 스택 기본. 페이지 진입 애니메이션은 따로 두지 않는다.
 
 ## Do's and Don'ts
 
-### Do:
-- **Do** 모든 색을 `useTheme()`가 돌려주는 `palette`에서 가져온다. 화면에 hex를 직접 쓰지 않는다.
-- **Do** 한 화면의 주 행동 하나만 햇살 노랑 알약(높이 56)으로 두고, 짝 행동은 Soft, 보조는 Surface, 가장 약한 행동은 Plain으로 내린다.
-- **Do** 수치는 Nunito 고정폭으로 쓰고 아래에 흐린 Footnote 라벨을 붙인다.
-- **Do** 단계는 가로 바, 난이도는 둥근 점으로 표시하고, 그 옆이나 아래에 글자 정보를 함께 둔다.
-- **Do** 그림자가 필요하면 따뜻한 떠 있음(`0 4px 16px rgba(120, 96, 52, 0.10)`) 하나만 쓴다.
-- **Do** 되돌릴 수 없는 행동은 하단 고정 영역에 두고 확인을 거친다.
+### Do
+- 색·글자·간격·반경·그림자는 `@/constants/theme`에서 가져온다.
+- 한 화면의 주 행동 하나만 Chew Yellow, 나머지는 secondary, 가장 약한 행동은 plain.
+- 수치는 `Num`/`Stat`으로, 아래에 라벨을 붙인다.
+- 지도 위 떠 있는 요소만 `Glass`로 감싼다.
 
-### Don't:
-- **Don't** 초록 계열 색을 쓰지 않는다(사용자 지정).
-- **Don't** 도로·노면 표시 이미지(차선, 노면 페인트, 도로 표지식 숫자, 트랙)를 쓰지 않는다. 펫로드는 산책이지 도로가 아니다(사용자 지정). 지도 플레이스홀더의 길은 지도 안에서만 허용된다.
-- **Don't** 순수 검정 글자, 검정 그림자, 어두운 전면 배경을 쓰지 않는다.
-- **Don't** 다크 모드나 색 반전 테마를 만들지 않는다. 앱은 라이트 모드 하나다.
-- **Don't** 햇살 노랑을 글자색으로 쓰지 않는다. 밝은 바탕 위에서 읽히지 않는다. 노랑 계열 글자가 필요하면 갈색 틴트를 쓴다.
-- **Don't** 버튼과 칩을 각진 사각형으로 만들지 않는다.
+### Don't
+- 초록·주황 계열, 순수 검정(#000), 어두운 전면 배경, 다크 모드.
+- Chew Yellow를 글자색으로 쓰기, 넓은 배경 면으로 깔기.
+- 모든 카드에 그림자, 콘텐츠 화면에 유리 효과.
+- 지도 자체에 필터나 색 오버레이.
+- 도로·노면 표시 이미지(차선, 노면 페인트, 도로 표지식 숫자). 펫로드는 산책이지 도로가 아니다.

@@ -1,12 +1,11 @@
 import { useEffect } from "react";
-import { Nunito_700Bold } from "@expo-google-fonts/nunito/700Bold";
-import { Nunito_800ExtraBold } from "@expo-google-fonts/nunito/800ExtraBold";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import QueryProvider from "@/providers/QueryProvider";
+import { font } from "@/constants/theme";
 import { useStackOptions } from "@/hooks/useTheme";
 import { useUserStore } from "@/stores/userStore";
 
@@ -18,7 +17,13 @@ const guarded = { gestureEnabled: false, headerBackVisible: false };
 export default function RootLayout() {
   const onboarded = useUserStore((s) => s.onboarded);
   const stackOptions = useStackOptions();
-  const [loaded, error] = useFonts({ Nunito_700Bold, Nunito_800ExtraBold });
+  // Expo Go는 config plugin으로 폰트를 넣을 수 없어 실행 중에 불러온다
+  const [loaded, error] = useFonts({
+    [font.regular]: require("@/assets/fonts/Pretendard-Regular.otf"),
+    [font.medium]: require("@/assets/fonts/Pretendard-Medium.otf"),
+    [font.semibold]: require("@/assets/fonts/Pretendard-SemiBold.otf"),
+    [font.bold]: require("@/assets/fonts/Pretendard-Bold.otf"),
+  });
 
   useEffect(() => {
     if (loaded || error) SplashScreen.hideAsync();
