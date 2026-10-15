@@ -1,4 +1,4 @@
-import { palette, type Palette } from "@/constants/colors";
+import { font, palette, type Palette } from "@/constants/theme";
 
 // 밝은 테마 하나만 쓴다 (app.json userInterfaceStyle: light)
 export function useTheme(): Palette {
@@ -8,11 +8,11 @@ export function useTheme(): Palette {
 export function useStackOptions() {
   const c = useTheme();
   return {
-    headerTintColor: c.ink,
-    headerTitleStyle: { color: c.ink },
-    headerStyle: { backgroundColor: c.ground },
+    headerTintColor: c.textPrimary,
+    headerTitleStyle: { color: c.textPrimary, fontFamily: font.semibold },
+    headerStyle: { backgroundColor: c.background },
     headerShadowVisible: false,
     headerBackButtonDisplayMode: "minimal" as const,
-    contentStyle: { backgroundColor: c.ground },
+    contentStyle: { backgroundColor: c.background },
   };
 }
