@@ -71,8 +71,8 @@ export default function CourseRegisterScreen() {
           <Row
             title="거리"
             detail={
-              <Num size={20} color={c.inkMuted}>
-                {walk.distanceKm.toFixed(2)} KM
+              <Num size={16} color={c.textSecondary}>
+                {walk.distanceKm.toFixed(2)} km
               </Num>
             }
           />
