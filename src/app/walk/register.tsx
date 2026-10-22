@@ -17,8 +17,9 @@ export default function CourseRegisterScreen() {
   const c = useTheme();
   const walk = useWalkStore((s) => s.current);
   const dog = useUserStore((s) => s.dog);
-  const [name, setName] = useState("");
-  const [cover, setCover] = useState<string>();
+  // 결과 화면에서 정한 이름·대표 사진을 그대로 이어받는다
+  const [name, setName] = useState(walk?.title ?? "");
+  const [cover, setCover] = useState(walk?.cover);
   const [tags, setTags] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("쉬움");
 

@@ -12,6 +12,7 @@ type WalkState = {
   tick: () => void;
   move: (p: LatLng) => void;
   addPhoto: () => void;
+  edit: (patch: Partial<Pick<Walk, "title" | "cover">>) => void;
   finish: () => void;
   save: () => void;
   discard: () => void;
@@ -44,6 +45,7 @@ export const useWalkStore = create<WalkState>()((set) => ({
     ),
   // ponytail: 사진 자리만 추가. expo-camera 촬영으로 교체
   addPhoto: () => set((s) => update(s, (w) => ({ photos: [...w.photos, `사진 ${w.photos.length + 1}`] }))),
+  edit: (patch) => set((s) => update(s, () => patch)),
   // ponytail: 완주율 임시값 = 걸은 거리 ÷ 코스 거리. 기획 §17대로 경로 매칭 알고리즘이 정해지면 교체
   finish: () =>
     set((s) =>
