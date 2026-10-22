@@ -15,6 +15,7 @@ type WalkState = {
   finish: () => void;
   save: () => void;
   discard: () => void;
+  remove: (id: string) => void;
 };
 
 const seed: Walk[] = [
@@ -53,4 +54,5 @@ export const useWalkStore = create<WalkState>()((set) => ({
     ),
   save: () => set((s) => (s.current ? { walks: [s.current, ...s.walks], current: null } : {})),
   discard: () => set({ current: null }),
+  remove: (id) => set((s) => ({ walks: s.walks.filter((w) => w.id !== id) })),
 }));
