@@ -10,7 +10,10 @@ import { useWalkStore } from "@/stores/walkStore";
 import type { Difficulty } from "@/types/course";
 import { ageFromBirth } from "@/utils/format";
 
-const TAGS = ["그늘많음", "공원", "물가", "평지", "한적함", "야경"];
+const TAGS = [
+  "그늘많음", "공원", "물가", "숲길", "흙길", "평지", "오르막", "계단",
+  "한적함", "사람많음", "야경", "벚꽃", "단풍", "카페거리", "벤치", "반려견놀이터",
+];
 const DIFFICULTIES = ["쉬움", "보통", "어려움"] as const;
 
 export default function CourseRegisterScreen() {
