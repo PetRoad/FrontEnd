@@ -1,7 +1,7 @@
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { MapPlate } from "@/components/common/MapPlate";
-import { BottomBar, Btn, Field, I, Page, Plate, Section, Stat, T } from "@/components/common/ui";
+import { BottomBar, Btn, I, Page, Plate, Section, Stat, T } from "@/components/common/ui";
 import { PhotoGrid } from "@/components/walk/PhotoGrid";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
@@ -13,12 +13,8 @@ export default function WalkResultScreen() {
   const c = useTheme();
   const walk = useWalkStore((s) => s.current);
   if (!walk) return null;
-  // 자유산책만 이름·대표 사진을 정한다. 따라 걷기는 코스 이름 그대로
-  const free = !walk.courseId;
-  const { edit } = useWalkStore.getState();
 
   const save = () => {
-    if (!walk.title.trim()) return Alert.alert("산책 이름을 정해주세요.");
     useWalkStore.getState().save();
     router.dismissAll();
     router.push("/my/walks");
@@ -56,18 +52,12 @@ export default function WalkResultScreen() {
           </View>
         </View>
 
-        {free && (
-          <Section title="산책 이름">
-            <Field value={walk.title} onChangeText={(title) => edit({ title })} placeholder="성북천 한바퀴" maxLength={30} />
-          </Section>
-        )}
-
         <Section title="걸은 경로">
           <MapPlate style={s.map} route={walk.route} />
         </Section>
 
-        <Section title={free ? "대표 사진" : "산책 중 찍은 사진"} hint={free && walk.photos.length ? "찍은 사진 중에서 골라요" : `${walk.photos.length}장`}>
-          <PhotoGrid photos={walk.photos} selected={free ? walk.cover : undefined} onPress={free ? (cover) => edit({ cover }) : undefined} />
+        <Section title="산책 중 찍은 사진" hint={`${walk.photos.length}장`}>
+          <PhotoGrid photos={walk.photos} />
         </Section>
       </Page>
 
