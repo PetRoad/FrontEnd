@@ -19,7 +19,7 @@ export default function WalksScreen() {
           {walks.map((w) => (
             <Row
               key={w.id}
-              left={<PhotoTile icon={w.photos.length ? I.photo : I.walk} label={w.cover ?? w.photos[0]} style={s.thumb} />}
+              left={<PhotoTile icon={w.photos.length ? I.photo : I.walk} style={s.thumb} />}
               title={
                 <View style={{ gap: 2 }}>
                   <Num size={16}>{dotDate(w.date)}</Num>

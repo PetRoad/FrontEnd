@@ -1,12 +1,11 @@
 import { StyleSheet, View } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { MapPlate } from "@/components/common/MapPlate";
-import { Btn, Empty, I, Page, Section, Stat, T } from "@/components/common/ui";
+import { Empty, I, Page, Section, Stat, T } from "@/components/common/ui";
 import { PhotoGrid } from "@/components/walk/PhotoGrid";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
-import { confirm } from "@/utils/confirm";
 import { dotDate } from "@/utils/format";
 
 export default function WalkDetailScreen() {
@@ -21,18 +20,6 @@ export default function WalkDetailScreen() {
       </Page>
     );
   }
-
-  const remove = () =>
-    confirm({
-      title: "기록을 삭제할까요?",
-      message: "삭제한 산책은 되돌릴 수 없어요.",
-      ok: "삭제",
-      destructive: true,
-      onOk: () => {
-        router.back();
-        useWalkStore.getState().remove(walk.id);
-      },
-    });
 
   return (
     <Page>
@@ -54,8 +41,6 @@ export default function WalkDetailScreen() {
       <Section title="이 산책에서 찍은 사진" hint={`${walk.photos.length}장`}>
         <PhotoGrid photos={walk.photos} />
       </Section>
-
-      <Btn tone="plain" title="기록 삭제" onPress={remove} />
     </Page>
   );
 }
