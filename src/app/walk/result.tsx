@@ -17,8 +17,11 @@ export default function WalkResultScreen() {
   const free = !walk.courseId;
   const { edit } = useWalkStore.getState();
 
+  // 저장과 코스 공유 모두 산책일지에 남으니 이름이 있어야 한다
+  const named = () => !!walk.title.trim() || (Alert.alert("산책 이름을 정해주세요."), false);
+
   const save = () => {
-    if (!walk.title.trim()) return Alert.alert("산책 이름을 정해주세요.");
+    if (!named()) return;
     useWalkStore.getState().save();
     router.dismissAll();
     router.push("/my/walks");
@@ -74,7 +77,7 @@ export default function WalkResultScreen() {
       <BottomBar>
         <Plate title="기록 저장" onPress={save} />
         {/* 남의 코스를 따라 걸은 기록은 내 코스로 등록하지 않음 (스케치 흐름 그대로 유지) */}
-        {!walk.courseId && <Btn title="코스로 등록하여 공유" icon={I.map} onPress={() => router.push("/walk/register")} />}
+        {!walk.courseId && <Btn title="코스로 등록하여 공유" icon={I.map} onPress={() => named() && router.push("/walk/register")} />}
         <Btn tone="plain" title="기록 버리기" onPress={discard} />
       </BottomBar>
     </View>
