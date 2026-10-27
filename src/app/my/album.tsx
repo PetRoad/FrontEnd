@@ -14,7 +14,9 @@ type Item = { walk: Walk; photo: string };
 export default function AlbumScreen() {
   const c = useTheme();
   const walks = useWalkStore((s) => s.walks);
-  const [sel, setSel] = useState<Item>();
+  const [picked, setSel] = useState<Item>();
+  // 상세 화면에서 삭제된 기록이면 선택도 풀린다
+  const sel = picked && walks.some((w) => w.id === picked.walk.id) ? picked : undefined;
 
   const months = new Map<string, Item[]>();
   for (const walk of walks) {
