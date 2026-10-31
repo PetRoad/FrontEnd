@@ -5,8 +5,8 @@ import * as Location from "expo-location";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MapPlate } from "@/components/common/MapPlate";
-import { FloatButton, Glass, I, Plate, Stat, T } from "@/components/common/ui";
-import { mapEdge, radius, space } from "@/constants/theme";
+import { FloatButton, Glass, I, Num, Plate, T } from "@/components/common/ui";
+import { font, mapEdge, radius, shadow, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
 import type { Course } from "@/types/course";
@@ -68,33 +68,27 @@ export function Tracker({ course }: { course?: Course }) {
     <View style={{ flex: 1, backgroundColor: c.background }}>
       <MapPlate style={StyleSheet.absoluteFill} marker follow route={walk.route} />
 
-      {/* 시간·거리가 가장 크게. 코스 따라 걷기는 거리 아래에 코스 전체 길이를 함께 */}
-      <Glass
+      {/* 한 줄 바: 왼쪽 코스 이름, 오른쪽 수치. 따라 걷기는 걸은 거리 | 코스 전체, 자유산책은 시간 | 걸은 거리 */}
+      <View
         accessible
         accessibilityLabel={
           course
-            ? `${course.name}, ${clock(walk.durationSec)}, ${course.distanceKm}킬로미터 중 ${km}킬로미터 걸었어요`
-            : `자유 산책, ${clock(walk.durationSec)}, ${km}킬로미터 걸었어요`
+            ? `${course.name}, ${course.distanceKm}킬로미터 중 ${km}킬로미터 걸었어요`
+            : `자유산책, ${clock(walk.durationSec)}, ${km}킬로미터 걸었어요`
         }
-        r={radius.cardLg}
-        style={[s.panel, { top: insets.top + space.sm }]}
+        style={[s.panel, shadow.float, { top: insets.top + space.sm, backgroundColor: c.primary }]}
       >
-        <View style={s.title}>
-          <View style={[s.live, { backgroundColor: c.primary, borderColor: c.onPrimary }]} />
-          <T w="semibold" numberOfLines={1} style={{ flex: 1 }}>
-            {course ? course.name : "자유 산책"}
-          </T>
-        </View>
-        <View style={s.stats}>
-          <View style={{ flex: 1 }}>
-            <Stat value={clock(walk.durationSec)} label="산책 시간" size={28} />
-          </View>
-          <View style={[s.divider, { backgroundColor: c.borderStrong }]} />
-          <View style={{ flex: 1 }}>
-            <Stat value={km} unit="km" label={course ? `코스 ${course.distanceKm.toFixed(2)}km 중` : "걸은 거리"} size={28} />
-          </View>
-        </View>
-      </Glass>
+        <T w="semibold" color={c.onPrimary} numberOfLines={1} style={{ flex: 1 }}>
+          {course ? course.name : "자유산책"}
+        </T>
+        <Num color={c.onPrimary} style={{ fontFamily: font.medium }}>
+          {course ? `${km}km` : clock(walk.durationSec)}
+        </Num>
+        <View style={[s.divider, { backgroundColor: c.onPrimary }]} />
+        <Num bold color={c.onPrimary}>
+          {course ? `${course.distanceKm.toFixed(2)}km` : `${km}km`}
+        </Num>
+      </View>
 
       {course && <Legend bottom={bottom + CONTROLS + space.md} />}
 
@@ -147,11 +141,18 @@ function Legend({ bottom }: { bottom: number }) {
 }
 
 const s = StyleSheet.create({
-  panel: { position: "absolute", left: mapEdge, right: mapEdge, padding: space.xl, gap: space.md },
-  title: { flexDirection: "row", alignItems: "center", gap: space.sm },
-  live: { width: 10, height: 10, borderRadius: 5, borderWidth: 1.5 },
-  stats: { flexDirection: "row", alignItems: "center", gap: space.lg },
-  divider: { width: StyleSheet.hairlineWidth, alignSelf: "stretch" },
+  panel: {
+    position: "absolute",
+    left: mapEdge,
+    right: mapEdge,
+    minHeight: 52,
+    paddingHorizontal: space.xl,
+    borderRadius: radius.button,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: space.md,
+  },
+  divider: { width: 1, height: 14, opacity: 0.3 },
   controls: { position: "absolute", left: mapEdge, right: mapEdge, flexDirection: "row", alignItems: "center", gap: space.md },
   legend: { position: "absolute", left: mapEdge, padding: space.md, gap: space.sm },
   legendRow: { flexDirection: "row", alignItems: "center", gap: 10 },
