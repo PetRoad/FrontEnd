@@ -118,8 +118,8 @@ export function Num({ size = 16, bold, color, style, children }: { size?: number
   );
 }
 
-// 숫자 아래에는 항상 라벨
-export function Stat({ value, unit, label, size = 32 }: { value: string; unit?: string; label: string; size?: number }) {
+// 숫자 아래에는 항상 라벨. 색 면 위에서는 sub로 단위·라벨 색을 바꾼다(회색은 대비가 모자람)
+export function Stat({ value, unit, label, size = 32, sub }: { value: string; unit?: string; label: string; size?: number; sub?: string }) {
   const c = useTheme();
   return (
     <View style={{ gap: 2 }}>
@@ -128,12 +128,12 @@ export function Stat({ value, unit, label, size = 32 }: { value: string; unit?: 
           {value}
         </Num>
         {unit && (
-          <Num size={Math.max(12, Math.round(size * 0.45))} color={c.textSecondary}>
+          <Num size={Math.max(12, Math.round(size * 0.45))} color={sub ?? c.textSecondary}>
             {unit}
           </Num>
         )}
       </View>
-      <T v="bodySmall" muted>
+      <T v="bodySmall" color={sub} muted>
         {label}
       </T>
     </View>
