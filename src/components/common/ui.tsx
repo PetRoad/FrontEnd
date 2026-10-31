@@ -323,7 +323,16 @@ export function Steps({ step, total }: { step: number; total: number }) {
     <View style={{ flexDirection: "row", alignItems: "center", gap: space.md }} accessibilityLabel={`${total}단계 중 ${step}단계`}>
       <View style={{ flex: 1, flexDirection: "row", gap: 6 }}>
         {Array.from({ length: total }, (_, i) => (
-          <View key={i} style={[s.track, { backgroundColor: i < step ? c.primary : c.borderSubtle }]} />
+          // 바 전체의 양 끝만 둥글게, 칸 사이 갈라진 쪽은 각지게
+          <View
+            key={i}
+            style={[
+              s.track,
+              { backgroundColor: i < step ? c.primary : c.borderSubtle },
+              i === 0 && { borderTopLeftRadius: 3, borderBottomLeftRadius: 3 },
+              i === total - 1 && { borderTopRightRadius: 3, borderBottomRightRadius: 3 },
+            ]}
+          />
         ))}
       </View>
       <Num size={14} color={c.textSecondary}>
@@ -493,7 +502,7 @@ const s = StyleSheet.create({
   chip: { height: 40, paddingHorizontal: 14, borderRadius: radius.chip, alignItems: "center", justifyContent: "center" },
   tag: { height: 24, paddingHorizontal: space.sm, borderRadius: radius.chip, justifyContent: "center" },
   tile: { borderRadius: radius.thumb, alignItems: "center", justifyContent: "center", gap: space.xs, overflow: "hidden", padding: 6 },
-  track: { flex: 1, height: 6, borderRadius: 3 },
+  track: { flex: 1, height: 6 },
   badge: { position: "absolute", top: -4, right: -4, minWidth: 22, height: 22, paddingHorizontal: 5, borderRadius: 11, borderWidth: 2, alignItems: "center", justifyContent: "center" },
   page: { padding: gutter, gap: space.xxl, paddingBottom: space.huge },
   group: { borderRadius: radius.card, overflow: "hidden", borderWidth: 1 },
