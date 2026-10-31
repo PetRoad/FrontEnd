@@ -74,7 +74,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
               accessibilityRole="button"
               accessibilityLabel={birth ? `생년월일 ${dotDate(birth)}, 변경` : "생년월일 선택"}
               onPress={openPicker}
-              style={[s.dateField, { backgroundColor: picking ? c.surface : c.surfaceMuted, borderColor: picking ? c.textPrimary : "transparent" }]}
+              style={[s.dateField, { backgroundColor: c.surface, borderColor: picking ? c.primaryDeep : c.borderStrong }]}
             >
               {birth ? <Num size={16}>{dotDate(birth)}</Num> : <T muted>날짜를 선택해주세요</T>}
             </Pressable>
@@ -100,5 +100,5 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
 const s = StyleSheet.create({
   avatarWrap: { alignItems: "center", gap: space.sm },
   avatar: { width: 112, height: 112, borderRadius: radius.pill },
-  dateField: { minHeight: 52, borderRadius: radius.input, borderWidth: 1.5, paddingHorizontal: space.lg, justifyContent: "center" },
+  dateField: { minHeight: 52, borderRadius: radius.input, borderWidth: 1, paddingHorizontal: space.lg, justifyContent: "center" },
 });

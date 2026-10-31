@@ -150,23 +150,24 @@ type PressProps = {
 };
 type Tone = "primary" | "secondary" | "plain";
 
-// primary: 화면당 하나뿐인 주 행동 / secondary: 보조 행동 / plain: 가장 약한 행동(버리기, 전환)
+// primary: 화면당 하나뿐인 주 행동(Chew Yellow 채움) / secondary: 보조 행동(Cream Beige 틴트) / plain: 가장 약한 행동(버리기, 전환)
+// 눌림은 투명도 대신 한 단계 진한 색. 비활성은 회색 면 + 흰 글자
 export function Btn({ title, onPress, icon, disabled, loading, style, tone = "secondary" }: PressProps & { tone?: Tone }) {
   const c = useTheme();
   const look = {
-    primary: { bg: c.primary, fg: c.onPrimary, h: 56, text: typography.bodyMain },
-    secondary: { bg: c.surfaceMuted, fg: c.textPrimary, h: 52, text: typography.bodyMain },
-    plain: { bg: "transparent", fg: c.textSecondary, h: 44, text: [typography.body, { fontFamily: font.medium }] },
+    primary: { bg: c.primary, down: c.primaryPressed, fg: c.onPrimary, h: 56, text: typography.bodyMain },
+    secondary: { bg: c.primarySoft, down: c.primarySoftPressed, fg: c.primaryDeep, h: 52, text: typography.bodyMain },
+    plain: { bg: "transparent", down: c.surfaceMuted, fg: c.textSecondary, h: 44, text: [typography.body, { fontFamily: font.medium }] },
   }[tone];
-  const bg = disabled && tone !== "plain" ? c.surfaceMuted : look.bg;
-  const fg = disabled ? c.textTertiary : look.fg;
+  const off = disabled && tone !== "plain";
+  const fg = off ? c.surface : disabled ? c.textTertiary : look.fg;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ disabled: disabled || loading, busy: loading }}
       onPress={onPress}
       disabled={disabled || loading}
-      style={({ pressed }) => [s.btn, { minHeight: look.h, backgroundColor: bg, opacity: pressed ? 0.8 : 1 }, style]}
+      style={({ pressed }) => [s.btn, { minHeight: look.h, backgroundColor: off ? c.borderStrong : pressed ? look.down : look.bg }, style]}
     >
       {loading ? <ActivityIndicator color={fg} /> : isValidElement(icon) ? icon : icon && <Icon name={icon} size={20} color={fg} />}
       <Text style={[look.text, { color: fg }]}>{title}</Text>
@@ -203,12 +204,13 @@ export function Field({ label, error, style, onFocus, onBlur, ...props }: TextIn
           setFocused(false);
           onBlur?.(e);
         }}
+        // 흰 칸 + 회색 테두리, 포커스는 Chew Brown. 수정할 수 없는 칸은 회색으로 채운다
         style={[
           s.field,
           {
             color: c.textPrimary,
-            backgroundColor: focused ? c.surface : c.surfaceMuted,
-            borderColor: error ? c.error : focused ? c.textPrimary : "transparent",
+            backgroundColor: props.editable === false ? c.surfaceMuted : c.surface,
+            borderColor: error ? c.error : focused ? c.primaryDeep : c.borderStrong,
           },
           style,
         ]}
@@ -278,7 +280,7 @@ export function Chip({ label, on, onPress }: { label: string; on?: boolean; onPr
       accessibilityState={{ selected: !!on }}
       onPress={onPress}
       hitSlop={4}
-      style={({ pressed }) => [s.chip, { backgroundColor: on ? c.primary : c.surfaceMuted, opacity: pressed ? 0.8 : 1 }]}
+      style={({ pressed }) => [s.chip, { backgroundColor: on ? (pressed ? c.primaryPressed : c.primary) : pressed ? c.borderSubtle : c.surfaceMuted }]}
     >
       <T v="bodySmall" w={on ? "semibold" : "medium"} color={on ? c.onPrimary : c.textPrimary}>
         {label}
@@ -483,7 +485,7 @@ export function Empty({ icon, title, body }: { icon: IconName; title: string; bo
 const s = StyleSheet.create({
   btn: { borderRadius: radius.button, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space.sm, paddingHorizontal: space.xl },
   // 한 줄 입력칸에 lineHeight를 주면 iOS에서 글자가 위아래로 밀려 크기·자간만 준다
-  field: { minHeight: 52, borderRadius: radius.input, borderWidth: 1.5, paddingHorizontal: space.lg, paddingVertical: space.md, fontFamily: font.regular, fontSize: 16, letterSpacing: -0.2 },
+  field: { minHeight: 52, borderRadius: radius.input, borderWidth: 1, paddingHorizontal: space.lg, paddingVertical: space.md, fontFamily: font.regular, fontSize: 16, letterSpacing: -0.2 },
   bigField: { minHeight: 56 },
   eye: { position: "absolute", right: 4, top: 6, width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   segment: { flexDirection: "row", borderRadius: radius.input, padding: 3, height: 44 },
