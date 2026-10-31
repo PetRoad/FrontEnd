@@ -51,3 +51,6 @@ example
 !.impeccable/surfaces/
 # 로컬 Claude 스킬 (impeccable 등). 각자 설치하며, 커밋하면 GitHub 언어 통계가 JS로 잡힌다
 .claude/skills/
+# impeccable update가 Codex용으로도 같이 설치하는 사본
+.agents/skills/
+.codex/
