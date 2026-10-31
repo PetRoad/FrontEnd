@@ -9,6 +9,7 @@ import { BreedSheet } from "./BreedSheet";
 import { dotDate, isoDate } from "@/utils/format";
 
 const SIZES = ["소형", "중형", "대형"] as const;
+const SIZE_WEIGHTS = { 소형: "(1~10kg)", 중형: "(10~25kg)", 대형: "(25kg 이상)" };
 
 type Props = { initial?: Dog | null; submitLabel: string; onSubmit: (dog: Dog) => void; header?: ReactNode };
 
@@ -77,7 +78,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
           <T v="bodySmall" w="medium" muted>
             크기
           </T>
-          <Segmented options={SIZES} value={size} onChange={setSize} />
+          <Segmented options={SIZES} value={size} onChange={setSize} subs={SIZE_WEIGHTS} />
         </View>
         {Platform.OS === "web" ? (
           // 웹에는 시스템 날짜 선택기가 없다
