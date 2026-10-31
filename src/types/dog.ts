@@ -5,4 +5,5 @@ export type Dog = {
   breed: string;
   size: DogSize;
   birth: string; // YYYY-MM-DD
+  photo?: string; // 앨범에서 고른 사진 uri
 };

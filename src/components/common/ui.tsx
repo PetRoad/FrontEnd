@@ -44,6 +44,8 @@ export const I = {
   paw: { ios: "pawprint", android: "pets" },
   eye: { ios: "eye", android: "visibility" },
   eyeSlash: { ios: "eye.slash", android: "visibility_off" },
+  search: { ios: "magnifyingglass", android: "search" },
+  close: { ios: "xmark", android: "close" },
 } satisfies Record<string, IconName>;
 
 export function Icon({ name, size = 22, color }: { name: IconName; size?: number; color?: ColorValue }) {
@@ -247,16 +249,28 @@ export function PasswordField(props: TextInputProps) {
   );
 }
 
-export function Segmented<V extends string>({ options, value, onChange }: { options: readonly V[]; value: V; onChange: (v: V) => void }) {
+// subs: 항목 이름 아래 작은 설명(예: 크기별 무게)
+export function Segmented<V extends string>({
+  options,
+  value,
+  onChange,
+  subs,
+}: {
+  options: readonly V[];
+  value: V;
+  onChange: (v: V) => void;
+  subs?: Partial<Record<V, string>>;
+}) {
   const c = useTheme();
   return (
-    <View accessibilityRole="radiogroup" style={[s.segment, { backgroundColor: c.surfaceMuted }]}>
+    <View accessibilityRole="radiogroup" style={[s.segment, { backgroundColor: c.surfaceMuted }, subs && { height: 60 }]}>
       {options.map((o) => {
         const on = o === value;
         return (
           <Pressable
             key={o}
             accessibilityRole="radio"
+            accessibilityLabel={subs?.[o] ? `${o} ${subs[o]}` : undefined}
             accessibilityState={{ selected: on }}
             onPress={() => onChange(o)}
             style={[s.segmentItem, on && [{ backgroundColor: c.surface }, shadow.subtle]]}
@@ -264,6 +278,11 @@ export function Segmented<V extends string>({ options, value, onChange }: { opti
             <T v="bodySmall" w={on ? "semibold" : "medium"} muted={!on}>
               {o}
             </T>
+            {subs?.[o] && (
+              <Num size={12} color={c.textSecondary} style={{ fontFamily: font.regular }}>
+                {subs[o]}
+              </Num>
+            )}
           </Pressable>
         );
       })}

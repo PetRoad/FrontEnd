@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Group, I, Icon, Page, Row, Stat, T } from "@/components/common/ui";
 import { radius, space } from "@/constants/theme";
+import { DogAvatar } from "@/features/dog/DogAvatar";
 import { useTheme } from "@/hooks/useTheme";
 import { useCourseStore } from "@/stores/courseStore";
 import { useUserStore } from "@/stores/userStore";
@@ -32,10 +33,7 @@ export default function MyScreen() {
         style={({ pressed }) => [s.profile, { backgroundColor: c.surface, borderColor: c.borderSubtle, opacity: pressed ? 0.85 : 1 }]}
       >
         <View style={s.head}>
-          {/* 프로필 사진 연결 전까지 iOS 연락처처럼 이름 첫 글자 */}
-          <View style={[s.avatar, { backgroundColor: c.primarySoft }]}>
-            <T v="heading">{dog?.name.slice(0, 1)}</T>
-          </View>
+          <DogAvatar photo={dog?.photo} size={64} />
           <View style={{ flex: 1, gap: 2 }}>
             <T v="heading" numberOfLines={1}>
               {dog?.name}
@@ -75,7 +73,6 @@ export default function MyScreen() {
 const s = StyleSheet.create({
   profile: { borderRadius: radius.cardLg, borderWidth: 1, padding: space.xl, gap: space.lg },
   head: { flexDirection: "row", alignItems: "center", gap: space.lg },
-  avatar: { width: 64, height: 64, borderRadius: 32, alignItems: "center", justifyContent: "center" },
   region: { flexDirection: "row", alignItems: "center", gap: space.xs, marginTop: 2 },
   bento: { flexDirection: "row", gap: space.sm },
   cell: { flex: 1, borderRadius: radius.button, padding: space.lg },
