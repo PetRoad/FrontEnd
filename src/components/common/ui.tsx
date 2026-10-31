@@ -118,8 +118,8 @@ export function Num({ size = 16, bold, color, style, children }: { size?: number
   );
 }
 
-// 숫자 아래에는 항상 라벨
-export function Stat({ value, unit, label, size = 32 }: { value: string; unit?: string; label: string; size?: number }) {
+// 숫자 아래에는 항상 라벨. 색 면 위에서는 sub로 단위·라벨 색을 바꾼다(회색은 대비가 모자람)
+export function Stat({ value, unit, label, size = 32, sub }: { value: string; unit?: string; label: string; size?: number; sub?: string }) {
   const c = useTheme();
   return (
     <View style={{ gap: 2 }}>
@@ -128,12 +128,12 @@ export function Stat({ value, unit, label, size = 32 }: { value: string; unit?: 
           {value}
         </Num>
         {unit && (
-          <Num size={Math.max(12, Math.round(size * 0.45))} color={c.textSecondary}>
+          <Num size={Math.max(12, Math.round(size * 0.45))} color={sub ?? c.textSecondary}>
             {unit}
           </Num>
         )}
       </View>
-      <T v="bodySmall" muted>
+      <T v="bodySmall" color={sub} muted>
         {label}
       </T>
     </View>
@@ -150,23 +150,24 @@ type PressProps = {
 };
 type Tone = "primary" | "secondary" | "plain";
 
-// primary: 화면당 하나뿐인 주 행동 / secondary: 보조 행동 / plain: 가장 약한 행동(버리기, 전환)
+// primary: 화면당 하나뿐인 주 행동(Chew Yellow 채움) / secondary: 보조 행동(Cream Beige 틴트) / plain: 가장 약한 행동(버리기, 전환)
+// 눌림은 투명도 대신 한 단계 진한 색. 비활성은 회색 면 + 흰 글자
 export function Btn({ title, onPress, icon, disabled, loading, style, tone = "secondary" }: PressProps & { tone?: Tone }) {
   const c = useTheme();
   const look = {
-    primary: { bg: c.primary, fg: c.onPrimary, h: 56, text: typography.bodyMain },
-    secondary: { bg: c.surfaceMuted, fg: c.textPrimary, h: 52, text: typography.bodyMain },
-    plain: { bg: "transparent", fg: c.textSecondary, h: 44, text: [typography.body, { fontFamily: font.medium }] },
+    primary: { bg: c.primary, down: c.primaryPressed, fg: c.onPrimary, h: 56, text: typography.bodyMain },
+    secondary: { bg: c.primarySoft, down: c.primarySoftPressed, fg: c.primaryDeep, h: 52, text: typography.bodyMain },
+    plain: { bg: "transparent", down: c.surfaceMuted, fg: c.textSecondary, h: 44, text: [typography.body, { fontFamily: font.medium }] },
   }[tone];
-  const bg = disabled && tone !== "plain" ? c.surfaceMuted : look.bg;
-  const fg = disabled ? c.textTertiary : look.fg;
+  const off = disabled && tone !== "plain";
+  const fg = off ? c.surface : disabled ? c.textTertiary : look.fg;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ disabled: disabled || loading, busy: loading }}
       onPress={onPress}
       disabled={disabled || loading}
-      style={({ pressed }) => [s.btn, { minHeight: look.h, backgroundColor: bg, opacity: pressed ? 0.8 : 1 }, style]}
+      style={({ pressed }) => [s.btn, { minHeight: look.h, backgroundColor: off ? c.borderStrong : pressed ? look.down : look.bg }, style]}
     >
       {loading ? <ActivityIndicator color={fg} /> : isValidElement(icon) ? icon : icon && <Icon name={icon} size={20} color={fg} />}
       <Text style={[look.text, { color: fg }]}>{title}</Text>
@@ -203,12 +204,13 @@ export function Field({ label, error, style, onFocus, onBlur, ...props }: TextIn
           setFocused(false);
           onBlur?.(e);
         }}
+        // 흰 칸 + 회색 테두리, 포커스는 Chew Brown. 수정할 수 없는 칸은 회색으로 채운다
         style={[
           s.field,
           {
             color: c.textPrimary,
-            backgroundColor: focused ? c.surface : c.surfaceMuted,
-            borderColor: error ? c.error : focused ? c.textPrimary : "transparent",
+            backgroundColor: props.editable === false ? c.surfaceMuted : c.surface,
+            borderColor: error ? c.error : focused ? c.primaryDeep : c.borderStrong,
           },
           style,
         ]}
@@ -278,7 +280,7 @@ export function Chip({ label, on, onPress }: { label: string; on?: boolean; onPr
       accessibilityState={{ selected: !!on }}
       onPress={onPress}
       hitSlop={4}
-      style={({ pressed }) => [s.chip, { backgroundColor: on ? c.primary : c.surfaceMuted, opacity: pressed ? 0.8 : 1 }]}
+      style={({ pressed }) => [s.chip, { backgroundColor: on ? (pressed ? c.primaryPressed : c.primary) : pressed ? c.borderSubtle : c.surfaceMuted }]}
     >
       <T v="bodySmall" w={on ? "semibold" : "medium"} color={on ? c.onPrimary : c.textPrimary}>
         {label}
@@ -321,7 +323,16 @@ export function Steps({ step, total }: { step: number; total: number }) {
     <View style={{ flexDirection: "row", alignItems: "center", gap: space.md }} accessibilityLabel={`${total}단계 중 ${step}단계`}>
       <View style={{ flex: 1, flexDirection: "row", gap: 6 }}>
         {Array.from({ length: total }, (_, i) => (
-          <View key={i} style={[s.track, { backgroundColor: i < step ? c.primary : c.borderSubtle }]} />
+          // 바 전체의 양 끝만 둥글게, 칸 사이 갈라진 쪽은 각지게
+          <View
+            key={i}
+            style={[
+              s.track,
+              { backgroundColor: i < step ? c.primary : c.borderSubtle },
+              i === 0 && { borderTopLeftRadius: 3, borderBottomLeftRadius: 3 },
+              i === total - 1 && { borderTopRightRadius: 3, borderBottomRightRadius: 3 },
+            ]}
+          />
         ))}
       </View>
       <Num size={14} color={c.textSecondary}>
@@ -483,7 +494,7 @@ export function Empty({ icon, title, body }: { icon: IconName; title: string; bo
 const s = StyleSheet.create({
   btn: { borderRadius: radius.button, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space.sm, paddingHorizontal: space.xl },
   // 한 줄 입력칸에 lineHeight를 주면 iOS에서 글자가 위아래로 밀려 크기·자간만 준다
-  field: { minHeight: 52, borderRadius: radius.input, borderWidth: 1.5, paddingHorizontal: space.lg, paddingVertical: space.md, fontFamily: font.regular, fontSize: 16, letterSpacing: -0.2 },
+  field: { minHeight: 52, borderRadius: radius.input, borderWidth: 1, paddingHorizontal: space.lg, paddingVertical: space.md, fontFamily: font.regular, fontSize: 16, letterSpacing: -0.2 },
   bigField: { minHeight: 56 },
   eye: { position: "absolute", right: 4, top: 6, width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   segment: { flexDirection: "row", borderRadius: radius.input, padding: 3, height: 44 },
@@ -491,7 +502,7 @@ const s = StyleSheet.create({
   chip: { height: 40, paddingHorizontal: 14, borderRadius: radius.chip, alignItems: "center", justifyContent: "center" },
   tag: { height: 24, paddingHorizontal: space.sm, borderRadius: radius.chip, justifyContent: "center" },
   tile: { borderRadius: radius.thumb, alignItems: "center", justifyContent: "center", gap: space.xs, overflow: "hidden", padding: 6 },
-  track: { flex: 1, height: 6, borderRadius: 3 },
+  track: { flex: 1, height: 6 },
   badge: { position: "absolute", top: -4, right: -4, minWidth: 22, height: 22, paddingHorizontal: 5, borderRadius: 11, borderWidth: 2, alignItems: "center", justifyContent: "center" },
   page: { padding: gutter, gap: space.xxl, paddingBottom: space.huge },
   group: { borderRadius: radius.card, overflow: "hidden", borderWidth: 1 },

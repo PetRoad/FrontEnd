@@ -3,8 +3,11 @@ import type { TextStyle } from "react-native";
 // PetRoad = Warm Minimal + Subtle Glass. 색·글자·간격·모서리·그림자는 모두 여기서만 가져온다
 export const palette = {
   primary: "#FFD374", // Chew Yellow: 주 버튼, 선택 상태. 글자색으로 쓰지 않는다
+  primaryPressed: "#F2BE4E", // 주 버튼 눌림
   onPrimary: "#232323",
-  primarySoft: "#FFF3D6", // Cream Beige: 강조 카드, 중요한 태그
+  primarySoft: "#FFF3D6", // Cream Beige: 보조 버튼, 강조 카드, 중요한 태그
+  primarySoftPressed: "#FFE7B0", // 보조 버튼 눌림
+  primaryDeep: "#8C5A00", // Chew Brown: Cream Beige 위 글자, 입력칸 포커스. 노랑 계열에서 글자로 쓰는 유일한 색 (흰 바탕 5.9:1, Cream Beige 5.3:1)
   background: "#FEFFFA", // Tese White: 화면 바탕, 바텀시트
   surface: "#FFFFFF", // 카드, 그룹 목록, 탭바
   surfaceMuted: "#F5F5F5", // 입력칸, 보조 버튼, 사진 자리, 세그먼트 트랙

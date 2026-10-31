@@ -71,15 +71,20 @@ export default function CourseDetailScreen() {
             accessibilityLabel={liked ? `좋아요 취소, ${course.likes}` : `좋아요, ${course.likes}`}
             accessibilityState={{ selected: liked }}
             onPress={() => useCourseStore.getState().toggleLike(course.id)}
-            style={({ pressed }) => [s.like, { backgroundColor: liked ? c.primarySoft : c.surfaceMuted, opacity: pressed ? 0.8 : 1 }]}
+            style={({ pressed }) => [
+              s.like,
+              { backgroundColor: liked ? (pressed ? c.primarySoftPressed : c.primarySoft) : pressed ? c.borderSubtle : c.surfaceMuted },
+            ]}
           >
             {/* 처음 열 때는 그대로, 누를 때만 하트가 살짝 커지며 바뀐다 */}
             <LayoutAnimationConfig skipEntering>
               <Animated.View key={String(liked)} entering={ZoomIn.duration(180)}>
-                <Icon name={liked ? I.heartFill : I.heart} size={20} />
+                <Icon name={liked ? I.heartFill : I.heart} size={20} color={liked ? c.primaryDeep : undefined} />
               </Animated.View>
             </LayoutAnimationConfig>
-            <Num size={16}>{course.likes}</Num>
+            <Num size={16} color={liked ? c.primaryDeep : undefined}>
+              {course.likes}
+            </Num>
           </Pressable>
           <Plate title="이 코스 따라 걷기" icon={I.walk} onPress={follow} style={{ flex: 1 }} />
         </View>

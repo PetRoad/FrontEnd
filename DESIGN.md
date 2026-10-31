@@ -3,8 +3,11 @@ name: PetRoad
 description: 반려견과 걸은 길과 순간을 기록하고, 우리 동네의 좋은 산책길을 발견하는 iOS 앱
 colors:
   primary: "#FFD374"
+  primary-pressed: "#F2BE4E"
   on-primary: "#232323"
   primary-soft: "#FFF3D6"
+  primary-soft-pressed: "#FFE7B0"
+  primary-deep: "#8C5A00"
   background: "#FEFFFA"
   surface: "#FFFFFF"
   surface-muted: "#F5F5F5"
@@ -85,12 +88,19 @@ components:
     typography: "{typography.body-main}"
     rounded: "{rounded.button}"
     height: "56px"
+  button-primary-pressed:
+    backgroundColor: "{colors.primary-pressed}"
   button-secondary:
-    backgroundColor: "{colors.surface-muted}"
-    textColor: "{colors.text-primary}"
+    backgroundColor: "{colors.primary-soft}"
+    textColor: "{colors.primary-deep}"
     typography: "{typography.body-main}"
     rounded: "{rounded.button}"
     height: "52px"
+  button-secondary-pressed:
+    backgroundColor: "{colors.primary-soft-pressed}"
+  button-disabled:
+    backgroundColor: "{colors.border-strong}"
+    textColor: "{colors.surface}"
   button-plain:
     textColor: "{colors.text-secondary}"
     typography: "{typography.body}"
@@ -111,7 +121,7 @@ components:
   tag-soft:
     backgroundColor: "{colors.primary-soft}"
   field:
-    backgroundColor: "{colors.surface-muted}"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.text-primary}"
     rounded: "{rounded.input}"
     height: "52px"
@@ -139,7 +149,7 @@ components:
 
 화면마다 정보 계층이 다르다.
 - 산책 홈: 지도 중심 탐색. 위에는 유리 동네 알약과 내 위치 버튼, 아래에는 Tese White 추천 코스 시트.
-- 산책 진행: 실시간 수치와 조작. 유리 패널에 시간·거리, 아래에 원형 카메라 버튼과 종료 버튼.
+- 산책 진행: 실시간 수치와 조작. 위에 Chew Yellow 한 줄 바(코스명과 수치), 아래에 원형 카메라 버튼과 종료 버튼.
 - 코스 상세: 콘텐츠와 정보. 커버, 코스명, 거리·난이도, 반려견, 경로.
 - 마이: 개인 데이터 정리. 큰 프로필 카드 + 함께 걸은 기록 두 칸 + 메뉴 묶음.
 - 로그인·온보딩: 입력과 진행. 넓은 여백, 채운 입력칸, 하단 주 버튼.
@@ -149,8 +159,9 @@ components:
 ## Colors
 
 ### Brand
-- **Chew Yellow** (primary `#FFD374`): 주 버튼, 선택된 칩, 단계 바 채움, 사진 수 배지, 산책 중 표시 점. 글자색으로 쓰지 않는다.
-- **Cream Beige** (primarySoft `#FFF3D6`): 통계 카드(결과·일지 상세), 난이도 태그, 좋아요 켜진 버튼, 마이 아바타.
+- **Chew Yellow** (primary `#FFD374`): 주 버튼, 선택된 칩, 단계 바 채움, 사진 수 배지, 산책 진행 바, 산책 결과 통계 카드. 글자색으로 쓰지 않는다. 눌림은 primaryPressed `#F2BE4E`.
+- **Cream Beige** (primarySoft `#FFF3D6`): 보조 버튼, 통계 카드(일지 상세), 난이도 태그, 좋아요 켜진 버튼, 마이 아바타. 눌림은 primarySoftPressed `#FFE7B0`.
+- **Chew Brown** (primaryDeep `#8C5A00`): Cream Beige 위 글자와 아이콘(보조 버튼, 좋아요 켜짐), 입력칸 포커스 테두리. 노랑 계열에서 글자로 쓰는 유일한 색(흰 바탕 5.9:1, Cream Beige 5.3:1).
 - **Tese White** (background `#FEFFFA`): 모든 화면, 스택 헤더, 하단 고정 영역, 추천 코스 시트.
 - **Hunt Black** (textPrimary `#232323`): 본문, 제목, 아이콘, 선택·커서 색. Chew Yellow 위 글자(onPrimary)도 같은 값.
 
@@ -159,7 +170,7 @@ components:
 - textTertiary `#ADADAD`: 비활성 탭, 화살표, 사진 자리 아이콘.
 - borderStrong `#CCCCCC`: 시트 손잡이, 통계 카드 안 구분선.
 - borderSubtle `#EFEFEF`: 카드·그룹 테두리, 행 구분선, 탭바 위 선.
-- surfaceMuted `#F5F5F5`: 입력칸, 보조 버튼, 칩·태그, 사진 자리, 세그먼트 트랙.
+- surfaceMuted `#F5F5F5`: 수정할 수 없는 입력칸, 칩·태그, 좋아요 꺼진 버튼, 사진 자리, 세그먼트 트랙.
 - surface `#FFFFFF`: 카드, 그룹 목록, 탭바, 포커스된 입력칸.
 
 ### 기능 색
@@ -222,7 +233,7 @@ components:
 
 ## Glass
 
-지도 위 오버레이에만 쓴다: 산책 홈 동네 알약·내 위치 버튼, 산책 진행 시간·거리 패널·카메라 버튼·범례.
+지도 위 오버레이에만 쓴다: 산책 홈 동네 알약·내 위치 버튼, 산책 진행 카메라 버튼·범례.
 - 바탕 `rgba(255,255,255,0.72)`, 테두리 1px `rgba(255,255,255,0.5)`, 블러 20(`expo-blur`, tint light), Level 2 그림자.
 - iOS만 실제 블러. 안드로이드는 `BlurTargetView` 없이 블러가 되지 않아 바탕을 0.94로 올려 가독성을 지킨다(웹도 같음).
 - 유리 버튼의 눌림은 투명도 대신 크기(0.94)로 보여준다. 블러 뷰의 투명도를 바꾸면 효과가 깨진다.
@@ -232,13 +243,13 @@ components:
 
 ### Buttons (`Btn`, `Plate`)
 - **primary (`Plate`)**: Chew Yellow, Hunt Black bodyMain, 높이 56, 반경 16, 선택 아이콘 20. 화면당 하나.
-- **secondary**: surfaceMuted, Hunt Black, 높이 52.
+- **secondary**: Cream Beige 틴트, Chew Brown 글자, 높이 52. 주 버튼 옆에 나란히 둘 때도 같은 모양.
 - **plain**: 투명, textSecondary body Medium, 높이 44. 가장 약한 행동(기록 버리기).
-- 상태: 눌림 투명도 0.8, 비활성 surfaceMuted 바탕 + textTertiary 글자, 로딩은 아이콘 자리에 스피너 + 누를 수 없음.
+- 상태: 눌림은 투명도 대신 한 단계 진한 면(primary → primaryPressed, secondary → primarySoftPressed, plain → surfaceMuted). 비활성은 borderStrong 바탕 + 흰 글자. 로딩은 아이콘 자리에 스피너 + 누를 수 없음.
 
 ### Inputs (`Field`, `BigField`, `PasswordField`)
-- surfaceMuted 채운 칸, 반경 14, 최소 높이 52(로그인 56), 테두리 없음. 위에 bodySmall Medium 라벨.
-- 포커스: 흰 바탕 + Hunt Black 1.5px 테두리. 오류(`error`): error 테두리 + 아래 caption 문구.
+- 흰 칸 + borderStrong 1px 테두리, 반경 14, 최소 높이 52(로그인 56). 위에 bodySmall Medium 라벨.
+- 포커스: Chew Brown 테두리. 수정할 수 없는 칸: surfaceMuted 채움. 오류(`error`): error 테두리 + 아래 caption 문구.
 - 플레이스홀더는 textSecondary(야외 가독성).
 
 ### Chips & Tags
@@ -247,12 +258,12 @@ components:
 
 ### Cards
 - **CourseCard**: 흰 면, borderSubtle 1px, 반경 20, 안쪽 4. 커버(가로 카드 112 / 세로 160, 반경 16) / 코스명 bodyMain / 거리 Num + 난이도 Tag + 좋아요 / 견종·나이 bodySmall. 그림자 없음.
-- **통계 카드**: Cream Beige, 반경 24(결과) / 20(일지 상세), 안쪽 20.
+- **통계 카드**: 반경 24(결과) / 20(일지 상세), 안쪽 20. 산책 결과는 Chew Yellow 면에 단위, 라벨, 구분선 모두 Hunt Black(회색은 노랑 위 대비 부족), 일지 상세는 Cream Beige.
 - **Group / Row**: 흰 면, 반경 20, 행 최소 높이 56, 좌측 16 들여 쓴 구분선, 아이콘 20 Hunt Black, 화살표 textTertiary.
 
 ### Map overlay (`Glass`, `FloatButton`)
 - FloatButton: 원형 유리 버튼(기본 48, 산책 진행 카메라 56), 아이콘은 지름의 0.42. 사진 수는 Chew Yellow 배지.
-- 산책 진행 패널: 반경 24, 안쪽 20. 위에 산책 중 점 + 코스명(자유 산책), 아래에 시간 | 거리(28 Bold) 두 칸. 따라 걷기는 거리 라벨에 코스 전체 길이.
+- 산책 진행 바: Chew Yellow 상태 표시 면, Level 2 그림자, 높이 52, 반경 16, 좌우 안쪽 20, 글자 Hunt Black. 왼쪽 코스명(자유산책은 "자유산책"), 오른쪽 수치 두 개를 옅은 세로선으로 나눈다. 따라 걷기는 걸은 거리(Medium) | 코스 전체 길이(Bold), 자유산책은 시간(Medium) | 걸은 거리(Bold). 수치는 16 `Num`.
 
 ### Navigation
 - 스택 헤더: Tese White, 그림자 없음, Pretendard SemiBold 제목, 뒤로 버튼 최소 표시. 걷는 중·결과 화면은 스와이프 뒤로가기를 막는다.
@@ -263,7 +274,7 @@ SF Symbols(`expo-symbols`), 안드로이드·웹은 Material Symbols. 아웃라�
 
 ## Motion
 
-- 버튼 눌림: 투명도 0.8, 유리 버튼은 크기 0.94.
+- 버튼 눌림: 한 단계 진한 면(카드는 투명도 0.85), 유리 버튼은 크기 0.94.
 - 추천 코스 시트: spring(damping 26, stiffness 260, mass 0.9), 큰 바운스 없음.
 - 좋아요: 누를 때만 하트가 ZoomIn 180ms로 바뀐다. 화면을 처음 열 때는 움직이지 않는다.
 - 화면 전환은 네이티브 스택 기본. 페이지 진입 애니메이션은 따로 두지 않는다.
