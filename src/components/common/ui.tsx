@@ -44,6 +44,8 @@ export const I = {
   paw: { ios: "pawprint", android: "pets" },
   eye: { ios: "eye", android: "visibility" },
   eyeSlash: { ios: "eye.slash", android: "visibility_off" },
+  search: { ios: "magnifyingglass", android: "search" },
+  close: { ios: "xmark", android: "close" },
 } satisfies Record<string, IconName>;
 
 export function Icon({ name, size = 22, color }: { name: IconName; size?: number; color?: ColorValue }) {

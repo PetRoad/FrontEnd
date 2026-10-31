@@ -1,10 +1,11 @@
 import { useState, type ReactNode } from "react";
 import { Alert, Platform, Pressable, StyleSheet, View } from "react-native";
 import DateTimePicker, { DateTimePickerAndroid, type DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { Field, I, Num, Page, PhotoTile, Plate, Segmented, T } from "@/components/common/ui";
+import { Field, I, Icon, Num, Page, PhotoTile, Plate, Segmented, T } from "@/components/common/ui";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import type { Dog, DogSize } from "@/types/dog";
+import { BreedSheet } from "./BreedSheet";
 import { dotDate, isoDate } from "@/utils/format";
 
 const SIZES = ["소형", "중형", "대형"] as const;
@@ -24,6 +25,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
   const [size, setSize] = useState<DogSize>(initial?.size ?? "소형");
   const [birth, setBirth] = useState(initial?.birth ?? "");
   const [picking, setPicking] = useState(false);
+  const [findingBreed, setFindingBreed] = useState(false);
 
   const pickerDate = birth ? parseIso(birth) : new Date(new Date().getFullYear() - 2, 0, 1);
   const onPick = (_: DateTimePickerEvent, d?: Date) => {
@@ -38,7 +40,8 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
   };
 
   const submit = () => {
-    if (!name.trim() || !breed.trim()) return Alert.alert("이름과 견종을 입력해주세요.");
+    if (!name.trim()) return Alert.alert("이름을 입력해주세요.");
+    if (!breed) return Alert.alert("견종을 골라주세요.");
     if (!/^\d{4}-\d{2}-\d{2}$/.test(birth)) return Alert.alert("생년월일을 선택해주세요.");
     onSubmit({ name: name.trim(), breed: breed.trim(), size, birth });
   };
@@ -55,7 +58,21 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
       </View>
       <View style={{ gap: space.lg }}>
         <Field label="이름" value={name} onChangeText={setName} placeholder="콩이" />
-        <Field label="견종" value={breed} onChangeText={setBreed} placeholder="포메라니안" />
+        <View style={{ gap: space.sm }}>
+          <T v="bodySmall" w="medium" muted>
+            견종
+          </T>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={breed ? `견종 ${breed}, 변경` : "견종 검색"}
+            onPress={() => setFindingBreed(true)}
+            style={[s.pickField, { backgroundColor: c.surface, borderColor: findingBreed ? c.primaryDeep : c.borderStrong }]}
+          >
+            {breed ? <T>{breed}</T> : <T muted>견종을 검색해주세요</T>}
+            <Icon name={I.search} size={18} color={c.textSecondary} />
+          </Pressable>
+        </View>
+        <BreedSheet visible={findingBreed} value={breed} onClose={() => setFindingBreed(false)} onPick={setBreed} />
         <View style={{ gap: space.sm }}>
           <T v="bodySmall" w="medium" muted>
             크기
@@ -74,7 +91,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
               accessibilityRole="button"
               accessibilityLabel={birth ? `생년월일 ${dotDate(birth)}, 변경` : "생년월일 선택"}
               onPress={openPicker}
-              style={[s.dateField, { backgroundColor: c.surface, borderColor: picking ? c.primaryDeep : c.borderStrong }]}
+              style={[s.pickField, { backgroundColor: c.surface, borderColor: picking ? c.primaryDeep : c.borderStrong }]}
             >
               {birth ? <Num size={16}>{dotDate(birth)}</Num> : <T muted>날짜를 선택해주세요</T>}
             </Pressable>
@@ -100,5 +117,14 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
 const s = StyleSheet.create({
   avatarWrap: { alignItems: "center", gap: space.sm },
   avatar: { width: 112, height: 112, borderRadius: radius.pill },
-  dateField: { minHeight: 52, borderRadius: radius.input, borderWidth: 1, paddingHorizontal: space.lg, justifyContent: "center" },
+  // 눌러서 고르는 칸(견종, 생년월일): 입력칸과 같은 모양
+  pickField: {
+    minHeight: 52,
+    borderRadius: radius.input,
+    borderWidth: 1,
+    paddingHorizontal: space.lg,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
 });
