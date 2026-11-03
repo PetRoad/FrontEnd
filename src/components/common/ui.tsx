@@ -16,6 +16,7 @@ import {
   type ViewStyle,
 } from "react-native";
 import { BlurView } from "expo-blur";
+import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from "expo-glass-effect";
 import { Image } from "expo-image";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -361,8 +362,33 @@ export function Steps({ step, total }: { step: number; total: number }) {
   );
 }
 
-// 지도 위 오버레이 전용 유리 면. iOS만 실제 블러, 나머지는 더 불투명한 흰 면으로 대신한다
-export function Glass({ r = radius.card, style, children, ...rest }: ViewProps & { r?: number }) {
+// iOS 26 Liquid Glass. 일부 베타는 API가 없어 크래시하므로 둘 다 확인한다
+export const liquidGlass = Platform.OS === "ios" && isGlassEffectAPIAvailable() && isLiquidGlassAvailable();
+
+// 지도 위 오버레이 전용 유리 면. iOS 26은 Liquid Glass, 그 아래 iOS는 블러, 나머지는 더 불투명한 흰 면으로 대신한다
+// tint를 주면 그 색을 비친 유리. Liquid Glass가 없으면 블러 없이 그 색 면으로 대신한다
+export function Glass({ r = radius.card, interactive, tint, style, children, ...rest }: ViewProps & { r?: number; interactive?: boolean; tint?: ColorValue }) {
+  if (liquidGlass) {
+    return (
+      <GlassView
+        {...rest}
+        glassEffectStyle="regular"
+        colorScheme="light"
+        tintColor={tint}
+        isInteractive={interactive}
+        style={[{ borderRadius: r, borderCurve: "continuous" }, style]}
+      >
+        {children}
+      </GlassView>
+    );
+  }
+  if (tint) {
+    return (
+      <View {...rest} style={[{ borderRadius: r, backgroundColor: tint }, shadow.float, style]}>
+        {children}
+      </View>
+    );
+  }
   const blur = Platform.OS === "ios";
   return (
     <View
@@ -372,6 +398,20 @@ export function Glass({ r = radius.card, style, children, ...rest }: ViewProps &
       {blur && <BlurView intensity={glass.blur} tint="light" style={[StyleSheet.absoluteFill, { borderRadius: r, overflow: "hidden" }]} />}
       {children}
     </View>
+  );
+}
+
+// 지도 위 주 버튼. iOS 26은 Chew Yellow를 비친 Liquid Glass(눌림은 유리가 직접 보여준다), 나머지는 그림자 얹은 Plate
+export function GlassPlate({ title, icon, onPress, style }: Omit<PressProps, "disabled" | "loading">) {
+  const c = useTheme();
+  if (!liquidGlass) return <Plate title={title} icon={icon} onPress={onPress} style={[shadow.float, style]} />;
+  return (
+    <Pressable accessibilityRole="button" onPress={onPress} style={style}>
+      <Glass r={radius.button} tint={c.primary} interactive style={s.plateGlass}>
+        {isValidElement(icon) ? icon : icon && <Icon name={icon} size={20} color={c.onPrimary} />}
+        <Text style={[typography.bodyMain, { color: c.onPrimary }]}>{title}</Text>
+      </Glass>
+    </Pressable>
   );
 }
 
@@ -385,7 +425,7 @@ export function FloatButton({ icon, label, onPress, size = 48, badge }: { icon: 
       onPress={onPress}
       style={({ pressed }) => ({ transform: [{ scale: pressed ? 0.94 : 1 }] })}
     >
-      <Glass r={size / 2} style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
+      <Glass r={size / 2} interactive style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
         <Icon name={icon} size={Math.round(size * 0.42)} />
       </Glass>
       {!!badge && (
@@ -512,6 +552,7 @@ export function Empty({ icon, title, body }: { icon: IconName; title: string; bo
 
 const s = StyleSheet.create({
   btn: { borderRadius: radius.button, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space.sm, paddingHorizontal: space.xl },
+  plateGlass: { minHeight: 56, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space.sm, paddingHorizontal: space.xl },
   // 한 줄 입력칸에 lineHeight를 주면 iOS에서 글자가 위아래로 밀려 크기·자간만 준다
   field: { minHeight: 52, borderRadius: radius.input, borderWidth: 1, paddingHorizontal: space.lg, paddingVertical: space.md, fontFamily: font.regular, fontSize: 16, letterSpacing: -0.2 },
   bigField: { minHeight: 56 },

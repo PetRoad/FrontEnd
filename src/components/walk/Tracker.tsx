@@ -5,8 +5,8 @@ import * as Location from "expo-location";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MapPlate } from "@/components/common/MapPlate";
-import { FloatButton, Glass, I, Num, Plate, T } from "@/components/common/ui";
-import { font, mapEdge, radius, shadow, space } from "@/constants/theme";
+import { FloatButton, Glass, GlassPlate, I, Num, T } from "@/components/common/ui";
+import { font, mapEdge, radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
 import type { Course } from "@/types/course";
@@ -69,14 +69,16 @@ export function Tracker({ course }: { course?: Course }) {
       <MapPlate style={StyleSheet.absoluteFill} marker follow route={walk.route} />
 
       {/* 한 줄 바: 왼쪽 코스 이름, 오른쪽 수치. 따라 걷기는 걸은 거리 | 코스 전체, 자유산책은 시간 | 걸은 거리 */}
-      <View
+      <Glass
         accessible
         accessibilityLabel={
           course
             ? `${course.name}, ${course.distanceKm}킬로미터 중 ${km}킬로미터 걸었어요`
             : `자유산책, ${clock(walk.durationSec)}, ${km}킬로미터 걸었어요`
         }
-        style={[s.panel, shadow.float, { top: insets.top + space.sm, backgroundColor: c.primary }]}
+        r={radius.button}
+        tint={c.primary}
+        style={[s.panel, { top: insets.top + space.sm }]}
       >
         <T w="semibold" color={c.onPrimary} numberOfLines={1} style={{ flex: 1 }}>
           {course ? course.name : "자유산책"}
@@ -88,7 +90,7 @@ export function Tracker({ course }: { course?: Course }) {
         <Num bold color={c.onPrimary}>
           {course ? `${course.distanceKm.toFixed(2)}km` : `${km}km`}
         </Num>
-      </View>
+      </Glass>
 
       {course && <Legend bottom={bottom + CONTROLS + space.md} />}
 
@@ -101,7 +103,7 @@ export function Tracker({ course }: { course?: Course }) {
           size={CONTROLS}
           badge={walk.photos.length}
         />
-        <Plate title="산책 종료" icon={I.stop} onPress={end} style={{ flex: 1 }} />
+        <GlassPlate title="산책 종료" icon={I.stop} onPress={end} style={{ flex: 1 }} />
       </View>
     </View>
   );
@@ -147,7 +149,6 @@ const s = StyleSheet.create({
     right: mapEdge,
     minHeight: 52,
     paddingHorizontal: space.xl,
-    borderRadius: radius.button,
     flexDirection: "row",
     alignItems: "center",
     gap: space.md,

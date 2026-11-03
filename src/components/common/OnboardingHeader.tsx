@@ -1,8 +1,8 @@
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { router, type Href } from "expo-router";
-import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from "expo-glass-effect";
+import { GlassView } from "expo-glass-effect";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Glass, Icon, Steps } from "@/components/common/ui";
+import { Glass, Icon, liquidGlass, Steps } from "@/components/common/ui";
 import { gutter, radius, shadow, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -12,7 +12,6 @@ type Props = { step: number; total: number; fallbackHref: Href };
 export function OnboardingHeader({ step, total, fallbackHref }: Props) {
   const c = useTheme();
   const insets = useSafeAreaInsets();
-  const nativeGlass = Platform.OS === "ios" && isGlassEffectAPIAvailable() && isLiquidGlassAvailable();
   const backIcon = <Icon name={{ ios: "chevron.left", android: "chevron_left" }} size={22} />;
 
   const goBack = () => {
@@ -29,7 +28,7 @@ export function OnboardingHeader({ step, total, fallbackHref }: Props) {
           onPress={goBack}
           style={({ pressed }) => [s.back, { transform: [{ scale: pressed ? 0.97 : 1 }] }]}
         >
-          {nativeGlass ? (
+          {liquidGlass ? (
             <GlassView glassEffectStyle="regular" colorScheme="light" isInteractive style={s.surface}>
               {backIcon}
             </GlassView>

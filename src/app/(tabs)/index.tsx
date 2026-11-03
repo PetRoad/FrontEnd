@@ -7,7 +7,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-na
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
 import { MapPlate } from "@/components/common/MapPlate";
-import { FloatButton, Glass, I, Icon, Logo, Plate, T } from "@/components/common/ui";
+import { FloatButton, Glass, GlassPlate, I, Icon, Logo, T } from "@/components/common/ui";
 import { CourseCard } from "@/components/course/CourseCard";
 import { gutter, mapEdge, radius, shadow, space } from "@/constants/theme";
 import { recommend } from "@/features/course/recommend";
@@ -105,7 +105,7 @@ export default function WalkHomeScreen() {
       </View>
 
       <Animated.View style={[s.start, startStyle]}>
-        <Plate title="산책 시작하기" icon={<Logo size={18} color={c.onPrimary} />} onPress={startWalk} style={shadow.float} />
+        <GlassPlate title="산책 시작하기" icon={<Logo size={18} color={c.onPrimary} />} onPress={startWalk} />
       </Animated.View>
 
       <Animated.View style={[s.sheet, { backgroundColor: c.background, height: Math.max(0, height - points.open) }, shadow.float, sheetStyle]}>
