@@ -3,7 +3,7 @@ import { Alert, StyleSheet, View } from "react-native";
 import * as Location from "expo-location";
 import { router } from "expo-router";
 import { MapPlate } from "@/components/common/MapPlate";
-import { Btn, Field, I, Page, Plate, Steps, T } from "@/components/common/ui";
+import { Btn, Field, I, Page, Plate, T } from "@/components/common/ui";
 import { radius, space } from "@/constants/theme";
 import { useUserStore } from "@/stores/userStore";
 import { here } from "@/utils/location";
@@ -27,7 +27,6 @@ export default function RegionScreen() {
 
   return (
     <Page>
-      <Steps step={1} total={2} />
       <View style={{ gap: space.sm }}>
         <T v="titleLG">우리 동네를 알려주세요</T>
         <T muted>
