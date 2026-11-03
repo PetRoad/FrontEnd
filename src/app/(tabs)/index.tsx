@@ -1,13 +1,13 @@
 import { useRef, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type MapView from "react-native-maps";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import Animated, { scrollTo, useAnimatedRef, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
 import { MapPlate } from "@/components/common/MapPlate";
-import { FloatButton, Glass, I, Icon, Logo, Plate, T } from "@/components/common/ui";
+import { FloatButton, Glass, GlassPlate, I, Icon, Logo, T } from "@/components/common/ui";
 import { CourseCard } from "@/components/course/CourseCard";
 import { gutter, mapEdge, radius, shadow, space } from "@/constants/theme";
 import { recommend } from "@/features/course/recommend";
@@ -39,13 +39,27 @@ export default function WalkHomeScreen() {
   const points = { open: Math.round(height * (1 - OPEN_RATIO)), peek: height - PEEK, closed: height - MIN };
   const y = useSharedValue(10000);
   const startY = useSharedValue(0);
+  const listRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollY = useSharedValue(0);
+  const grabAt = useSharedValue(-1); // 목록을 끌다 시트를 잡기 시작한 순간의 손가락 이동량. -1이면 안 잡음
 
   const snap = (to: Snap) => {
     y.set(withSpring(points[to], SPRING));
+    if (to !== "open") scrollY.set(0); // 다시 열면 목록이 맨 위부터 새로 그려진다
     setState(to);
   };
   // 탭: 닫힘 → 반 → 전체 → 반
   const next: Record<Snap, Snap> = { closed: "peek", peek: "open", open: "peek" };
+
+  // 손을 놓은 속도만큼 조금 더 간 지점에서 가장 가까운 위치로 붙는다
+  const settle = (velocityY: number) => {
+    "worklet";
+    const target = y.get() + velocityY * 0.15;
+    const to = (["open", "peek", "closed"] as const).reduce((a, b) =>
+      Math.abs(points[b] - target) < Math.abs(points[a] - target) ? b : a,
+    );
+    scheduleOnRN(snap, to);
+  };
 
   const pan = Gesture.Pan()
     .onBegin(() => {
@@ -54,19 +68,41 @@ export default function WalkHomeScreen() {
     .onUpdate((e) => {
       y.set(Math.min(points.closed, Math.max(points.open, startY.get() + e.translationY)));
     })
-    .onEnd((e) => {
-      // 손을 놓은 속도만큼 조금 더 간 지점에서 가장 가까운 위치로 붙는다
-      const target = y.get() + e.velocityY * 0.15;
-      const to = (["open", "peek", "closed"] as const).reduce((a, b) =>
-        Math.abs(points[b] - target) < Math.abs(points[a] - target) ? b : a,
-      );
-      y.set(withSpring(points[to], SPRING));
-      scheduleOnRN(setState, to);
-    });
+    .onEnd((e) => settle(e.velocityY));
   const tap = Gesture.Tap().onEnd(() => {
     scheduleOnRN(snap, next[state]);
   });
 
+  // 전체로 연 목록이 맨 위일 때 더 아래로 당기면 스크롤 대신 시트가 따라 내려온다
+  const onScroll = useAnimatedScrollHandler((e) => {
+    scrollY.set(e.contentOffset.y);
+  });
+  const listScroll = Gesture.Native();
+  const listPan = Gesture.Pan()
+    .enabled(open)
+    .simultaneousWithExternalGesture(listScroll)
+    .onBegin(() => {
+      grabAt.set(-1);
+    })
+    // eslint-disable-next-line react-hooks/refs -- 제스처 콜백은 렌더가 아니라 UI 스레드에서 실행된다
+    .onUpdate((e) => {
+      if (grabAt.get() < 0) {
+        if (scrollY.get() <= 0 && e.velocityY > 0) grabAt.set(e.translationY);
+        return;
+      }
+      const to = points.open + e.translationY - grabAt.get();
+      if (to <= points.open) {
+        // 다시 끝까지 올렸으면 시트를 놓고 목록 스크롤로 돌아간다
+        y.set(points.open);
+        grabAt.set(-1);
+        return;
+      }
+      y.set(Math.min(points.closed, to));
+      scrollTo(listRef, 0, 0, false); // 시트를 끄는 동안 목록은 맨 위에 붙잡아 둔다
+    })
+    .onEnd((e) => {
+      if (grabAt.get() >= 0) settle(e.velocityY);
+    });
   const sheetStyle = useAnimatedStyle(() => ({ transform: [{ translateY: y.get() }] }));
   // 산책 시작 버튼은 시트 바로 위를 따라다닌다
   const startStyle = useAnimatedStyle(() => ({ transform: [{ translateY: y.get() - START_GAP }] }));
@@ -105,7 +141,7 @@ export default function WalkHomeScreen() {
       </View>
 
       <Animated.View style={[s.start, startStyle]}>
-        <Plate title="산책 시작하기" icon={<Logo size={18} color={c.onPrimary} />} onPress={startWalk} style={shadow.float} />
+        <GlassPlate title="산책 시작하기" icon={<Logo size={18} color={c.onPrimary} />} onPress={startWalk} />
       </Animated.View>
 
       <Animated.View style={[s.sheet, { backgroundColor: c.background, height: Math.max(0, height - points.open) }, shadow.float, sheetStyle]}>
@@ -131,16 +167,26 @@ export default function WalkHomeScreen() {
             아직 주변에 등록된 코스가 없어요. 첫 코스를 만들어보세요.
           </T>
         ) : (
-          <ScrollView
-            key={String(open)}
-            horizontal={!open}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={open ? s.listOpen : s.listPeek}
-          >
-            {list.map((course) => (
-              <CourseCard key={course.id} course={course} width={open ? undefined : 232} />
-            ))}
-          </ScrollView>
+          <GestureDetector gesture={listPan}>
+            <GestureDetector gesture={listScroll}>
+              <Animated.ScrollView
+                key={String(open)}
+                ref={listRef}
+                horizontal={!open}
+                onScroll={onScroll}
+                scrollEventThrottle={16}
+                // 맨 위에서 당길 때 고무줄 대신 시트가 움직이도록 전체 목록은 튕김을 끈다
+                bounces={!open}
+                overScrollMode={open ? "never" : "auto"}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={open ? s.listOpen : s.listPeek}
+              >
+                {list.map((course) => (
+                  <CourseCard key={course.id} course={course} width={open ? undefined : 232} />
+                ))}
+              </Animated.ScrollView>
+            </GestureDetector>
+          </GestureDetector>
         )}
       </Animated.View>
     </View>
