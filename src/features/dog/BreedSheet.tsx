@@ -77,7 +77,7 @@ export function BreedSheet({ visible, value, onClose, onPick }: Props) {
   );
 }
 
-// 검색어와 맞는 부분만 Chew Brown으로
+// 검색어와 맞는 부분만 primaryDeep으로
 function BreedRow({ name, q, on, onPress }: { name: string; q: string; on: boolean; onPress: () => void }) {
   const c = useTheme();
   const i = q ? name.indexOf(q) : -1;
@@ -111,7 +111,7 @@ function Sep() {
   return <View style={[s.sep, { backgroundColor: c.borderSubtle }]} />;
 }
 
-// 테두리 버튼. 골라 둔 상태면 Cream Beige + Chew Yellow 테두리
+// 테두리 버튼. 골라 둔 상태면 primarySoft + primary 테두리
 function MixedButton({ on, onPress }: { on: boolean; onPress: () => void }) {
   const c = useTheme();
   return (

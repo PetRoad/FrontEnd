@@ -122,21 +122,22 @@ export function Num({ size = 16, bold, color, style, children }: { size?: number
 }
 
 // 숫자 아래에는 항상 라벨. 색 면 위에서는 sub로 단위·라벨 색을 바꾼다(회색은 대비가 모자람)
-export function Stat({ value, unit, label, size = 32, sub }: { value: string; unit?: string; label: string; size?: number; sub?: string }) {
+// color: 색 면 위에 얹을 때 숫자, 단위, 라벨 모두 이 색으로 쓴다
+export function Stat({ value, unit, label, size = 32, color }: { value: string; unit?: string; label: string; size?: number; color?: string }) {
   const c = useTheme();
   return (
     <View style={{ gap: 2 }}>
       <View style={{ flexDirection: "row", alignItems: "baseline", gap: 3 }}>
-        <Num size={size} bold>
+        <Num size={size} bold color={color}>
           {value}
         </Num>
         {unit && (
-          <Num size={Math.max(12, Math.round(size * 0.45))} color={sub ?? c.textSecondary}>
+          <Num size={Math.max(12, Math.round(size * 0.45))} color={color ?? c.textSecondary}>
             {unit}
           </Num>
         )}
       </View>
-      <T v="bodySmall" color={sub} muted>
+      <T v="bodySmall" color={color} muted>
         {label}
       </T>
     </View>
@@ -153,7 +154,7 @@ type PressProps = {
 };
 type Tone = "primary" | "secondary" | "plain";
 
-// primary: 화면당 하나뿐인 주 행동(Chew Yellow 채움) / secondary: 보조 행동(Cream Beige 틴트) / plain: 가장 약한 행동(버리기, 전환)
+// primary: 화면당 하나뿐인 주 행동(로고색 채움) / secondary: 보조 행동(따뜻한 회색 틴트) / plain: 가장 약한 행동(버리기, 전환)
 // 눌림은 투명도 대신 한 단계 진한 색. 비활성은 회색 면 + 흰 글자
 export function Btn({ title, onPress, icon, disabled, loading, style, tone = "secondary" }: PressProps & { tone?: Tone }) {
   const c = useTheme();
@@ -178,7 +179,7 @@ export function Btn({ title, onPress, icon, disabled, loading, style, tone = "se
   );
 }
 
-// Chew Yellow 주 버튼
+// 로고색 주 버튼
 export function Plate(props: PressProps) {
   return <Btn {...props} tone="primary" />;
 }
@@ -207,7 +208,7 @@ export function Field({ label, error, style, onFocus, onBlur, ...props }: TextIn
           setFocused(false);
           onBlur?.(e);
         }}
-        // 흰 칸 + 회색 테두리, 포커스는 Chew Brown. 수정할 수 없는 칸은 회색으로 채운다
+        // 흰 칸 + 회색 테두리, 포커스는 로고색. 수정할 수 없는 칸은 회색으로 채운다
         style={[
           s.field,
           {
@@ -291,7 +292,7 @@ export function Segmented<V extends string>({
   );
 }
 
-// 고를 수 있는 칩. 선택되면 Chew Yellow
+// 고를 수 있는 칩. 선택되면 로고색
 export function Chip({ label, on, onPress }: { label: string; on?: boolean; onPress: () => void }) {
   const c = useTheme();
   return (
@@ -309,7 +310,7 @@ export function Chip({ label, on, onPress }: { label: string; on?: boolean; onPr
   );
 }
 
-// 읽기 전용 태그. 중요한 태그(난이도)만 soft = Cream Beige
+// 읽기 전용 태그. 중요한 태그(난이도)만 soft = primarySoft
 export function Tag({ label, soft }: { label: string; soft?: boolean }) {
   const c = useTheme();
   return (
@@ -336,7 +337,7 @@ export function PhotoTile({ label, icon = I.photo, selected, style }: { label?: 
   );
 }
 
-// 온보딩 단계: 단계마다 한 칸씩 Chew Yellow로 채워지는 가로 바 + "n/N"
+// 온보딩 단계: 단계마다 한 칸씩 로고색으로 채워지는 가로 바 + "n/N"
 export function Steps({ step, total }: { step: number; total: number }) {
   const c = useTheme();
   return (
@@ -401,7 +402,7 @@ export function Glass({ r = radius.card, interactive, tint, style, children, ...
   );
 }
 
-// 지도 위 주 버튼. iOS 26은 Chew Yellow를 비친 Liquid Glass(눌림은 유리가 직접 보여준다), 나머지는 그림자 얹은 Plate
+// 지도 위 주 버튼. iOS 26은 로고색을 비친 Liquid Glass(눌림은 유리가 직접 보여준다), 나머지는 그림자 얹은 Plate
 export function GlassPlate({ title, icon, onPress, style }: Omit<PressProps, "disabled" | "loading">) {
   const c = useTheme();
   if (!liquidGlass) return <Plate title={title} icon={icon} onPress={onPress} style={[shadow.float, style]} />;

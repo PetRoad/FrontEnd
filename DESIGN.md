@@ -2,12 +2,12 @@
 name: PetRoad
 description: 반려견과 걸은 길과 순간을 기록하고, 우리 동네의 좋은 산책길을 발견하는 iOS 앱
 colors:
-  primary: "#FFD374"
-  primary-pressed: "#F2BE4E"
-  on-primary: "#232323"
-  primary-soft: "#FFF3D6"
-  primary-soft-pressed: "#FFE7B0"
-  primary-deep: "#8C5A00"
+  primary: "#232323"
+  primary-pressed: "#444444"
+  on-primary: "#FFFFFF"
+  primary-soft: "#ECECE8"
+  primary-soft-pressed: "#DEDED9"
+  primary-deep: "#232323"
   background: "#FEFFFA"
   surface: "#FFFFFF"
   surface-muted: "#F5F5F5"
@@ -149,7 +149,7 @@ components:
 
 화면마다 정보 계층이 다르다.
 - 산책 홈: 지도 중심 탐색. 위에는 유리 동네 알약과 내 위치 버튼, 아래에는 Tese White 추천 코스 시트.
-- 산책 진행: 실시간 수치와 조작. 위에 Chew Yellow 한 줄 바(코스명과 수치), 아래에 원형 카메라 버튼과 종료 버튼.
+- 산책 진행: 실시간 수치와 조작. 위에 로고색 한 줄 바(코스명과 수치), 아래에 원형 카메라 버튼과 종료 버튼.
 - 코스 상세: 콘텐츠와 정보. 커버, 코스명, 거리·난이도, 반려견, 경로.
 - 마이: 개인 데이터 정리. 큰 프로필 카드 + 함께 걸은 기록 두 칸 + 메뉴 묶음.
 - 로그인·온보딩: 입력과 진행. 넓은 여백, 채운 입력칸, 하단 주 버튼.
@@ -159,11 +159,11 @@ components:
 ## Colors
 
 ### Brand
-- **Chew Yellow** (primary `#FFD374`): 주 버튼, 선택된 칩, 단계 바 채움, 사진 수 배지, 산책 진행 바, 산책 결과 통계 카드. 글자색으로 쓰지 않는다. 눌림은 primaryPressed `#F2BE4E`.
-- **Cream Beige** (primarySoft `#FFF3D6`): 보조 버튼, 통계 카드(일지 상세), 난이도 태그, 좋아요 켜진 버튼, 마이 아바타. 눌림은 primarySoftPressed `#FFE7B0`.
-- **Chew Brown** (primaryDeep `#8C5A00`): Cream Beige 위 글자와 아이콘(보조 버튼, 좋아요 켜짐), 입력칸 포커스 테두리. 노랑 계열에서 글자로 쓰는 유일한 색(흰 바탕 5.9:1, Cream Beige 5.3:1).
+- **Logo Black** (primary `#232323`): 로고와 같은 색. 주 버튼, 선택된 칩, 단계 바 채움, 사진 수 배지, 산책 진행 바, 산책 결과 통계 카드. 그 위 글자(onPrimary)는 흰색 `#FFFFFF`. 검정은 더 진해질 데가 없어 눌림은 한 단계 밝은 primaryPressed `#444444`.
+- **Warm Gray** (primarySoft `#ECECE8`): 보조 버튼, 통계 카드(일지 상세), 난이도 태그, 좋아요 켜진 버튼, 마이 아바타. surfaceMuted보다 한 단계 진해서 켜짐과 꺼짐이 구분된다. 눌림은 primarySoftPressed `#DEDED9`.
+- **primaryDeep** (`#232323`): Warm Gray 위 글자와 아이콘(보조 버튼, 좋아요 켜짐), 입력칸 포커스 테두리.
 - **Tese White** (background `#FEFFFA`): 모든 화면, 스택 헤더, 하단 고정 영역, 추천 코스 시트.
-- **Hunt Black** (textPrimary `#232323`): 본문, 제목, 아이콘, 선택·커서 색. Chew Yellow 위 글자(onPrimary)도 같은 값.
+- **Hunt Black** (textPrimary `#232323`): 본문, 제목, 아이콘, 선택·커서 색. primary와 같은 값이라 글자와 주 행동 면이 한 색으로 묶인다.
 
 ### Neutral
 - textSecondary `#616160`: 보조 정보, 라벨, 단위, 플레이스홀더.
@@ -175,15 +175,15 @@ components:
 
 ### 기능 색
 - error `#D93636`: 입력 오류 테두리와 문구.
-- route `#9A6412`: 지도 위 내가 걸은 길(두께 5). 원래 코스(노랑)와 구분되도록 기존 색을 유지한다. 지도 밖 UI에는 쓰지 않는다.
+- route `#9A6412`: 지도 위 내가 걸은 길(두께 5). 원래 코스(검정 점선)와 구분되도록 기존 색을 유지한다. 지도 밖 UI에는 쓰지 않는다.
 - mapWater `#E3EEF2`: 웹 지도 자리 전용.
 
 ### Named Rules
-**The One Sun Rule.** Chew Yellow 면은 한 화면의 주 행동 하나와 상태 표시에만. 넓은 강조 면이 필요하면 Cream Beige.
+**The One Ink Rule.** 검정(primary) 면은 한 화면의 주 행동 하나와 상태 표시에만. 넓은 강조 면이 필요하면 Warm Gray.
 
 **The No Green Rule.** 초록 계열(Foxtail Green, Bean Green)과 Jelly Orange는 쓰지 않는다.
 
-**The Route Rule.** 지도 위 경로는 브랜드 노랑으로 통일하지 않는다. 원래 코스는 노랑 점선, 내가 걸은 길은 route 실선.
+**The Route Rule.** 지도 위 경로는 브랜드 색으로 통일하지 않는다. 원래 코스는 검정 점선, 내가 걸은 길은 route 실선.
 
 ## Typography
 
@@ -242,28 +242,28 @@ components:
 ## Components
 
 ### Buttons (`Btn`, `Plate`)
-- **primary (`Plate`)**: Chew Yellow, Hunt Black bodyMain, 높이 56, 반경 16, 선택 아이콘 20. 화면당 하나.
-- **secondary**: Cream Beige 틴트, Chew Brown 글자, 높이 52. 주 버튼 옆에 나란히 둘 때도 같은 모양.
+- **primary (`Plate`)**: Logo Black, 흰 bodyMain, 높이 56, 반경 16, 선택 아이콘 20. 화면당 하나.
+- **secondary**: Warm Gray 틴트, Hunt Black 글자, 높이 52. 주 버튼 옆에 나란히 둘 때도 같은 모양.
 - **plain**: 투명, textSecondary body Medium, 높이 44. 가장 약한 행동(기록 버리기).
-- 상태: 눌림은 투명도 대신 한 단계 진한 면(primary → primaryPressed, secondary → primarySoftPressed, plain → surfaceMuted). 비활성은 borderStrong 바탕 + 흰 글자. 로딩은 아이콘 자리에 스피너 + 누를 수 없음.
+- 상태: 눌림은 투명도 대신 한 단계 다른 면(primary → primaryPressed는 밝게, secondary → primarySoftPressed, plain → surfaceMuted). 비활성은 borderStrong 바탕 + 흰 글자. 로딩은 아이콘 자리에 스피너 + 누를 수 없음.
 
 ### Inputs (`Field`, `BigField`, `PasswordField`)
 - 흰 칸 + borderStrong 1px 테두리, 반경 14, 최소 높이 52(로그인 56). 위에 bodySmall Medium 라벨.
-- 포커스: Chew Brown 테두리. 수정할 수 없는 칸: surfaceMuted 채움. 오류(`error`): error 테두리 + 아래 caption 문구.
+- 포커스: Hunt Black 테두리. 수정할 수 없는 칸: surfaceMuted 채움. 오류(`error`): error 테두리 + 아래 caption 문구.
 - 플레이스홀더는 textSecondary(야외 가독성).
 
 ### Chips & Tags
-- **Chip**: 고를 수 있는 칩. 높이 40, 반경 8, surfaceMuted → 선택 시 Chew Yellow + SemiBold.
-- **Tag**: 읽기 전용. 높이 24, 반경 8, caption Medium. 난이도만 `soft`(Cream Beige), 나머지 특징 태그는 surfaceMuted.
+- **Chip**: 고를 수 있는 칩. 높이 40, 반경 8, surfaceMuted → 선택 시 Logo Black 면 + 흰 SemiBold.
+- **Tag**: 읽기 전용. 높이 24, 반경 8, caption Medium. 난이도만 `soft`(Warm Gray), 나머지 특징 태그는 surfaceMuted.
 
 ### Cards
 - **CourseCard**: 흰 면, borderSubtle 1px, 반경 20, 안쪽 4. 커버(가로 카드 112 / 세로 160, 반경 16) / 코스명 bodyMain / 거리 Num + 난이도 Tag + 좋아요 / 견종·나이 bodySmall. 그림자 없음.
-- **통계 카드**: 반경 24(결과) / 20(일지 상세), 안쪽 20. 산책 결과는 Chew Yellow 면에 단위, 라벨, 구분선 모두 Hunt Black(회색은 노랑 위 대비 부족), 일지 상세는 Cream Beige.
+- **통계 카드**: 반경 24(결과) / 20(일지 상세), 안쪽 20. 산책 결과는 Logo Black 면에 숫자, 단위, 라벨, 구분선 모두 흰색(`Stat`의 `color`), 일지 상세는 Warm Gray.
 - **Group / Row**: 흰 면, 반경 20, 행 최소 높이 56, 좌측 16 들여 쓴 구분선, 아이콘 20 Hunt Black, 화살표 textTertiary.
 
 ### Map overlay (`Glass`, `FloatButton`)
-- FloatButton: 원형 유리 버튼(기본 48, 산책 진행 카메라 56), 아이콘은 지름의 0.42. 사진 수는 Chew Yellow 배지.
-- 산책 진행 바: Chew Yellow 상태 표시 면, Level 2 그림자, 높이 52, 반경 16, 좌우 안쪽 20, 글자 Hunt Black. 왼쪽 코스명(자유산책은 "자유산책"), 오른쪽 수치 두 개를 옅은 세로선으로 나눈다. 따라 걷기는 걸은 거리(Medium) | 코스 전체 길이(Bold), 자유산책은 시간(Medium) | 걸은 거리(Bold). 수치는 16 `Num`.
+- FloatButton: 원형 유리 버튼(기본 48, 산책 진행 카메라 56), 아이콘은 지름의 0.42. 사진 수는 Logo Black 배지.
+- 산책 진행 바: Logo Black 상태 표시 면, Level 2 그림자, 높이 52, 반경 16, 좌우 안쪽 20, 글자 흰색. 왼쪽 코스명(자유산책은 "자유산책"), 오른쪽 수치 두 개를 옅은 세로선으로 나눈다. 따라 걷기는 걸은 거리(Medium) | 코스 전체 길이(Bold), 자유산책은 시간(Medium) | 걸은 거리(Bold). 수치는 16 `Num`.
 
 ### Navigation
 - 스택 헤더: Tese White, 그림자 없음, Pretendard SemiBold 제목, 뒤로 버튼 최소 표시. 걷는 중·결과 화면은 스와이프 뒤로가기를 막는다.
@@ -284,13 +284,13 @@ SF Symbols(`expo-symbols`), 안드로이드·웹은 Material Symbols. 아웃라�
 
 ### Do
 - 색·글자·간격·반경·그림자는 `@/constants/theme`에서 가져온다.
-- 한 화면의 주 행동 하나만 Chew Yellow, 나머지는 secondary, 가장 약한 행동은 plain.
+- 한 화면의 주 행동 하나만 Logo Black, 나머지는 secondary, 가장 약한 행동은 plain.
 - 수치는 `Num`/`Stat`으로, 아래에 라벨을 붙인다.
 - 지도 위 떠 있는 요소만 `Glass`로 감싼다.
 
 ### Don't
 - 초록·주황 계열, 순수 검정(#000), 어두운 전면 배경, 다크 모드.
-- Chew Yellow를 글자색으로 쓰기, 넓은 배경 면으로 깔기.
+- 노랑 계열 포인트 색, 검정(primary)을 넓은 배경 면으로 깔기.
 - 모든 카드에 그림자, 콘텐츠 화면에 유리 효과.
 - 지도 자체에 필터나 색 오버레이.
 - 도로·노면 표시 이미지(차선, 노면 페인트, 도로 표지식 숫자). 펫로드는 산책이지 도로가 아니다.

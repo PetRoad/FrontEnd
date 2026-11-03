@@ -67,14 +67,14 @@ export default function WalkResultScreen() {
             unit="km"
             label="거리"
             size={56}
-            sub={c.onPrimary}
+            color={c.onPrimary}
           />
           <View style={[s.stats, { borderTopColor: c.onPrimary }]}>
             <Stat
               value={clock(walk.durationSec)}
               label="산책 시간"
               size={28}
-              sub={c.onPrimary}
+              color={c.onPrimary}
             />
             {walk.completion !== undefined && (
               <Stat
@@ -82,7 +82,7 @@ export default function WalkResultScreen() {
                 unit="%"
                 label="코스 완주율"
                 size={28}
-                sub={c.onPrimary}
+                color={c.onPrimary}
               />
             )}
             <Stat
@@ -90,7 +90,7 @@ export default function WalkResultScreen() {
               unit="장"
               label="사진"
               size={28}
-              sub={c.onPrimary}
+              color={c.onPrimary}
             />
           </View>
         </View>

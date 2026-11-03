@@ -6,7 +6,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { useCourseStore } from "@/stores/courseStore";
 import type { Course, Difficulty } from "@/types/course";
 
-// 난이도는 카드에서 가장 중요한 태그라 Cream Beige로 둔다
+// 난이도는 카드에서 가장 중요한 태그라 primarySoft로 둔다
 export function DifficultyMark({ difficulty }: { difficulty: Difficulty }) {
   return (
     <View accessible accessibilityLabel={`난이도 ${difficulty}`}>

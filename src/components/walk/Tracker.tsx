@@ -109,7 +109,7 @@ export function Tracker({ course }: { course?: Course }) {
   );
 }
 
-// 지도 위 경로 구분은 기존 색 그대로: 원래 코스 Chew Yellow 점선, 내가 걸은 길 갈색 실선
+// 지도 위 경로 구분은 기존 색 그대로: 원래 코스 로고색 점선, 내가 걸은 길 갈색 실선
 function Legend({ bottom }: { bottom: number }) {
   const c = useTheme();
   return (

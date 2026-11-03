@@ -2,12 +2,12 @@ import type { TextStyle } from "react-native";
 
 // PetRoad = Warm Minimal + Subtle Glass. 색·글자·간격·모서리·그림자는 모두 여기서만 가져온다
 export const palette = {
-  primary: "#FFD374", // Chew Yellow: 주 버튼, 선택 상태. 글자색으로 쓰지 않는다
-  primaryPressed: "#F2BE4E", // 주 버튼 눌림
-  onPrimary: "#232323",
-  primarySoft: "#FFF3D6", // Cream Beige: 보조 버튼, 강조 카드, 중요한 태그
-  primarySoftPressed: "#FFE7B0", // 보조 버튼 눌림
-  primaryDeep: "#8C5A00", // Chew Brown: Cream Beige 위 글자, 입력칸 포커스. 노랑 계열에서 글자로 쓰는 유일한 색 (흰 바탕 5.9:1, Cream Beige 5.3:1)
+  primary: "#232323", // 로고색(Hunt Black): 주 버튼, 선택 상태
+  primaryPressed: "#444444", // 주 버튼 눌림. 검정은 더 진해질 데가 없어 한 단계 밝힌다
+  onPrimary: "#FFFFFF",
+  primarySoft: "#ECECE8", // 따뜻한 회색: 보조 버튼, 강조 카드, 중요한 태그. surfaceMuted보다 한 단계 진해 켜짐이 구분된다
+  primarySoftPressed: "#DEDED9", // 보조 버튼 눌림
+  primaryDeep: "#232323", // primarySoft 위 글자, 입력칸 포커스
   background: "#FEFFFA", // Tese White: 화면 바탕, 바텀시트
   surface: "#FFFFFF", // 카드, 그룹 목록, 탭바
   surfaceMuted: "#F5F5F5", // 입력칸, 보조 버튼, 사진 자리, 세그먼트 트랙
@@ -17,7 +17,7 @@ export const palette = {
   borderStrong: "#CCCCCC",
   borderSubtle: "#EFEFEF",
   error: "#D93636", // 입력 오류. 흰 바탕 대비 4.5:1 이상
-  route: "#9A6412", // 지도 위 내가 걸은 길. 코스(노랑)와 구분되도록 기존 색 유지
+  route: "#9A6412", // 지도 위 내가 걸은 길. 코스(검정 점선)와 구분되도록 기존 색 유지
   mapWater: "#E3EEF2", // 웹 지도 자리 전용
 };
 
