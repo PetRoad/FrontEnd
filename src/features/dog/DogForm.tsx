@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Alert, Platform, Pressable, StyleSheet, View } from "react-native";
+import { Alert, Keyboard, Platform, Pressable, StyleSheet, View } from "react-native";
 import DateTimePicker, { DateTimePickerAndroid, type DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { Field, I, Icon, Num, Page, PhotoTile, Plate, Segmented, T } from "@/components/common/ui";
@@ -36,6 +36,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
     if (d) setBirth(isoDate(d));
   };
   const openPicker = () => {
+    Keyboard.dismiss();
     if (Platform.OS === "android") {
       DateTimePickerAndroid.open({ value: pickerDate, mode: "date", maximumDate: new Date(), onChange: onPick });
     } else {
@@ -53,6 +54,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
   // 사진만, 정사각형으로 잘라서. 이 방식은 iOS에서 사진 보관함 권한을 묻지 않는다
   // ponytail: 고른 사진의 캐시 uri를 그대로 저장. 스토어를 영구 저장하거나 서버에 올릴 때 파일 복사·업로드로 교체
   const pickPhoto = async () => {
+    Keyboard.dismiss();
     const r = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], allowsEditing: true, aspect: [1, 1], quality: 0.8 });
     if (!r.canceled) setPhoto(r.assets[0].uri);
   };
@@ -88,7 +90,10 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={breed ? `견종 ${breed}, 변경` : "견종 검색"}
-            onPress={() => setFindingBreed(true)}
+            onPress={() => {
+              Keyboard.dismiss();
+              setFindingBreed(true);
+            }}
             style={[s.pickField, { backgroundColor: c.surface, borderColor: findingBreed ? c.primaryDeep : c.borderStrong }]}
           >
             {breed ? <T>{breed}</T> : <T muted>견종을 검색해주세요</T>}
@@ -100,7 +105,15 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
           <T v="bodySmall" w="medium" muted>
             크기
           </T>
-          <Segmented options={SIZES} value={size} onChange={setSize} subs={SIZE_WEIGHTS} />
+          <Segmented
+            options={SIZES}
+            value={size}
+            onChange={(v) => {
+              Keyboard.dismiss();
+              setSize(v);
+            }}
+            subs={SIZE_WEIGHTS}
+          />
         </View>
         {Platform.OS === "web" ? (
           // 웹에는 시스템 날짜 선택기가 없다
