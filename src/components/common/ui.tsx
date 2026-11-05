@@ -1,5 +1,5 @@
 import { Children, isValidElement, useEffect, useState, type ReactElement, type ReactNode } from "react";
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 import {
   ActivityIndicator,
   Platform,
@@ -340,16 +340,17 @@ export function PhotoTile({ label, icon = I.photo, selected, style }: { label?: 
 
 // 온보딩 단계: 단계마다 한 칸씩 로고색으로 채워지는 가로 바 + "n/N"
 // 지금 단계 칸만 화면에 들어올 때 왼쪽에서 오른쪽으로 채운다. 지난 단계는 이미 찬 상태
-function StepFill({ color, grow }: { color: ColorValue; grow: boolean }) {
+// delay: 화면이 밀려 들어오는 동안 채움이 끝나 버리지 않도록 전환이 끝난 뒤 시작
+function StepFill({ color, grow, delay }: { color: ColorValue; grow: boolean; delay: number }) {
   const p = useSharedValue(grow ? 0 : 1);
   useEffect(() => {
-    if (grow) p.value = withTiming(1, { duration: 500, easing: Easing.bezier(0.16, 1, 0.3, 1) });
-  }, [grow, p]);
+    if (grow) p.value = withDelay(delay, withTiming(1, { duration: 500, easing: Easing.bezier(0.16, 1, 0.3, 1) }));
+  }, [grow, delay, p]);
   const style = useAnimatedStyle(() => ({ width: `${p.value * 100}%` }));
   return <Animated.View style={[{ height: "100%", backgroundColor: color }, style]} />;
 }
 
-export function Steps({ step, total }: { step: number; total: number }) {
+export function Steps({ step, total, delay = 0 }: { step: number; total: number; delay?: number }) {
   const c = useTheme();
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: space.md }} accessibilityLabel={`${total}단계 중 ${step}단계`}>
@@ -365,7 +366,7 @@ export function Steps({ step, total }: { step: number; total: number }) {
               i === total - 1 && { borderTopRightRadius: 3, borderBottomRightRadius: 3 },
             ]}
           >
-            {i < step && <StepFill color={c.primary} grow={i === step - 1} />}
+            {i < step && <StepFill color={c.primary} grow={i === step - 1} delay={delay} />}
           </View>
         ))}
       </View>
