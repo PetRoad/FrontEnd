@@ -1,4 +1,5 @@
-import { Children, isValidElement, useState, type ReactElement, type ReactNode } from "react";
+import { Children, isValidElement, useEffect, useState, type ReactElement, type ReactNode } from "react";
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import {
   ActivityIndicator,
   Platform,
@@ -338,6 +339,16 @@ export function PhotoTile({ label, icon = I.photo, selected, style }: { label?: 
 }
 
 // 온보딩 단계: 단계마다 한 칸씩 로고색으로 채워지는 가로 바 + "n/N"
+// 지금 단계 칸만 화면에 들어올 때 왼쪽에서 오른쪽으로 채운다. 지난 단계는 이미 찬 상태
+function StepFill({ color, grow }: { color: ColorValue; grow: boolean }) {
+  const p = useSharedValue(grow ? 0 : 1);
+  useEffect(() => {
+    if (grow) p.value = withTiming(1, { duration: 500, easing: Easing.bezier(0.16, 1, 0.3, 1) });
+  }, [grow, p]);
+  const style = useAnimatedStyle(() => ({ width: `${p.value * 100}%` }));
+  return <Animated.View style={[{ height: "100%", backgroundColor: color }, style]} />;
+}
+
 export function Steps({ step, total }: { step: number; total: number }) {
   const c = useTheme();
   return (
@@ -349,11 +360,13 @@ export function Steps({ step, total }: { step: number; total: number }) {
             key={i}
             style={[
               s.track,
-              { backgroundColor: i < step ? c.primary : c.borderSubtle },
+              { backgroundColor: c.borderSubtle },
               i === 0 && { borderTopLeftRadius: 3, borderBottomLeftRadius: 3 },
               i === total - 1 && { borderTopRightRadius: 3, borderBottomRightRadius: 3 },
             ]}
-          />
+          >
+            {i < step && <StepFill color={c.primary} grow={i === step - 1} />}
+          </View>
         ))}
       </View>
       <Num size={14} color={c.textSecondary}>
@@ -563,7 +576,7 @@ const s = StyleSheet.create({
   chip: { height: 40, paddingHorizontal: 14, borderRadius: radius.chip, alignItems: "center", justifyContent: "center" },
   tag: { height: 24, paddingHorizontal: space.sm, borderRadius: radius.chip, justifyContent: "center" },
   tile: { borderRadius: radius.thumb, alignItems: "center", justifyContent: "center", gap: space.xs, overflow: "hidden", padding: 6 },
-  track: { flex: 1, height: 6 },
+  track: { flex: 1, height: 6, overflow: "hidden" },
   badge: { position: "absolute", top: -4, right: -4, minWidth: 22, height: 22, paddingHorizontal: 5, borderRadius: 11, borderWidth: 2, alignItems: "center", justifyContent: "center" },
   page: { padding: gutter, gap: space.xxl, paddingBottom: space.huge },
   group: { borderRadius: radius.card, overflow: "hidden", borderWidth: 1 },
