@@ -6,10 +6,10 @@ import { Glass, Icon, liquidGlass, Steps } from "@/components/common/ui";
 import { gutter, radius, shadow, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 
-type Props = { step: number; total: number; fallbackHref: Href };
+type Props = { step: number; total: number; fallbackHref: Href; delay?: number };
 
 // 온보딩 뒤로가기와 진행률을 한 줄로 묶어 상단에 유지한다.
-export function OnboardingHeader({ step, total, fallbackHref }: Props) {
+export function OnboardingHeader({ step, total, fallbackHref, delay }: Props) {
   const c = useTheme();
   const insets = useSafeAreaInsets();
   const backIcon = <Icon name={{ ios: "chevron.left", android: "chevron_left" }} size={22} />;
@@ -39,7 +39,7 @@ export function OnboardingHeader({ step, total, fallbackHref }: Props) {
           )}
         </Pressable>
         <View style={s.progress}>
-          <Steps step={step} total={total} />
+          <Steps step={step} total={total} delay={delay} />
         </View>
       </View>
     </View>
