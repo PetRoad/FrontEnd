@@ -8,6 +8,7 @@ type CourseState = {
   liked: string[];
   toggleLike: (id: string) => void;
   add: (course: NewCourse) => void;
+  remove: (id: string) => void;
 };
 
 // 1.5km 안에 2개뿐이라 처음엔 3km로 확장됨. 내 코스를 등록하면 1.5km로 좁혀짐
@@ -33,5 +34,10 @@ export const useCourseStore = create<CourseState>()((set) => ({
   add: (course) =>
     set((s) => ({
       courses: [{ ...course, id: `c${Date.now()}`, likes: 0, fromMeKm: 0, mine: true }, ...s.courses],
+    })),
+  remove: (id) =>
+    set((s) => ({
+      courses: s.courses.filter((c) => c.id !== id),
+      liked: s.liked.filter((x) => x !== id),
     })),
 }));
