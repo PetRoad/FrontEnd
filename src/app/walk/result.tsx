@@ -120,7 +120,7 @@ export default function WalkResultScreen() {
         >
           <PhotoGrid
             photos={walk.photos}
-            selected={free ? walk.cover : undefined}
+            selected={free ? (walk.cover ?? walk.photos[0]) : undefined}
             onPress={free ? (cover) => edit({ cover }) : undefined}
           />
         </Section>
