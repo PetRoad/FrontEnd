@@ -8,8 +8,8 @@ export type Course = {
   distanceKm: number;
   difficulty: Difficulty;
   tags: string[];
-  breed: string;
-  dogAge: number;
+  creatorDogBreed: string;
+  creatorDogAge: number;
   fromMeKm: number; // 현재 위치 ~ 코스 시작점
   mine?: boolean;
 };

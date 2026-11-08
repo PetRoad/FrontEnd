@@ -50,7 +50,7 @@ export function CourseCard({ course, width }: { course: Course; width?: number }
           </Num>
         </View>
         <T v="bodySmall" muted numberOfLines={1}>
-          {course.breed} · {course.dogAge}살
+          {course.creatorDogBreed} · {course.creatorDogAge}살
         </T>
       </View>
     </Pressable>

@@ -56,7 +56,7 @@ export default function CourseDetailScreen() {
         </View>
 
         <Group>
-          <Row icon={I.paw} title={`${course.breed} · ${course.dogAge}살`} sub="이 코스를 걸은 반려견" />
+          <Row icon={I.paw} title={`${course.creatorDogBreed} · ${course.creatorDogAge}살`} sub="코스 작성자의 반려견" />
         </Group>
 
         <Section title="코스 경로">

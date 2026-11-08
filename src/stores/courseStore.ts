@@ -12,11 +12,11 @@ type CourseState = {
 
 // 1.5km 안에 2개뿐이라 처음엔 3km로 확장됨. 내 코스를 등록하면 1.5km로 좁혀짐
 const seed: Course[] = [
-  { id: "c1", name: "성북천 한바퀴", likes: 75, distanceKm: 2.4, difficulty: "쉬움", tags: ["물가", "평지"], breed: "포메라니안", dogAge: 3, fromMeKm: 1.3 },
-  { id: "c2", name: "정릉 숲길", likes: 42, distanceKm: 3.1, difficulty: "보통", tags: ["그늘많음", "한적함"], breed: "진돗개", dogAge: 5, fromMeKm: 0.6 },
-  { id: "c3", name: "낙산공원 야경길", likes: 120, distanceKm: 1.8, difficulty: "어려움", tags: ["야경", "공원"], breed: "말티즈", dogAge: 2, fromMeKm: 2.6 },
-  { id: "c4", name: "개운산 둘레길", likes: 42, distanceKm: 2.9, difficulty: "보통", tags: ["그늘많음", "공원"], breed: "비숑", dogAge: 4, fromMeKm: 1.9 },
-  { id: "c5", name: "북악 스카이웨이", likes: 210, distanceKm: 6.5, difficulty: "어려움", tags: ["야경"], breed: "보더콜리", dogAge: 6, fromMeKm: 4.2 },
+  { id: "c1", name: "성북천 한바퀴", likes: 75, distanceKm: 2.4, difficulty: "쉬움", tags: ["물가", "평지"], creatorDogBreed: "포메라니안", creatorDogAge: 3, fromMeKm: 1.3 },
+  { id: "c2", name: "정릉 숲길", likes: 42, distanceKm: 3.1, difficulty: "보통", tags: ["그늘많음", "한적함"], creatorDogBreed: "진돗개", creatorDogAge: 5, fromMeKm: 0.6 },
+  { id: "c3", name: "낙산공원 야경길", likes: 120, distanceKm: 1.8, difficulty: "어려움", tags: ["야경", "공원"], creatorDogBreed: "말티즈", creatorDogAge: 2, fromMeKm: 2.6 },
+  { id: "c4", name: "개운산 둘레길", likes: 42, distanceKm: 2.9, difficulty: "보통", tags: ["그늘많음", "공원"], creatorDogBreed: "비숑", creatorDogAge: 4, fromMeKm: 1.9 },
+  { id: "c5", name: "북악 스카이웨이", likes: 210, distanceKm: 6.5, difficulty: "어려움", tags: ["야경"], creatorDogBreed: "보더콜리", creatorDogAge: 6, fromMeKm: 4.2 },
 ];
 
 export const useCourseStore = create<CourseState>()((set) => ({

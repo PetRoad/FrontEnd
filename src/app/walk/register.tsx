@@ -40,8 +40,8 @@ export default function CourseRegisterScreen() {
       tags,
       difficulty,
       distanceKm: walk.distanceKm,
-      breed: dog?.breed ?? "",
-      dogAge,
+      creatorDogBreed: dog?.breed ?? "",
+      creatorDogAge: dogAge,
     });
     useWalkStore.getState().save();
     router.dismissAll();
