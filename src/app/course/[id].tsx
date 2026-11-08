@@ -2,12 +2,13 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import Animated, { LayoutAnimationConfig, ZoomIn } from "react-native-reanimated";
 import { MapPlate } from "@/components/common/MapPlate";
-import { BottomBar, Empty, Group, I, Icon, Num, Page, PhotoTile, Plate, Row, Section, T, Tag } from "@/components/common/ui";
+import { BottomBar, Btn, Empty, Group, I, Icon, Num, Page, PhotoTile, Plate, Row, Section, T, Tag } from "@/components/common/ui";
 import { DifficultyMark } from "@/components/course/CourseCard";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useCourseStore } from "@/stores/courseStore";
 import { useWalkStore } from "@/stores/walkStore";
+import { confirm } from "@/utils/confirm";
 
 export default function CourseDetailScreen() {
   const c = useTheme();
@@ -27,6 +28,19 @@ export default function CourseDetailScreen() {
     useWalkStore.getState().start(course.name, course.id);
     router.push("/walk/follow");
   };
+
+  // 코스만 지운다. 같은 산책의 산책일지 기록은 남는다
+  const remove = () =>
+    confirm({
+      title: "코스를 삭제할까요?",
+      message: "삭제한 코스는 되돌릴 수 없어요. 산책일지 기록은 남아요.",
+      ok: "삭제",
+      destructive: true,
+      onOk: () => {
+        router.back();
+        useCourseStore.getState().remove(course.id);
+      },
+    });
 
   return (
     <View style={{ flex: 1, backgroundColor: c.background }}>
@@ -62,6 +76,8 @@ export default function CourseDetailScreen() {
         <Section title="코스 경로">
           <MapPlate style={s.map} />
         </Section>
+
+        {course.mine && <Btn tone="plain" title="코스 삭제" onPress={remove} />}
       </Page>
 
       <BottomBar>
