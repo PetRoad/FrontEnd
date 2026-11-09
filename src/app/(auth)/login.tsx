@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ComponentRef, type ReactNode } from "react";
-import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View, type TextInputInstance } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -9,11 +9,21 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
+import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BigField, Logo, PasswordField, Plate, T } from "@/components/common/ui";
 import { gutter, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
+import { ApiError, errorMessage } from "@/services/api";
+import { login } from "@/services/auth";
+
+const loginError = (e: unknown) => {
+  if (!(e instanceof ApiError)) return errorMessage(e);
+  if (e.status === 401) return "이메일 또는 비밀번호가 맞지 않아요.";
+  if (e.status === 429) return `로그인 시도가 많았어요. ${Math.ceil((e.retryAfter ?? 60) / 60)}분 뒤에 다시 시도해주세요.`;
+  return e.message;
+};
 
 // 인트로: 로고와 PetRoad가 화면 가운데 크게 머문 뒤 제자리로 줄어들며 들어가고, 나머지가 뒤따라 나타난다
 const HOLD = 1300; // 가운데에 머무는 시간(나타나는 400ms 포함)
@@ -37,7 +47,6 @@ function Reveal({ phase, delay, rise, children }: { phase: Phase; delay: number;
   return <Animated.View style={style}>{children}</Animated.View>;
 }
 
-// ponytail: 인증 없이 화면 흐름만. services/auth 연결 시 교체
 export default function LoginScreen() {
   const c = useTheme();
   const insets = useSafeAreaInsets();
@@ -48,6 +57,25 @@ export default function LoginScreen() {
   const shift = useSharedValue(0);
   const settle = useSharedValue(phase === "done" ? 1 : 0);
   const shown = useSharedValue(phase === "done" ? 1 : 0);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const passwordRef = useRef<TextInputInstance>(null);
+  // 동네·반려견이 다 있으면 guard가 산책 홈으로 보내고, 없으면 빠진 단계부터 이어간다
+  const signIn = useMutation({
+    mutationFn: () => login(email.trim(), password),
+    onSuccess: ({ region, dog }) => {
+      if (!region) router.push("/region");
+      else if (!dog) router.push("/dog-register");
+    },
+  });
+  const submit = () => {
+    if (email.trim() && password && !signIn.isPending) signIn.mutate();
+  };
+  // 고쳐 쓰기 시작하면 지난 실패 문구는 내린다
+  const edit = (set: (v: string) => void) => (v: string) => {
+    set(v);
+    if (signIn.isError) signIn.reset();
+  };
 
   const play = () => {
     if (introPlayed) return;
@@ -102,16 +130,35 @@ export default function LoginScreen() {
           </Reveal>
         </View>
         <Reveal phase={phase} delay={at(1)} rise={!reduceMotion}>
-          <BigField placeholder="이메일" keyboardType="email-address" autoCapitalize="none" autoComplete="email" />
+          <BigField
+            placeholder="이메일"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoComplete="email"
+            value={email}
+            onChangeText={edit(setEmail)}
+            returnKeyType="next"
+            submitBehavior="submit"
+            onSubmitEditing={() => passwordRef.current?.focus()}
+          />
         </Reveal>
         <Reveal phase={phase} delay={at(2)} rise={!reduceMotion}>
-          <PasswordField placeholder="비밀번호" autoComplete="password" />
+          <PasswordField
+            placeholder="비밀번호"
+            ref={passwordRef}
+            autoComplete="password"
+            value={password}
+            onChangeText={edit(setPassword)}
+            returnKeyType="go"
+            onSubmitEditing={submit}
+            error={signIn.error ? loginError(signIn.error) : undefined}
+          />
         </Reveal>
       </View>
 
       <Reveal phase={phase} delay={at(3)} rise={!reduceMotion}>
         <View style={s.actions}>
-          <Plate title="로그인" onPress={() => router.push("/region")} />
+          <Plate title="로그인" onPress={submit} disabled={!email.trim() || !password} loading={signIn.isPending} />
           <Pressable accessibilityRole="link" onPress={() => router.push("/signup")} style={s.link}>
             <T v="bodySmall" w="semibold" muted>
               회원가입

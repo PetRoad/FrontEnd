@@ -1,4 +1,4 @@
-import { Children, isValidElement, useEffect, useState, type ReactElement, type ReactNode } from "react";
+import { Children, isValidElement, useEffect, useState, type ReactElement, type ReactNode, type Ref } from "react";
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 import {
   ActivityIndicator,
@@ -11,6 +11,7 @@ import {
   View,
   type ColorValue,
   type StyleProp,
+  type TextInputInstance,
   type TextInputProps,
   type TextStyle,
   type ViewProps,
@@ -185,7 +186,10 @@ export function Plate(props: PressProps) {
   return <Btn {...props} tone="primary" />;
 }
 
-export function Field({ label, error, style, onFocus, onBlur, ...props }: TextInputProps & { label?: string; error?: string }) {
+// ref: 키보드 "다음"으로 다음 칸에 포커스를 옮길 때
+type FieldProps = TextInputProps & { label?: string; error?: string; ref?: Ref<TextInputInstance> };
+
+export function Field({ label, error, style, onFocus, onBlur, ...props }: FieldProps) {
   const c = useTheme();
   const [focused, setFocused] = useState(false);
   return (
@@ -230,11 +234,11 @@ export function Field({ label, error, style, onFocus, onBlur, ...props }: TextIn
 }
 
 // 로그인·회원가입의 큰 입력칸: 라벨 없이 플레이스홀더만
-export function BigField({ style, ...props }: TextInputProps & { error?: string }) {
+export function BigField({ style, ...props }: Omit<FieldProps, "label">) {
   return <Field {...props} style={[s.bigField, style]} />;
 }
 
-export function PasswordField(props: TextInputProps) {
+export function PasswordField(props: Omit<FieldProps, "label">) {
   const c = useTheme();
   const [hidden, setHidden] = useState(true);
   return (
