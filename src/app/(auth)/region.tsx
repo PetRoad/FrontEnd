@@ -1,20 +1,27 @@
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import * as Location from "expo-location";
+import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { MapPlate } from "@/components/common/MapPlate";
 import { Btn, Field, I, Page, Plate, T } from "@/components/common/ui";
 import { radius, space } from "@/constants/theme";
+import { errorMessage } from "@/services/api";
+import { saveRegion } from "@/services/user";
 import { useUserStore } from "@/stores/userStore";
 import { here } from "@/utils/location";
 
 export default function RegionScreen() {
   const [region, setRegion] = useState(useUserStore.getState().region);
+  const save = useMutation({
+    mutationFn: () => saveRegion(region.trim()),
+    onSuccess: () => router.push("/dog-register"),
+    onError: (e) => Alert.alert("동네를 저장하지 못했어요.", errorMessage(e)),
+  });
 
   const next = () => {
     if (!region.trim()) return Alert.alert("동네를 알려주세요.", "현재 위치로 설정하거나 직접 입력할 수 있어요.");
-    useUserStore.setState({ region: region.trim() });
-    router.push("/dog-register");
+    save.mutate();
   };
 
   const locate = async () => {
@@ -38,7 +45,7 @@ export default function RegionScreen() {
         <Btn title="현재 위치로 설정" icon={I.locate} onPress={locate} />
         <Field label="동네" value={region} onChangeText={setRegion} placeholder="서울시 성북구" />
       </View>
-      <Plate title="다음" onPress={next} />
+      <Plate title="다음" onPress={next} loading={save.isPending} />
     </Page>
   );
 }

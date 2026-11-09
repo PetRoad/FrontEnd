@@ -2,9 +2,11 @@ import { useState, type ReactNode } from "react";
 import { Alert, Keyboard, Platform, Pressable, StyleSheet, View } from "react-native";
 import DateTimePicker, { DateTimePickerAndroid, type DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
+import { useMutation } from "@tanstack/react-query";
 import { Field, I, Icon, Num, Page, PhotoTile, Plate, Segmented, T } from "@/components/common/ui";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
+import { errorMessage } from "@/services/api";
 import type { Dog, DogSize } from "@/types/dog";
 import { BreedSheet } from "./BreedSheet";
 import { DogAvatar } from "./DogAvatar";
@@ -13,7 +15,7 @@ import { dotDate, isoDate } from "@/utils/format";
 const SIZES = ["소형", "중형", "대형"] as const;
 const SIZE_WEIGHTS = { 소형: "(1~10kg)", 중형: "(10~25kg)", 대형: "(25kg 이상)" };
 
-type Props = { initial?: Dog | null; submitLabel: string; onSubmit: (dog: Dog) => void; header?: ReactNode };
+type Props = { initial?: Dog | null; submitLabel: string; onSubmit: (dog: Dog) => Promise<void>; header?: ReactNode };
 
 const parseIso = (iso: string) => {
   const [y, m, d] = iso.split("-").map(Number);
@@ -30,6 +32,10 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
   const [photo, setPhoto] = useState(initial?.photo);
   const [picking, setPicking] = useState(false);
   const [findingBreed, setFindingBreed] = useState(false);
+  const save = useMutation({
+    mutationFn: onSubmit,
+    onError: (e) => Alert.alert("반려견 정보를 저장하지 못했어요.", errorMessage(e)),
+  });
 
   const pickerDate = birth ? parseIso(birth) : new Date(new Date().getFullYear() - 2, 0, 1);
   const onPick = (_: DateTimePickerEvent, d?: Date) => {
@@ -48,11 +54,11 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
     if (!name.trim()) return Alert.alert("이름을 입력해주세요.");
     if (!breed) return Alert.alert("견종을 골라주세요.");
     if (!/^\d{4}-\d{2}-\d{2}$/.test(birth)) return Alert.alert("생년월일을 선택해주세요.");
-    onSubmit({ name: name.trim(), breed: breed.trim(), size, birth, photo });
+    save.mutate({ name: name.trim(), breed: breed.trim(), size, birth, photo });
   };
 
   // 사진만, 정사각형으로 잘라서. 이 방식은 iOS에서 사진 보관함 권한을 묻지 않는다
-  // ponytail: 고른 사진의 캐시 uri를 그대로 저장. 스토어를 영구 저장하거나 서버에 올릴 때 파일 복사·업로드로 교체
+  // 고른 사진은 기기 안 uri. 저장할 때 services/user saveDog가 서버에 올린다
   const pickPhoto = async () => {
     Keyboard.dismiss();
     const r = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], allowsEditing: true, aspect: [1, 1], quality: 0.8 });
@@ -145,7 +151,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
           </View>
         )}
       </View>
-      <Plate title={submitLabel} onPress={submit} />
+      <Plate title={submitLabel} onPress={submit} loading={save.isPending} />
     </Page>
   );
 }

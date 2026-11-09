@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { DogForm } from "@/features/dog/DogForm";
+import { saveDog } from "@/services/user";
 import { useUserStore } from "@/stores/userStore";
 
 export default function DogProfileScreen() {
@@ -8,8 +9,8 @@ export default function DogProfileScreen() {
     <DogForm
       initial={dog}
       submitLabel="저장"
-      onSubmit={(next) => {
-        useUserStore.setState({ dog: next });
+      onSubmit={async (next) => {
+        await saveDog(next);
         router.back();
       }}
     />
