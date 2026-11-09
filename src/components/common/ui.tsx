@@ -49,6 +49,8 @@ export const I = {
   eyeSlash: { ios: "eye.slash", android: "visibility_off" },
   search: { ios: "magnifyingglass", android: "search" },
   close: { ios: "xmark", android: "close" },
+  mail: { ios: "envelope", android: "mail" },
+  logout: { ios: "rectangle.portrait.and.arrow.right", android: "logout" },
 } satisfies Record<string, IconName>;
 
 export function Icon({ name, size = 22, color }: { name: IconName; size?: number; color?: ColorValue }) {
@@ -511,9 +513,10 @@ export function Group({ header, children }: { header?: string; children: ReactNo
   );
 }
 
-type RowProps = { title: ReactNode; sub?: string; icon?: IconName; left?: ReactNode; detail?: ReactNode; onPress?: () => void };
+// arrow: 다른 화면으로 가는 행에만. 누르면 바로 실행되는 행동(로그아웃)은 화살표 없이
+type RowProps = { title: ReactNode; sub?: string; icon?: IconName; left?: ReactNode; detail?: ReactNode; onPress?: () => void; arrow?: boolean };
 
-export function Row({ title, sub, icon, left, detail, onPress }: RowProps) {
+export function Row({ title, sub, icon, left, detail, onPress, arrow = true }: RowProps) {
   const c = useTheme();
   return (
     <Pressable
@@ -538,7 +541,7 @@ export function Row({ title, sub, icon, left, detail, onPress }: RowProps) {
       ) : (
         detail
       )}
-      {onPress && <Icon name={I.chevron} size={14} color={c.textTertiary} />}
+      {onPress && arrow && <Icon name={I.chevron} size={14} color={c.textTertiary} />}
     </Pressable>
   );
 }

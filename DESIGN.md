@@ -19,6 +19,7 @@ colors:
   error: "#D93636"
   route: "#9A6412"
   map-water: "#E3EEF2"
+  scrim: "rgba(35, 35, 35, 0.4)"
 typography:
   title-xl:
     fontFamily: "Pretendard-Bold"
@@ -177,6 +178,7 @@ components:
 - error `#D93636`: 입력 오류 테두리와 문구.
 - route `#9A6412`: 지도 위 내가 걸은 길(두께 5). 원래 코스(검정 점선)와 구분되도록 기존 색을 유지한다. 지도 밖 UI에는 쓰지 않는다.
 - mapWater `#E3EEF2`: 웹 지도 자리 전용.
+- scrim `rgba(35,35,35,0.4)`: 확인 모달(회원탈퇴) 뒤를 덮는 면.
 
 ### Named Rules
 **The One Ink Rule.** 검정(primary) 면은 한 화면의 주 행동 하나와 상태 표시에만. 넓은 강조 면이 필요하면 Warm Gray.
@@ -259,7 +261,8 @@ components:
 ### Cards
 - **CourseCard**: 흰 면, borderSubtle 1px, 반경 20, 안쪽 4. 커버(가로 카드 112 / 세로 160, 반경 16) / 코스명 bodyMain / 거리 Num + 난이도 Tag + 좋아요 / 견종·나이 bodySmall. 그림자 없음.
 - **통계 카드**: 반경 24(결과) / 20(일지 상세), 안쪽 20. 산책 결과는 Logo Black 면에 숫자, 단위, 라벨, 구분선 모두 흰색(`Stat`의 `color`), 일지 상세는 Warm Gray.
-- **Group / Row**: 흰 면, 반경 20, 행 최소 높이 56, 좌측 16 들여 쓴 구분선, 아이콘 20 Hunt Black, 화살표 textTertiary.
+- **Group / Row**: 흰 면, 반경 20, 행 최소 높이 56, 좌측 16 들여 쓴 구분선, 아이콘 20 Hunt Black, 화살표 textTertiary. 화살표는 다른 화면으로 가는 행에만, 누르면 바로 실행되는 행(로그아웃)은 `arrow={false}`.
+- **마이 계정 묶음**: 맨 아래 "계정" Group(로그인한 이메일, 로그아웃). 회원탈퇴는 묶음 밖 아래에 bodySmall Medium textSecondary 글자 버튼으로 한 단계 약하게, 누르면 비밀번호 확인 모달(흰 카드 반경 24, scrim 위, 취소 secondary + 탈퇴하기 primary).
 
 ### Map overlay (`Glass`, `FloatButton`)
 - FloatButton: 원형 유리 버튼(기본 48, 산책 진행 카메라 56), 아이콘은 지름의 0.42. 사진 수는 Logo Black 배지.
