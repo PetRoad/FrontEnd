@@ -19,6 +19,7 @@ export const palette = {
   error: "#D93636", // 입력 오류. 흰 바탕 대비 4.5:1 이상
   route: "#9A6412", // 지도 위 내가 걸은 길. 코스(검정 점선)와 구분되도록 기존 색 유지
   mapWater: "#E3EEF2", // 웹 지도 자리 전용
+  scrim: "rgba(35, 35, 35, 0.4)", // 확인 모달 뒤를 덮는 면. 로고색을 옅게
 };
 
 export type Palette = typeof palette;

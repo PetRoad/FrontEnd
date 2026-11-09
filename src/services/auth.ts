@@ -28,6 +28,12 @@ export async function login(rawEmail: string, password: string) {
   return { region, dog };
 }
 
+// 비밀번호를 확인한 뒤 계정과 내 데이터를 지운다. 틀리면 400이라 토큰 재발급과 섞이지 않는다
+export async function withdraw(password: string) {
+  await api("/api/me", { method: "DELETE", body: { password } });
+  resetUser();
+}
+
 // 화면은 바로 로그인으로. 서버 세션 폐기는 실패해도 막지 않는다(리프레시 토큰은 만료되면 어차피 못 쓴다)
 export async function logout() {
   const { refreshToken } = useUserStore.getState();
