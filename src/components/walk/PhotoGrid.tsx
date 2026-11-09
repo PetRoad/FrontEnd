@@ -23,14 +23,14 @@ export function PhotoGrid({ photos, selected, onPress }: Props) {
   }
   return (
     <View style={grid.wrap}>
-      {photos.map((p) => {
+      {photos.map((p, i) => {
         const on = selected === p;
         return (
           <Pressable
             key={p}
             disabled={!onPress}
             accessibilityRole={onPress ? "button" : "image"}
-            accessibilityLabel={p}
+            accessibilityLabel={`사진 ${i + 1}`}
             accessibilityState={{ selected: on }}
             onPress={() => onPress?.(p)}
             style={grid.cell}

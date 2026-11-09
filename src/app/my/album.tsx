@@ -64,7 +64,7 @@ export default function AlbumScreen() {
               <Pressable
                 key={it.walk.id + it.photo}
                 accessibilityRole="button"
-                accessibilityLabel={`${dotDate(it.walk.date)} ${it.walk.title} ${it.photo}`}
+                accessibilityLabel={`${dotDate(it.walk.date)} ${it.walk.title} 사진 ${it.walk.photos.indexOf(it.photo) + 1}`}
                 accessibilityState={{ selected: isSel(it) }}
                 onPress={() => setSel(it)}
                 style={grid.cell}
