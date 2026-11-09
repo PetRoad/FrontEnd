@@ -11,7 +11,7 @@ type WalkState = {
   start: (title: string, courseId?: string) => void;
   tick: () => void;
   move: (p: LatLng) => void;
-  addPhoto: () => void;
+  addPhoto: (uri: string) => void;
   edit: (patch: Partial<Pick<Walk, "title" | "cover">>) => void;
   finish: () => void;
   save: () => void;
@@ -43,8 +43,8 @@ export const useWalkStore = create<WalkState>()((set) => ({
         return { route: [...route, p], distanceKm: w.distanceKm + (last ? meters(last, p) / 1000 : 0) };
       }),
     ),
-  // ponytail: 사진 자리만 추가. expo-camera 촬영으로 교체
-  addPhoto: () => set((s) => update(s, (w) => ({ photos: [...w.photos, `사진 ${w.photos.length + 1}`] }))),
+  // ponytail: 기기 캐시 폴더의 uri를 그대로 붙인다(OS가 지울 수 있음). 산책 저장 API가 연결되면 업로드한 주소로 교체
+  addPhoto: (uri) => set((s) => update(s, (w) => ({ photos: [...w.photos, uri] }))),
   edit: (patch) => set((s) => update(s, () => patch)),
   // ponytail: 완주율 임시값 = 걸은 거리 ÷ 코스 거리. 기획 §17대로 경로 매칭 알고리즘이 정해지면 교체
   finish: () =>

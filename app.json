@@ -39,7 +39,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "반려견 프로필 사진을 고르려고 사진 보관함을 사용해요."
+          "photosPermission": "반려견 프로필 사진을 고르려고 사진 보관함을 사용해요.",
+          "cameraPermission": "산책 중 사진을 찍으려고 카메라를 사용해요."
         }
       ],
       "@react-native-community/datetimepicker",
