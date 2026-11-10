@@ -76,7 +76,7 @@ export function Tracker({ course }: { course?: Course }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: c.background }}>
-      <MapPlate style={StyleSheet.absoluteFill} marker follow route={walk.route} />
+      <MapPlate style={StyleSheet.absoluteFill} marker follow route={walk.route} course={course?.route} />
 
       {/* 한 줄 바: 왼쪽 코스 이름, 오른쪽 수치. 따라 걷기는 걸은 거리 | 코스 전체, 자유산책은 시간 | 걸은 거리 */}
       <Glass
@@ -118,30 +118,27 @@ export function Tracker({ course }: { course?: Course }) {
   );
 }
 
-// 지도 위 경로 구분은 기존 색 그대로: 원래 코스 로고색 점선, 내가 걸은 길 갈색 실선
+// 지도에 실제로 그려지는 것만 적는다: 남은 코스 회색, 내가 걸은 길 갈색(코스 위를 덮으며 채워진다),
+// 내 위치는 OS가 그리는 파란 점(마커를 직접 그리지 않고 OS 것을 쓴다 - 방향·정확도 원이 공짜로 따라온다)
 function Legend({ bottom }: { bottom: number }) {
   const c = useTheme();
   return (
     <Glass r={radius.button} style={[s.legend, { bottom }]}>
       <View style={s.legendRow}>
-        <View style={s.swatch}>
-          {[0, 1, 2].map((i) => (
-            <View key={i} style={[s.swatchDash, { backgroundColor: c.primary }]} />
-          ))}
-        </View>
+        <View style={[s.swatch, s.swatchLine, { backgroundColor: c.courseDim }]} />
         <T v="caption" w="medium">
-          원래 코스
+          남은 코스
         </T>
       </View>
       <View style={s.legendRow}>
-        <View style={[s.swatch, { height: 4, borderRadius: 2, backgroundColor: c.route }]} />
+        <View style={[s.swatch, s.swatchLine, { backgroundColor: c.route }]} />
         <T v="caption" w="medium">
           내가 걸은 길
         </T>
       </View>
       <View style={s.legendRow}>
         <View style={s.swatch}>
-          <View style={[s.swatchDot, { backgroundColor: c.primary, borderColor: c.route }]} />
+          <View style={[s.swatchDot, { backgroundColor: c.userDot, borderColor: c.onPrimary }]} />
         </View>
         <T v="caption" w="medium">
           내 위치
@@ -167,6 +164,6 @@ const s = StyleSheet.create({
   legend: { position: "absolute", left: mapEdge, padding: space.md, gap: space.sm },
   legendRow: { flexDirection: "row", alignItems: "center", gap: 10 },
   swatch: { width: 28, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  swatchDash: { width: 6, height: 6, borderRadius: 3 },
+  swatchLine: { height: 4, borderRadius: 2 },
   swatchDot: { width: 14, height: 14, borderRadius: 7, borderWidth: 2, marginLeft: 7 },
 });

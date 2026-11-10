@@ -14,10 +14,11 @@ type Props = {
   marker?: boolean; // 내 위치 점을 띄우고, 처음 한 번 내 위치로 옮긴다
   follow?: boolean; // 걷는 동안 지도가 나를 따라온다
   route?: LatLng[]; // 걸은 길. 있으면 처음에 경로 전체가 보이게 맞춘다
+  course?: LatLng[]; // 따라 걷는 코스. 회색으로 깔리고, 그 위를 걸은 길이 덮으면서 채워진다
   ref?: RefObject<MapView | null>;
 };
 
-export function MapPlate({ style, marker, follow, route, ref }: Props) {
+export function MapPlate({ style, marker, follow, route, course, ref }: Props) {
   const c = useTheme();
   const own = useRef<MapView>(null);
   const map = ref ?? own;
@@ -36,7 +37,9 @@ export function MapPlate({ style, marker, follow, route, ref }: Props) {
         showsUserLocation={marker}
         followsUserLocation={follow}
         onMapReady={() => {
-          if (route?.length) map.current?.fitToCoordinates(route, { edgePadding: PAD, animated: false });
+          // 걸은 길이 아직 없으면(따라 걷기 시작 직후) 원래 코스 전체가 보이게 맞춘다
+          const fit = route?.length ? route : course;
+          if (fit?.length) map.current?.fitToCoordinates(fit, { edgePadding: PAD, animated: false });
         }}
         onUserLocationChange={({ nativeEvent: { coordinate: p } }) => {
           if (!p || centered.current || route?.length) return;
@@ -44,7 +47,9 @@ export function MapPlate({ style, marker, follow, route, ref }: Props) {
           map.current?.animateToRegion({ latitude: p.latitude, longitude: p.longitude, ...NEAR });
         }}
       >
-        {route && route.length > 1 && <Polyline coordinates={route} strokeColor={c.route} strokeWidth={5} />}
+        {/* 코스를 먼저 깔고 걸은 길을 그 위에 조금 더 굵게 그린다. 코스대로 걸으면 회색이 덮여 채워지고, 벗어나면 옆으로 삐져나온다 */}
+        {course && course.length > 1 && <Polyline coordinates={course} strokeColor={c.courseDim} strokeWidth={5} lineCap="round" />}
+        {route && route.length > 1 && <Polyline coordinates={route} strokeColor={c.route} strokeWidth={6} lineCap="round" />}
       </MapView>
     </View>
   );
