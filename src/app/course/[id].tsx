@@ -74,7 +74,7 @@ export default function CourseDetailScreen() {
         </Group>
 
         <Section title="코스 경로">
-          <MapPlate style={s.map} />
+          <MapPlate style={s.map} route={course.route} />
         </Section>
 
         {course.mine && <Btn tone="plain" title="코스 삭제" onPress={remove} />}
