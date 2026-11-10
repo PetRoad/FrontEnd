@@ -1,4 +1,4 @@
-import { Children, isValidElement, useEffect, useState, type ReactElement, type ReactNode } from "react";
+import { Children, isValidElement, useEffect, useState, type ReactElement, type ReactNode, type Ref } from "react";
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 import {
   ActivityIndicator,
@@ -11,6 +11,7 @@ import {
   View,
   type ColorValue,
   type StyleProp,
+  type TextInputInstance,
   type TextInputProps,
   type TextStyle,
   type ViewProps,
@@ -48,6 +49,8 @@ export const I = {
   eyeSlash: { ios: "eye.slash", android: "visibility_off" },
   search: { ios: "magnifyingglass", android: "search" },
   close: { ios: "xmark", android: "close" },
+  mail: { ios: "envelope", android: "mail" },
+  logout: { ios: "rectangle.portrait.and.arrow.right", android: "logout" },
 } satisfies Record<string, IconName>;
 
 export function Icon({ name, size = 22, color }: { name: IconName; size?: number; color?: ColorValue }) {
@@ -185,7 +188,10 @@ export function Plate(props: PressProps) {
   return <Btn {...props} tone="primary" />;
 }
 
-export function Field({ label, error, style, onFocus, onBlur, ...props }: TextInputProps & { label?: string; error?: string }) {
+// ref: 키보드 "다음"으로 다음 칸에 포커스를 옮길 때
+type FieldProps = TextInputProps & { label?: string; error?: string; ref?: Ref<TextInputInstance> };
+
+export function Field({ label, error, style, onFocus, onBlur, ...props }: FieldProps) {
   const c = useTheme();
   const [focused, setFocused] = useState(false);
   return (
@@ -230,11 +236,11 @@ export function Field({ label, error, style, onFocus, onBlur, ...props }: TextIn
 }
 
 // 로그인·회원가입의 큰 입력칸: 라벨 없이 플레이스홀더만
-export function BigField({ style, ...props }: TextInputProps & { error?: string }) {
+export function BigField({ style, ...props }: Omit<FieldProps, "label">) {
   return <Field {...props} style={[s.bigField, style]} />;
 }
 
-export function PasswordField(props: TextInputProps) {
+export function PasswordField(props: Omit<FieldProps, "label">) {
   const c = useTheme();
   const [hidden, setHidden] = useState(true);
   return (
@@ -507,9 +513,10 @@ export function Group({ header, children }: { header?: string; children: ReactNo
   );
 }
 
-type RowProps = { title: ReactNode; sub?: string; icon?: IconName; left?: ReactNode; detail?: ReactNode; onPress?: () => void };
+// arrow: 다른 화면으로 가는 행에만. 누르면 바로 실행되는 행동(로그아웃)은 화살표 없이
+type RowProps = { title: ReactNode; sub?: string; icon?: IconName; left?: ReactNode; detail?: ReactNode; onPress?: () => void; arrow?: boolean };
 
-export function Row({ title, sub, icon, left, detail, onPress }: RowProps) {
+export function Row({ title, sub, icon, left, detail, onPress, arrow = true }: RowProps) {
   const c = useTheme();
   return (
     <Pressable
@@ -534,7 +541,7 @@ export function Row({ title, sub, icon, left, detail, onPress }: RowProps) {
       ) : (
         detail
       )}
-      {onPress && <Icon name={I.chevron} size={14} color={c.textTertiary} />}
+      {onPress && arrow && <Icon name={I.chevron} size={14} color={c.textTertiary} />}
     </Pressable>
   );
 }

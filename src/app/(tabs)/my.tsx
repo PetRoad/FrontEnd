@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Group, I, Icon, Page, Row, Stat, T } from "@/components/common/ui";
 import { radius, space } from "@/constants/theme";
 import { DogAvatar } from "@/features/dog/DogAvatar";
+import { WithdrawModal } from "@/features/user/WithdrawModal";
 import { useTheme } from "@/hooks/useTheme";
+import { logout } from "@/services/auth";
 import { useCourseStore } from "@/stores/courseStore";
 import { useUserStore } from "@/stores/userStore";
 import { useWalkStore } from "@/stores/walkStore";
@@ -12,8 +15,9 @@ import { ageFromBirth } from "@/utils/format";
 
 export default function MyScreen() {
   const c = useTheme();
+  const [withdrawing, setWithdrawing] = useState(false);
   const insets = useSafeAreaInsets();
-  const { dog, region } = useUserStore();
+  const { dog, region, email } = useUserStore();
   const walks = useWalkStore((s) => s.walks);
   const courses = useCourseStore((s) => s.courses);
   const likedCount = useCourseStore((s) => s.liked.length);
@@ -66,6 +70,25 @@ export default function MyScreen() {
         <Row icon={I.map} title="내가 만든 코스" detail={courses.filter((x) => x.mine).length} onPress={() => router.push("/my/courses")} />
         <Row icon={I.heart} title="좋아요한 코스" detail={likedCount} onPress={() => router.push("/my/likes")} />
       </Group>
+
+      {/* 회원탈퇴는 되돌릴 수 없어 묶음 밖에 한 단계 약하게 둔다 */}
+      <View style={{ gap: space.xs }}>
+        <Group header="계정">
+          <Row icon={I.mail} title={email} sub="로그인한 계정" />
+          <Row icon={I.logout} title="로그아웃" onPress={logout} arrow={false} />
+        </Group>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => setWithdrawing(true)}
+          hitSlop={{ left: space.sm, right: space.sm }}
+          style={({ pressed }) => [s.withdraw, pressed && { backgroundColor: c.surfaceMuted }]}
+        >
+          <T v="bodySmall" w="medium" muted>
+            회원탈퇴
+          </T>
+        </Pressable>
+      </View>
+      <WithdrawModal visible={withdrawing} onClose={() => setWithdrawing(false)} />
     </Page>
   );
 }
@@ -76,4 +99,5 @@ const s = StyleSheet.create({
   region: { flexDirection: "row", alignItems: "center", gap: space.xs, marginTop: 2 },
   bento: { flexDirection: "row", gap: space.sm },
   cell: { flex: 1, borderRadius: radius.button, padding: space.lg },
+  withdraw: { alignSelf: "flex-start", minHeight: 44, justifyContent: "center", paddingHorizontal: space.sm, borderRadius: radius.chip },
 });

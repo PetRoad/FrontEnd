@@ -39,7 +39,8 @@ export default function RootLayout() {
           <Stack.Protected guard={!onboarded}>
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           </Stack.Protected>
-          <Stack.Protected guard={onboarded}>
+          {/* 로그아웃·세션 만료로 guard가 꺼지면 로그인으로. 없으면 (auth) 그룹 첫 자리 "/"로 가는데 거기엔 화면이 없다 */}
+          <Stack.Protected guard={onboarded} redirectTo="/login">
             <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "산책" }} />
             <Stack.Screen name="course/[id]" options={{ title: "코스" }} />
             <Stack.Screen name="walk/active" options={{ headerShown: false, ...guarded }} />
