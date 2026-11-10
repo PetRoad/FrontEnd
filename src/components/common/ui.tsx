@@ -329,11 +329,19 @@ export function Tag({ label, soft }: { label: string; soft?: boolean }) {
   );
 }
 
-// 사진 자리. expo-camera 연결 전까지 사진 대신 쓰인다
+// 사진 칸. label이 사진 uri(찍은 사진)면 실제 사진을, 아니면("사진 1" 같은 목업) 회색 자리를 그린다
 export function PhotoTile({ label, icon = I.photo, selected, style }: { label?: string; icon?: IconName; selected?: boolean; style?: StyleProp<ViewStyle> }) {
   const c = useTheme();
+  const box = [s.tile, { backgroundColor: c.surfaceMuted }, selected && { borderWidth: 3, borderColor: c.primary }, style];
+  if (label && /^(file|https?):\/\//.test(label)) {
+    return (
+      <View style={box}>
+        <Image source={{ uri: label }} contentFit="cover" style={StyleSheet.absoluteFill} />
+      </View>
+    );
+  }
   return (
-    <View style={[s.tile, { backgroundColor: c.surfaceMuted }, selected && { borderWidth: 3, borderColor: c.primary }, style]}>
+    <View style={box}>
       <Icon name={icon} size={22} color={c.textTertiary} />
       {label ? (
         <T v="caption" muted numberOfLines={1}>

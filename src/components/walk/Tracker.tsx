@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Alert, StyleSheet, View } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import { useKeepAwake } from "expo-keep-awake";
 import * as Location from "expo-location";
 import { router } from "expo-router";
@@ -61,6 +62,15 @@ export function Tracker({ course }: { course?: Course }) {
       },
     });
 
+  // 시스템 카메라로 한 장 찍어 산책에 붙인다. 취소하면 아무것도 안 한다
+  // ponytail: 안드로이드는 카메라 화면으로 넘어간 동안 위치 기록이 멈출 수 있다(iOS는 앱 위 모달이라 계속 기록). 안드로이드 출시 전 백그라운드 위치로 보강
+  const shoot = async () => {
+    const { granted } = await ImagePicker.requestCameraPermissionsAsync();
+    if (!granted) return Alert.alert("카메라 권한이 필요해요.", "설정에서 카메라를 허용해야 산책 중 사진을 찍을 수 있어요.");
+    const r = await ImagePicker.launchCameraAsync({ mediaTypes: ["images"], quality: 0.8 });
+    if (!r.canceled) useWalkStore.getState().addPhoto(r.assets[0].uri);
+  };
+
   const km = walk.distanceKm.toFixed(2);
   const bottom = insets.bottom + space.lg;
 
@@ -95,11 +105,10 @@ export function Tracker({ course }: { course?: Course }) {
       {course && <Legend bottom={bottom + CONTROLS + space.md} />}
 
       <View style={[s.controls, { bottom }]}>
-        {/* ponytail: 사진 자리만 추가. expo-camera 촬영으로 교체 */}
         <FloatButton
           icon={I.camera}
           label={walk.photos.length ? `사진 찍기, ${walk.photos.length}장 찍음` : "사진 찍기"}
-          onPress={useWalkStore.getState().addPhoto}
+          onPress={shoot}
           size={CONTROLS}
           badge={walk.photos.length}
         />
