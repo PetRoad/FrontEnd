@@ -38,8 +38,10 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
   });
 
   const pickerDate = birth ? parseIso(birth) : new Date(new Date().getFullYear() - 2, 0, 1);
+  // 날짜를 고르면 iOS 펼친 달력도 접는다. 안드로이드는 대화상자라 저절로 닫힌다
   const onPick = (_: DateTimePickerEvent, d?: Date) => {
     if (d) setBirth(isoDate(d));
+    setPicking(false);
   };
   const openPicker = () => {
     Keyboard.dismiss();
