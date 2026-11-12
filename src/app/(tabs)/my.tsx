@@ -41,7 +41,7 @@ export default function MyScreen() {
               {dog?.breed} · {dog?.size} · {dog ? ageFromBirth(dog.birth) : 0}살
             </T>
             <View style={s.region}>
-              <Icon name={I.pin} size={12} color={c.textSecondary} />
+              <Icon name={I.home} size={12} color={c.textSecondary} />
               <T v="caption" muted numberOfLines={1}>
                 {region}
               </T>

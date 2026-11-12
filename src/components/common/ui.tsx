@@ -44,6 +44,7 @@ export const I = {
   album: { ios: "photo.on.rectangle", android: "photo_library" },
   map: { ios: "map", android: "map" },
   pin: { ios: "mappin", android: "location_on" },
+  home: { ios: "house", android: "home" },
   paw: { ios: "pawprint", android: "pets" },
   eye: { ios: "eye", android: "visibility" },
   eyeSlash: { ios: "eye.slash", android: "visibility_off" },
