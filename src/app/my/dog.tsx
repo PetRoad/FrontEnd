@@ -9,6 +9,7 @@ export default function DogProfileScreen() {
     <DogForm
       initial={dog}
       submitLabel="저장"
+      confirmLeave
       onSubmit={async (next) => {
         await saveDog(next);
         router.back();

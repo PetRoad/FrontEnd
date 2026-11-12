@@ -3,10 +3,12 @@ import { Alert, Keyboard, Platform, Pressable, StyleSheet, View } from "react-na
 import DateTimePicker, { DateTimePickerAndroid, type DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { useMutation } from "@tanstack/react-query";
+import { usePreventRemove } from "expo-router";
 import { Field, I, Icon, Num, Page, PhotoTile, Plate, Segmented, T } from "@/components/common/ui";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { errorMessage } from "@/services/api";
+import { confirm } from "@/utils/confirm";
 import type { Dog, DogSize } from "@/types/dog";
 import { BreedSheet } from "./BreedSheet";
 import { DogAvatar } from "./DogAvatar";
@@ -15,7 +17,8 @@ import { dotDate, isoDate } from "@/utils/format";
 const SIZES = ["소형", "중형", "대형"] as const;
 const SIZE_WEIGHTS = { 소형: "(1~10kg)", 중형: "(10~25kg)", 대형: "(25kg 이상)" };
 
-type Props = { initial?: Dog | null; submitLabel: string; onSubmit: (dog: Dog) => Promise<void>; header?: ReactNode };
+// confirmLeave: 고친 내용이 있는데 뒤로 가면 수정을 취소할지 묻는다(마이 반려견 프로필 수정)
+type Props = { initial?: Dog | null; submitLabel: string; onSubmit: (dog: Dog) => Promise<void>; header?: ReactNode; confirmLeave?: boolean };
 
 const parseIso = (iso: string) => {
   const [y, m, d] = iso.split("-").map(Number);
@@ -23,7 +26,7 @@ const parseIso = (iso: string) => {
 };
 
 // 온보딩 반려견 등록 / 마이 반려견 프로필 수정 공용
-export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
+export function DogForm({ initial, submitLabel, onSubmit, header, confirmLeave }: Props) {
   const c = useTheme();
   const [name, setName] = useState(initial?.name ?? "");
   const [breed, setBreed] = useState(initial?.breed ?? "");
@@ -36,6 +39,28 @@ export function DogForm({ initial, submitLabel, onSubmit, header }: Props) {
     mutationFn: onSubmit,
     onError: (e) => Alert.alert("반려견 정보를 저장하지 못했어요.", errorMessage(e)),
   });
+
+  // 저장 중에는 묻지 않는다. 저장이 끝나면 화면이 스스로 뒤로 간다
+  const edited =
+    name !== (initial?.name ?? "") ||
+    breed !== (initial?.breed ?? "") ||
+    size !== (initial?.size ?? "소형") ||
+    birth !== (initial?.birth ?? "") ||
+    photo !== initial?.photo;
+  const [leaving, setLeaving] = useState(false);
+  usePreventRemove(!!confirmLeave && edited && !leaving && !save.isPending, ({ repeat }) =>
+    confirm({
+      title: "수정을 취소할까요?",
+      message: "바꾼 내용은 저장되지 않아요.",
+      ok: "수정 취소",
+      cancel: "계속 수정",
+      destructive: true,
+      onOk: () => {
+        setLeaving(true);
+        repeat();
+      },
+    }),
+  );
 
   const pickerDate = birth ? parseIso(birth) : new Date(new Date().getFullYear() - 2, 0, 1);
   // 날짜를 고르면 iOS 펼친 달력도 접는다. 안드로이드는 대화상자라 저절로 닫힌다
