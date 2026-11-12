@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import * as Location from "expo-location";
 import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { MapPlate } from "@/components/common/MapPlate";
@@ -9,7 +8,7 @@ import { radius, space } from "@/constants/theme";
 import { errorMessage } from "@/services/api";
 import { saveRegion } from "@/services/user";
 import { useUserStore } from "@/stores/userStore";
-import { here } from "@/utils/location";
+import { here, placeName } from "@/utils/location";
 
 export default function RegionScreen() {
   const [region, setRegion] = useState(useUserStore.getState().region);
@@ -27,9 +26,8 @@ export default function RegionScreen() {
   const locate = async () => {
     const p = await here();
     if (!p) return Alert.alert("현재 위치를 알 수 없어요.", "위치 권한과 위치 서비스를 켜거나 동네를 직접 입력해 주세요.");
-    const [a] = await Location.reverseGeocodeAsync(p).catch(() => []);
-    // 예: 서울특별시 성북구 정릉동. 나라마다 칸이 겹쳐 오기도 해서 중복은 뺀다
-    if (a) setRegion([...new Set([a.region, a.city, a.district].filter(Boolean))].join(" "));
+    const name = await placeName(p);
+    if (name) setRegion(name);
   };
 
   return (
