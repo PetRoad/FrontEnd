@@ -1,19 +1,22 @@
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { MapPlate } from "@/components/common/MapPlate";
 import { Btn, Empty, I, Page, Section, Stat, T } from "@/components/common/ui";
 import { PhotoGrid } from "@/components/walk/PhotoGrid";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
-import { useWalkStore } from "@/stores/walkStore";
+import { errorMessage } from "@/services/api";
+import { deleteWalk, useWalks } from "@/services/walk";
 import { confirm } from "@/utils/confirm";
-import { dotDate } from "@/utils/format";
+import { dotDate, floorKm } from "@/utils/format";
 
 export default function WalkDetailScreen() {
   const c = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const walk = useWalkStore((s) => s.walks.find((w) => w.id === id));
+  const { data: walks, isPending } = useWalks();
+  const walk = walks?.find((w) => w.id === id);
 
+  if (isPending) return <Page />;
   if (!walk) {
     return (
       <Page>
@@ -28,9 +31,10 @@ export default function WalkDetailScreen() {
       message: "삭제한 산책은 되돌릴 수 없어요.",
       ok: "삭제",
       destructive: true,
+      // 먼저 목록으로 돌아가고, 실패하면 목록에 그대로 남은 채로 알린다
       onOk: () => {
         router.back();
-        useWalkStore.getState().remove(walk.id);
+        deleteWalk(walk.id).catch((e) => Alert.alert("기록을 삭제하지 못했어요.", errorMessage(e)));
       },
     });
 
@@ -46,7 +50,7 @@ export default function WalkDetailScreen() {
       <MapPlate style={s.map} route={walk.route} />
 
       <View style={[s.band, { backgroundColor: c.primarySoft }]}>
-        <Stat value={walk.distanceKm.toFixed(1)} unit="km" label="거리" size={32} />
+        <Stat value={floorKm(walk.distanceKm)} unit="km" label="거리" size={32} />
         <Stat value={String(Math.round(walk.durationSec / 60))} unit="분" label="산책 시간" size={32} />
         {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={32} />}
       </View>

@@ -3,12 +3,22 @@ import { router } from "expo-router";
 import { Empty, Group, I, Num, Page, PhotoTile, Row, T } from "@/components/common/ui";
 import { radius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
-import { useWalkStore } from "@/stores/walkStore";
-import { dotDate } from "@/utils/format";
+import { errorMessage } from "@/services/api";
+import { useWalks } from "@/services/walk";
+import { dotDate, floorKm } from "@/utils/format";
 
 export default function WalksScreen() {
   const c = useTheme();
-  const walks = useWalkStore((s) => s.walks);
+  const { data: walks, error } = useWalks();
+
+  if (error) {
+    return (
+      <Page>
+        <Empty icon={I.log} title="산책일지를 불러오지 못했어요" body={errorMessage(error)} />
+      </Page>
+    );
+  }
+  if (!walks) return <Page />;
 
   return (
     <Page>
@@ -31,7 +41,7 @@ export default function WalksScreen() {
               detail={
                 <View style={s.detail}>
                   <Num size={16} bold>
-                    {w.distanceKm.toFixed(1)}km
+                    {floorKm(w.distanceKm)}km
                   </Num>
                   <Num size={13} color={c.textSecondary}>
                     {Math.round(w.durationSec / 60)}분

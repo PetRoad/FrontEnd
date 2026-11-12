@@ -13,15 +13,27 @@ import {
 import { PhotoGrid } from '@/components/walk/PhotoGrid';
 import { radius, space } from '@/constants/theme';
 import { useTheme } from '@/hooks/useTheme';
+import { errorMessage } from '@/services/api';
+import { saveWalk } from '@/services/walk';
 import { useWalkStore } from '@/stores/walkStore';
 import { confirm } from '@/utils/confirm';
 import { clock, dotDate } from '@/utils/format';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { Alert, StyleSheet, View } from 'react-native';
 
 export default function WalkResultScreen() {
   const c = useTheme();
   const walk = useWalkStore((s) => s.current);
+  const saving = useMutation({
+    mutationFn: saveWalk,
+    onSuccess: () => {
+      useWalkStore.getState().discard();
+      router.dismissAll();
+      router.push('/my/walks');
+    },
+    onError: (e) => Alert.alert('기록을 저장하지 못했어요.', errorMessage(e)),
+  });
   if (!walk) return null;
   // 자유산책만 이름·대표 사진을 정한다. 따라 걷기는 코스 이름 그대로
   const free = !walk.courseId;
@@ -32,10 +44,7 @@ export default function WalkResultScreen() {
     !!walk.title.trim() || (Alert.alert('산책 이름을 정해주세요.'), false);
 
   const save = () => {
-    if (!named()) return;
-    useWalkStore.getState().save();
-    router.dismissAll();
-    router.push('/my/walks');
+    if (named()) saving.mutate(walk);
   };
 
   const discard = () =>
@@ -127,7 +136,7 @@ export default function WalkResultScreen() {
       </Page>
 
       <BottomBar>
-        <Plate title="기록 저장" onPress={save} />
+        <Plate title="기록 저장" onPress={save} loading={saving.isPending} />
         {/* 남의 코스를 따라 걸은 기록은 내 코스로 등록하지 않음 (스케치 흐름 그대로 유지) */}
         {!walk.courseId && (
           <Btn
@@ -136,7 +145,7 @@ export default function WalkResultScreen() {
             onPress={() => named() && router.push('/walk/register')}
           />
         )}
-        <Btn tone="plain" title="기록 버리기" onPress={discard} />
+        <Btn tone="plain" title="기록 버리기" onPress={discard} disabled={saving.isPending} />
       </BottomBar>
     </View>
   );

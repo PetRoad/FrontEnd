@@ -5,7 +5,7 @@ import { Btn, Empty, I, Num, Page, PhotoTile, T } from "@/components/common/ui";
 import { grid } from "@/components/walk/PhotoGrid";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
-import { useWalkStore } from "@/stores/walkStore";
+import { useWalks } from "@/services/walk";
 import type { Walk } from "@/types/walk";
 import { dotDate, km, minutes, monthLabel } from "@/utils/format";
 
@@ -13,7 +13,7 @@ type Item = { walk: Walk; photo: string };
 
 export default function AlbumScreen() {
   const c = useTheme();
-  const walks = useWalkStore((s) => s.walks);
+  const walks = useWalks().data ?? [];
   const [picked, setSel] = useState<Item>();
   // 상세 화면에서 삭제된 기록이면 선택도 풀린다
   const sel = picked && walks.some((w) => w.id === picked.walk.id) ? picked : undefined;

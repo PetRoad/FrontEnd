@@ -8,21 +8,16 @@ import { DogAvatar } from "@/features/dog/DogAvatar";
 import { WithdrawModal } from "@/features/user/WithdrawModal";
 import { useTheme } from "@/hooks/useTheme";
 import { logout } from "@/services/auth";
-import { useCourseStore } from "@/stores/courseStore";
+import { useStats } from "@/services/user";
 import { useUserStore } from "@/stores/userStore";
-import { useWalkStore } from "@/stores/walkStore";
-import { ageFromBirth } from "@/utils/format";
+import { ageFromBirth, floorKm } from "@/utils/format";
 
 export default function MyScreen() {
   const c = useTheme();
   const [withdrawing, setWithdrawing] = useState(false);
   const insets = useSafeAreaInsets();
   const { dog, region, email } = useUserStore();
-  const walks = useWalkStore((s) => s.walks);
-  const courses = useCourseStore((s) => s.courses);
-  const likedCount = useCourseStore((s) => s.liked.length);
-  const photoCount = walks.reduce((n, w) => n + w.photos.length, 0);
-  const totalKm = walks.reduce((n, w) => n + w.distanceKm, 0);
+  const { data: stats } = useStats();
 
   return (
     // iOS는 contentInsetAdjustmentBehavior가 상단 안전영역을 자동으로 더해준다
@@ -56,19 +51,19 @@ export default function MyScreen() {
         </View>
         <View style={s.bento}>
           <View style={[s.cell, { backgroundColor: c.surfaceMuted }]}>
-            <Stat value={String(walks.length)} unit="번" label="함께 걸은 횟수" size={24} />
+            <Stat value={stats ? String(stats.walkCount) : "-"} unit="번" label="함께 걸은 횟수" size={24} />
           </View>
           <View style={[s.cell, { backgroundColor: c.surfaceMuted }]}>
-            <Stat value={totalKm.toFixed(1)} unit="km" label="함께 걸은 거리" size={24} />
+            <Stat value={stats ? floorKm(stats.totalDistanceMeters / 1000) : "-"} unit="km" label="함께 걸은 거리" size={24} />
           </View>
         </View>
       </Pressable>
 
       <Group header="내 산책">
-        <Row icon={I.log} title="산책일지" detail={walks.length} onPress={() => router.push("/my/walks")} />
-        <Row icon={I.album} title="산책 앨범" detail={photoCount} onPress={() => router.push("/my/album")} />
-        <Row icon={I.map} title="내가 만든 코스" detail={courses.filter((x) => x.mine).length} onPress={() => router.push("/my/courses")} />
-        <Row icon={I.heart} title="좋아요한 코스" detail={likedCount} onPress={() => router.push("/my/likes")} />
+        <Row icon={I.log} title="산책일지" detail={stats?.walkCount} onPress={() => router.push("/my/walks")} />
+        <Row icon={I.album} title="산책 앨범" detail={stats?.photoCount} onPress={() => router.push("/my/album")} />
+        <Row icon={I.map} title="내가 만든 코스" detail={stats?.courseCount} onPress={() => router.push("/my/courses")} />
+        <Row icon={I.heart} title="좋아요한 코스" detail={stats?.likedCourseCount} onPress={() => router.push("/my/likes")} />
       </Group>
 
       {/* 회원탈퇴는 되돌릴 수 없어 묶음 밖에 한 단계 약하게 둔다 */}

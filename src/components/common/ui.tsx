@@ -468,7 +468,7 @@ export function FloatButton({ icon, label, onPress, size = 48, badge }: { icon: 
   );
 }
 
-export function Page({ children, contentStyle }: { children: ReactNode; contentStyle?: StyleProp<ViewStyle> }) {
+export function Page({ children, contentStyle }: { children?: ReactNode; contentStyle?: StyleProp<ViewStyle> }) {
   const c = useTheme();
   return (
     <ScrollView
