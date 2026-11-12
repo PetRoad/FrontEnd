@@ -9,6 +9,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { useCourseStore } from "@/stores/courseStore";
 import { useWalkStore } from "@/stores/walkStore";
 import { confirm } from "@/utils/confirm";
+import { floorKm } from "@/utils/format";
 
 export default function CourseDetailScreen() {
   const c = useTheme();
@@ -52,7 +53,7 @@ export default function CourseDetailScreen() {
           <View style={s.facts}>
             <View style={s.km}>
               <Num size={28} bold>
-                {course.distanceKm.toFixed(1)}
+                {floorKm(course.distanceKm)}
               </Num>
               <Num size={15} color={c.textSecondary}>
                 km

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { queryClient } from "@/providers/QueryProvider";
 import type { Dog } from "@/types/dog";
 
 type UserState = {
@@ -16,4 +17,8 @@ const initial: UserState = { onboarded: false, email: "", region: "", dog: null,
 export const useUserStore = create<UserState>()(() => initial);
 
 // 로그아웃·세션 만료: onboarded=false → 루트 레이아웃 guard가 로그인 화면으로 보냄
-export const resetUser = () => useUserStore.setState(initial);
+// 서버에서 받아 둔 내 데이터도 비워서 다른 계정으로 로그인했을 때 앞 계정 기록이 보이지 않게 한다
+export function resetUser() {
+  useUserStore.setState(initial);
+  queryClient.clear();
+}

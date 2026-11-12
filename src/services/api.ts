@@ -1,3 +1,4 @@
+import { File } from "expo-file-system";
 import { resetUser, useUserStore } from "@/stores/userStore";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -71,4 +72,13 @@ function refresh() {
     refreshing = null;
   });
   return refreshing;
+}
+
+// SDK 58의 fetch(expo/fetch)는 RN식 { uri, name, type }를 받지 않는다. Blob을 구현한 expo-file-system File로 보낸다
+// ponytail: 웹은 앨범 사진이 blob uri라 안 올라간다. 웹을 지원할 때 picker의 asset.file을 넘기도록
+export async function upload(uri: string, purpose: "DOG_PROFILE" | "WALK_PHOTO" | "COURSE_COVER") {
+  const form = new FormData();
+  form.append("file", new File(uri));
+  const { url } = await api<{ url: string }>(`/api/uploads?purpose=${purpose}`, { method: "POST", body: form });
+  return url;
 }

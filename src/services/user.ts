@@ -1,5 +1,5 @@
-import { File } from "expo-file-system";
-import { api } from "@/services/api";
+import { useQuery } from "@tanstack/react-query";
+import { api, upload } from "@/services/api";
 import { useUserStore } from "@/stores/userStore";
 import type { Dog, DogSize } from "@/types/dog";
 
@@ -28,7 +28,7 @@ export async function saveRegion(region: string) {
 
 // 앨범에서 막 고른 사진(기기 안 uri)이면 먼저 올리고 받은 주소로 저장한다
 export async function saveDog(dog: Dog) {
-  const profileImage = dog.photo && !/^https?:\/\//.test(dog.photo) ? await upload(dog.photo) : dog.photo;
+  const profileImage = dog.photo && !/^https?:\/\//.test(dog.photo) ? await upload(dog.photo, "DOG_PROFILE") : dog.photo;
   const saved = await api<ApiDog>("/api/me/dog", {
     method: "PUT",
     body: { name: dog.name, breed: dog.breed, size: SIZE[dog.size], birthDate: dog.birth, profileImage },
@@ -36,11 +36,13 @@ export async function saveDog(dog: Dog) {
   useUserStore.setState({ dog: toDog(saved) });
 }
 
-// SDK 58의 fetch(expo/fetch)는 RN식 { uri, name, type }를 받지 않는다. Blob을 구현한 expo-file-system File로 보낸다
-// ponytail: 웹은 앨범 사진이 blob uri라 안 올라간다. 웹을 지원할 때 picker의 asset.file을 넘기도록
-async function upload(uri: string) {
-  const form = new FormData();
-  form.append("file", new File(uri));
-  const { url } = await api<{ url: string }>("/api/uploads?purpose=DOG_PROFILE", { method: "POST", body: form });
-  return url;
-}
+export type Stats = {
+  walkCount: number; // 산책일지 수 = 함께 걸은 횟수
+  totalDistanceMeters: number;
+  photoCount: number;
+  courseCount: number; // 내가 만든(공유한) 코스 수
+  likedCourseCount: number;
+};
+
+// 산책 저장·삭제 뒤 ["me"]로 시작하는 키를 다시 불러온다
+export const useStats = () => useQuery({ queryKey: ["me", "stats"], queryFn: () => api<Stats>("/api/me/stats") });

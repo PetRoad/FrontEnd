@@ -5,6 +5,7 @@ import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useCourseStore } from "@/stores/courseStore";
 import type { Course, Difficulty } from "@/types/course";
+import { floorKm } from "@/utils/format";
 
 // 난이도는 카드에서 가장 중요한 태그라 primarySoft로 둔다
 export function DifficultyMark({ difficulty }: { difficulty: Difficulty }) {
@@ -36,7 +37,7 @@ export function CourseCard({ course, width }: { course: Course; width?: number }
         <View style={s.line}>
           <View style={s.km}>
             <Num size={16} bold>
-              {course.distanceKm.toFixed(1)}
+              {floorKm(course.distanceKm)}
             </Num>
             <Num size={13} color={c.textSecondary}>
               km

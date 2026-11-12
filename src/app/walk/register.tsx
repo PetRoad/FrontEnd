@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
 import { Chip, Field, Group, Num, Page, Plate, Row, Section, Segmented, T } from "@/components/common/ui";
 import { PhotoGrid } from "@/components/walk/PhotoGrid";
 import { useTheme } from "@/hooks/useTheme";
+import { errorMessage } from "@/services/api";
+import { saveWalk } from "@/services/walk";
 import { useCourseStore } from "@/stores/courseStore";
 import { useUserStore } from "@/stores/userStore";
 import { useWalkStore } from "@/stores/walkStore";
@@ -25,27 +28,28 @@ export default function CourseRegisterScreen() {
   const [cover, setCover] = useState(walk?.cover ?? walk?.photos[0]); // 고르지 않으면 첫 사진
   const [tags, setTags] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("쉬움");
+  const dogAge = dog ? ageFromBirth(dog.birth) : 0;
+  // 산책일지는 서버에 저장하고, 코스는 아직 기기 안 목록에 넣는다
+  // ponytail: 코스 등록 API(POST /api/courses)는 코스 API 연동 때 붙인다
+  const sharing = useMutation({
+    mutationFn: saveWalk,
+    onSuccess: (_, w) => {
+      useCourseStore.getState().add({ name: name.trim(), cover, tags, difficulty, distanceKm: w.distanceKm, breed: dog?.breed ?? "", dogAge });
+      useWalkStore.getState().discard();
+      router.dismissAll();
+      router.push("/my/courses");
+    },
+    onError: (e) => Alert.alert("기록을 저장하지 못했어요.", errorMessage(e)),
+  });
 
   if (!walk) return null;
-  const dogAge = dog ? ageFromBirth(dog.birth) : 0;
 
   const toggleTag = (tag: string) =>
     setTags(tags.includes(tag) ? tags.filter((x) => x !== tag) : tags.length < 3 ? [...tags, tag] : tags);
 
   const share = () => {
     if (!name.trim()) return Alert.alert("코스 이름을 정해주세요.", "다른 보호자가 코스를 알아볼 수 있는 이름이면 좋아요.");
-    useCourseStore.getState().add({
-      name: name.trim(),
-      cover,
-      tags,
-      difficulty,
-      distanceKm: walk.distanceKm,
-      breed: dog?.breed ?? "",
-      dogAge,
-    });
-    useWalkStore.getState().save();
-    router.dismissAll();
-    router.push("/my/courses");
+    sharing.mutate(walk);
   };
 
   return (
@@ -86,7 +90,7 @@ export default function CourseRegisterScreen() {
         </Group>
       </Section>
 
-      <Plate title="공유하기" onPress={share} />
+      <Plate title="공유하기" onPress={share} loading={sharing.isPending} />
     </Page>
   );
 }
