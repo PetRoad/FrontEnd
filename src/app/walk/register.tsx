@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
@@ -6,11 +6,12 @@ import { Chip, Field, Group, Num, Page, Plate, Row, Section, Segmented, T } from
 import { PhotoGrid } from "@/components/walk/PhotoGrid";
 import { useTheme } from "@/hooks/useTheme";
 import { errorMessage } from "@/services/api";
+import { createCourse } from "@/services/course";
 import { saveWalk } from "@/services/walk";
-import { useCourseStore } from "@/stores/courseStore";
 import { useUserStore } from "@/stores/userStore";
 import { useWalkStore } from "@/stores/walkStore";
 import type { Difficulty } from "@/types/course";
+import type { Walk } from "@/types/walk";
 import { ageFromBirth } from "@/utils/format";
 
 const TAGS = [
@@ -29,17 +30,22 @@ export default function CourseRegisterScreen() {
   const [tags, setTags] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("쉬움");
   const dogAge = dog ? ageFromBirth(dog.birth) : 0;
-  // 산책일지는 서버에 저장하고, 코스는 아직 기기 안 목록에 넣는다
-  // ponytail: 코스 등록 API(POST /api/courses)는 코스 API 연동 때 붙인다
+  // 코스를 올린 뒤 산책일지를 저장한다. 산책일지 저장만 실패해서 다시 누르면 코스는 또 올리지 않는다
+  const created = useRef(false);
   const sharing = useMutation({
-    mutationFn: saveWalk,
-    onSuccess: (_, w) => {
-      useCourseStore.getState().add({ name: name.trim(), cover, tags, difficulty, distanceKm: w.distanceKm, breed: dog?.breed ?? "", dogAge });
+    mutationFn: async (w: Walk) => {
+      if (!created.current) {
+        await createCourse(w, { name: name.trim(), cover, tags, difficulty });
+        created.current = true;
+      }
+      await saveWalk(w);
+    },
+    onSuccess: () => {
       useWalkStore.getState().discard();
       router.dismissAll();
       router.push("/my/courses");
     },
-    onError: (e) => Alert.alert("기록을 저장하지 못했어요.", errorMessage(e)),
+    onError: (e) => Alert.alert("코스를 공유하지 못했어요.", errorMessage(e)),
   });
 
   if (!walk) return null;
@@ -49,6 +55,7 @@ export default function CourseRegisterScreen() {
 
   const share = () => {
     if (!name.trim()) return Alert.alert("코스 이름을 정해주세요.", "다른 보호자가 코스를 알아볼 수 있는 이름이면 좋아요.");
+    if ((walk.route?.length ?? 0) < 2) return Alert.alert("걸은 경로가 너무 짧아요.", "경로가 기록된 산책만 코스로 등록할 수 있어요.");
     sharing.mutate(walk);
   };
 

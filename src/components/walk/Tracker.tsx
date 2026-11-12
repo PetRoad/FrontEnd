@@ -57,7 +57,7 @@ export function Tracker({ course }: { course?: Course }) {
       ok: "마치기",
       cancel: "계속 걷기",
       onOk: () => {
-        useWalkStore.getState().finish();
+        useWalkStore.getState().finish(course?.distanceKm);
         router.replace("/walk/result");
       },
     });

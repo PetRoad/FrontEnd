@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type MapView from "react-native-maps";
+import type { LatLng } from "react-native-maps";
 import Animated, { scrollTo, useAnimatedRef, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
@@ -10,9 +11,8 @@ import { MapPlate } from "@/components/common/MapPlate";
 import { FloatButton, Glass, GlassPlate, I, Icon, Logo, T } from "@/components/common/ui";
 import { CourseCard } from "@/components/course/CourseCard";
 import { gutter, mapEdge, radius, shadow, space } from "@/constants/theme";
-import { recommend } from "@/features/course/recommend";
 import { useTheme } from "@/hooks/useTheme";
-import { useCourseStore } from "@/stores/courseStore";
+import { useRecommended } from "@/services/course";
 import { useUserStore } from "@/stores/userStore";
 import { useWalkStore } from "@/stores/walkStore";
 import { here } from "@/utils/location";
@@ -29,9 +29,21 @@ export default function WalkHomeScreen() {
   const c = useTheme();
   const insets = useSafeAreaInsets();
   const region = useUserStore((s) => s.region);
-  const courses = useCourseStore((s) => s.courses);
   const map = useRef<MapView>(null);
-  const { radius: within, list } = recommend(courses);
+  // 추천 기준 위치. undefined = 찾는 중, null = 권한이 없거나 위치를 못 받음
+  const [at, setAt] = useState<LatLng | null>();
+  useEffect(() => {
+    here().then(setAt);
+  }, []);
+  const { data, error } = useRecommended(at);
+  const list = data?.courses ?? [];
+  const status = data
+    ? `반경 ${data.radiusKm}km 안 ${list.length}곳 · 좋아요 많은 순`
+    : at === null
+      ? "위치를 허용하면 주변 코스를 추천해 드려요"
+      : error
+        ? "추천 코스를 불러오지 못했어요"
+        : "주변 코스를 찾고 있어요";
 
   const [height, setHeight] = useState(0);
   const [state, setState] = useState<Snap>("closed");
@@ -109,7 +121,9 @@ export default function WalkHomeScreen() {
 
   const locate = async () => {
     const p = await here();
-    if (p) map.current?.animateToRegion({ ...p, latitudeDelta: 0.008, longitudeDelta: 0.008 });
+    if (!p) return;
+    setAt(p); // 옮긴 자리 기준으로 추천도 다시 받는다
+    map.current?.animateToRegion({ ...p, latitudeDelta: 0.008, longitudeDelta: 0.008 });
   };
 
   const startWalk = () => {
@@ -157,12 +171,12 @@ export default function WalkHomeScreen() {
             <View style={[s.grabber, { backgroundColor: c.borderStrong }]} />
             <T v="heading">우리 동네 추천 코스</T>
             <T v="bodySmall" muted>
-              반경 {within}km 안 {list.length}곳 · 좋아요 많은 순
+              {status}
             </T>
           </View>
         </GestureDetector>
 
-        {list.length === 0 ? (
+        {!data ? null : list.length === 0 ? (
           <T v="bodySmall" muted style={{ paddingHorizontal: gutter }}>
             아직 주변에 등록된 코스가 없어요. 첫 코스를 만들어보세요.
           </T>
