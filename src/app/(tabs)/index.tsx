@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type MapView from "react-native-maps";
 import type { LatLng } from "react-native-maps";
@@ -15,7 +15,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { useRecommended } from "@/services/course";
 import { useUserStore } from "@/stores/userStore";
 import { useWalkStore } from "@/stores/walkStore";
-import { here } from "@/utils/location";
+import { here, placeName } from "@/utils/location";
 
 const MIN = 91; // 닫힌 시트: 손잡이 + 제목 + 부제만 남는다 (handle 스타일 높이 합)
 const PEEK = MIN + 228 + 16; // 반쯤 열린 시트: 가로 코스 카드 한 줄까지
@@ -32,9 +32,21 @@ export default function WalkHomeScreen() {
   const map = useRef<MapView>(null);
   // 추천 기준 위치. undefined = 찾는 중, null = 권한이 없거나 위치를 못 받음
   const [at, setAt] = useState<LatLng | null>();
-  useEffect(() => {
-    here().then(setAt);
+  const [place, setPlace] = useState<string | null>(null); // 현재 위치의 동네 이름. 못 받으면 우리 동네를 보여준다
+  const refresh = useCallback(async () => {
+    const p = await here();
+    setAt(p); // 위치가 바뀌면 추천 코스도 그 자리 기준으로 다시 받는다
+    const name = p && (await placeName(p));
+    if (name) setPlace(name); // 이름을 못 받으면 앞서 받은 이름을 그대로 둔다
+    return p;
   }, []);
+  // 홈에 들어올 때마다(산책을 마치고 돌아올 때도) 현재 위치를 새로 잡는다
+  useFocusEffect(
+    useCallback(() => {
+      refresh();
+    }, [refresh]),
+  );
+  const shownPlace = place || region;
   const { data, error } = useRecommended(at);
   const list = data?.courses ?? [];
   const status = data
@@ -120,14 +132,12 @@ export default function WalkHomeScreen() {
   const startStyle = useAnimatedStyle(() => ({ transform: [{ translateY: y.get() - START_GAP }] }));
 
   const locate = async () => {
-    const p = await here();
-    if (!p) return;
-    setAt(p); // 옮긴 자리 기준으로 추천도 다시 받는다
-    map.current?.animateToRegion({ ...p, latitudeDelta: 0.008, longitudeDelta: 0.008 });
+    const p = await refresh();
+    if (p) map.current?.animateToRegion({ ...p, latitudeDelta: 0.008, longitudeDelta: 0.008 });
   };
 
   const startWalk = () => {
-    useWalkStore.getState().start(`${region.split(" ").pop() ?? ""} 산책`);
+    useWalkStore.getState().start(`${shownPlace.split(" ").pop() ?? ""} 산책`);
     router.push("/walk/active");
   };
 
@@ -146,7 +156,7 @@ export default function WalkHomeScreen() {
         <Glass r={radius.pill} style={s.regionPill}>
           <Icon name={I.pin} size={16} />
           <T w="semibold" numberOfLines={1} style={{ flexShrink: 1 }}>
-            {region || "현재 위치"}
+            {shownPlace || "현재 위치"}
           </T>
         </Glass>
         <View style={{ marginLeft: "auto" }}>
