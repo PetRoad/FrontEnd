@@ -40,8 +40,6 @@ const refresh = () => queryClient.invalidateQueries({ queryKey: ["me"] });
 export async function saveWalk(w: Walk) {
   const photos = await Promise.all(w.photos.map((p) => upload(p, "WALK_PHOTO")));
   const cover = w.cover ? photos[w.photos.indexOf(w.cover)] : undefined;
-  // ponytail: 홈 추천 코스가 아직 목데이터(c1…)라 서버 코스 id(숫자)일 때만 코스와 완주율을 보낸다. 코스 API가 붙으면 조건을 없앤다
-  const course = w.courseId && /^\d+$/.test(w.courseId) ? { courseId: w.courseId, completion: w.completion } : {};
   await api("/api/me/walks", {
     method: "POST",
     body: {
@@ -51,7 +49,8 @@ export async function saveWalk(w: Walk) {
       photos,
       cover,
       route: w.route?.map((p) => ({ lat: p.latitude, lng: p.longitude })),
-      ...course,
+      courseId: w.courseId,
+      completion: w.completion,
     },
   });
   await refresh();

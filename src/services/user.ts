@@ -3,7 +3,7 @@ import { api, upload } from "@/services/api";
 import { useUserStore } from "@/stores/userStore";
 import type { Dog, DogSize } from "@/types/dog";
 
-const SIZE = { 소형: "SMALL", 중형: "MEDIUM", 대형: "LARGE" } as const satisfies Record<DogSize, string>;
+export const SIZE = { 소형: "SMALL", 중형: "MEDIUM", 대형: "LARGE" } as const satisfies Record<DogSize, string>;
 
 export type ApiDog = {
   name: string;

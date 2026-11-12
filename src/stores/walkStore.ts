@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { useCourseStore } from "@/stores/courseStore";
 import type { LatLng } from "react-native-maps";
 import type { Walk } from "@/types/walk";
 import { todayIso } from "@/utils/format";
@@ -12,7 +11,7 @@ type WalkState = {
   move: (p: LatLng) => void;
   addPhoto: (uri: string) => void;
   edit: (patch: Partial<Pick<Walk, "title" | "cover">>) => void;
-  finish: () => void;
+  finish: (courseKm?: number) => void;
   discard: () => void;
 };
 
@@ -37,12 +36,7 @@ export const useWalkStore = create<WalkState>()((set) => ({
   addPhoto: (uri) => set((s) => update(s, (w) => ({ photos: [...w.photos, uri] }))),
   edit: (patch) => set((s) => update(s, () => patch)),
   // ponytail: 완주율 임시값 = 걸은 거리 ÷ 코스 거리. 기획 §17대로 경로 매칭 알고리즘이 정해지면 교체
-  finish: () =>
-    set((s) =>
-      update(s, (w) => {
-        const course = useCourseStore.getState().courses.find((c) => c.id === w.courseId);
-        return course ? { completion: Math.min(100, Math.round((w.distanceKm / course.distanceKm) * 100)) } : {};
-      }),
-    ),
+  finish: (courseKm) =>
+    set((s) => update(s, (w) => (courseKm ? { completion: Math.min(100, Math.round((w.distanceKm / courseKm) * 100)) } : {}))),
   discard: () => set({ current: null }),
 }));

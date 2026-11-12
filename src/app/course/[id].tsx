@@ -1,12 +1,13 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import Animated, { LayoutAnimationConfig, ZoomIn } from "react-native-reanimated";
 import { MapPlate } from "@/components/common/MapPlate";
 import { BottomBar, Btn, Empty, Group, I, Icon, Num, Page, PhotoTile, Plate, Row, Section, T, Tag } from "@/components/common/ui";
-import { DifficultyMark } from "@/components/course/CourseCard";
+import { DifficultyMark, dogLine } from "@/components/course/CourseCard";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
-import { useCourseStore } from "@/stores/courseStore";
+import { ApiError, errorMessage } from "@/services/api";
+import { deleteCourse, toggleLike, useCourse } from "@/services/course";
 import { useWalkStore } from "@/stores/walkStore";
 import { confirm } from "@/utils/confirm";
 import { floorKm } from "@/utils/format";
@@ -14,16 +15,23 @@ import { floorKm } from "@/utils/format";
 export default function CourseDetailScreen() {
   const c = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const course = useCourseStore((s) => s.courses.find((x) => x.id === id));
-  const liked = useCourseStore((s) => s.liked.includes(id));
+  const { data: course, error, isPending } = useCourse(id);
 
+  if (isPending) return <Page />;
   if (!course) {
+    const gone = error instanceof ApiError && error.status === 404;
     return (
       <Page>
-        <Empty icon={I.map} title="코스를 찾을 수 없어요" body="삭제되었거나 더 이상 공개되지 않는 코스예요." />
+        <Empty
+          icon={I.map}
+          title={gone ? "코스를 찾을 수 없어요" : "코스를 불러오지 못했어요"}
+          body={gone ? "삭제되었거나 더 이상 공개되지 않는 코스예요." : errorMessage(error)}
+        />
       </Page>
     );
   }
+  const { liked } = course;
+  const dog = dogLine(course);
 
   const follow = () => {
     useWalkStore.getState().start(course.name, course.id);
@@ -37,9 +45,10 @@ export default function CourseDetailScreen() {
       message: "삭제한 코스는 되돌릴 수 없어요. 산책일지 기록은 남아요.",
       ok: "삭제",
       destructive: true,
+      // 먼저 돌아가고, 실패하면 목록에 그대로 남은 채로 알린다
       onOk: () => {
         router.back();
-        useCourseStore.getState().remove(course.id);
+        deleteCourse(course.id).catch((e) => Alert.alert("코스를 삭제하지 못했어요.", errorMessage(e)));
       },
     });
 
@@ -70,9 +79,11 @@ export default function CourseDetailScreen() {
           )}
         </View>
 
-        <Group>
-          <Row icon={I.paw} title={`${course.breed} · ${course.dogAge}살`} sub="이 코스를 걸은 반려견" />
-        </Group>
+        {!!dog && (
+          <Group>
+            <Row icon={I.paw} title={dog} sub="이 코스를 걸은 반려견" />
+          </Group>
+        )}
 
         <Section title="코스 경로">
           <MapPlate style={s.map} route={course.route} />
@@ -87,7 +98,7 @@ export default function CourseDetailScreen() {
             accessibilityRole="button"
             accessibilityLabel={liked ? `좋아요 취소, ${course.likes}` : `좋아요, ${course.likes}`}
             accessibilityState={{ selected: liked }}
-            onPress={() => useCourseStore.getState().toggleLike(course.id)}
+            onPress={() => toggleLike(course).catch((e) => Alert.alert("좋아요를 바꾸지 못했어요.", errorMessage(e)))}
             style={({ pressed }) => [
               s.like,
               { backgroundColor: liked ? (pressed ? c.primarySoftPressed : c.primarySoft) : pressed ? c.borderSubtle : c.surfaceMuted },
