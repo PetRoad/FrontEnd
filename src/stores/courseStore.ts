@@ -12,8 +12,8 @@ type CourseState = {
   remove: (id: string) => void;
 };
 
-// 낙산공원 야경길에 붙여 둔 테스트 경로. 한성대학교 정문에서 삼선교로16길을 따라 북쪽으로 430m (OSM 도로 좌표)
-// ponytail: 실제 낙산 코스가 아니라 개발자가 바로 걸어볼 수 있는 길이다. distanceKm(1.8)와 안 맞는 것도 알고 둔 것. 산책 API가 붙으면 통째로 사라진다
+// 한성대학교 정문길 테스트 경로. 정문에서 삼선교로16길을 따라 북쪽으로 430m (OSM 도로 좌표, distanceKm는 이 점들을 이은 길이)
+// ponytail: 개발자가 바로 걸어볼 수 있게 둔 목데이터. 코스 API가 붙으면 통째로 사라진다
 const TEST_ROUTE: LatLng[] = [
   { latitude: 37.5823637, longitude: 127.0111616 },
   { latitude: 37.5825906, longitude: 127.0111588 },
@@ -36,7 +36,7 @@ const TEST_ROUTE: LatLng[] = [
 const seed: Course[] = [
   { id: "c1", name: "성북천 한바퀴", likes: 75, distanceKm: 2.4, difficulty: "쉬움", tags: ["물가", "평지"], breed: "포메라니안", dogAge: 3, fromMeKm: 1.3 },
   { id: "c2", name: "정릉 숲길", likes: 42, distanceKm: 3.1, difficulty: "보통", tags: ["그늘많음", "한적함"], breed: "진돗개", dogAge: 5, fromMeKm: 0.6 },
-  { id: "c3", name: "낙산공원 야경길", likes: 120, distanceKm: 1.8, difficulty: "어려움", tags: ["야경", "공원"], breed: "말티즈", dogAge: 2, fromMeKm: 2.6, route: TEST_ROUTE },
+  { id: "c3", name: "한성대학교 정문길", likes: 120, distanceKm: 0.43, difficulty: "어려움", tags: ["야경", "공원"], breed: "말티즈", dogAge: 2, fromMeKm: 2.6, route: TEST_ROUTE },
   { id: "c4", name: "개운산 둘레길", likes: 42, distanceKm: 2.9, difficulty: "보통", tags: ["그늘많음", "공원"], breed: "비숑", dogAge: 4, fromMeKm: 1.9 },
   { id: "c5", name: "북악 스카이웨이", likes: 210, distanceKm: 6.5, difficulty: "어려움", tags: ["야경"], breed: "보더콜리", dogAge: 6, fromMeKm: 4.2 },
 ];
