@@ -30,7 +30,6 @@ export default function WalkDetailScreen() {
       title: "기록을 삭제할까요?",
       message: "삭제한 산책은 되돌릴 수 없어요.",
       ok: "삭제",
-      destructive: true,
       // 먼저 목록으로 돌아가고, 실패하면 목록에 그대로 남은 채로 알린다
       onOk: () => {
         router.back();

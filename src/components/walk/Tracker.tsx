@@ -86,7 +86,7 @@ export function Tracker({ course }: { course?: Course }) {
             ? `${course.name}, ${course.distanceKm}킬로미터 중 ${km}킬로미터 걸었어요`
             : `자유산책, ${clock(walk.durationSec)}, ${km}킬로미터 걸었어요`
         }
-        r={radius.button}
+        r={radius.pill}
         tint={c.primary}
         style={[s.panel, { top: insets.top + space.sm }]}
       >
@@ -154,7 +154,7 @@ const s = StyleSheet.create({
     left: mapEdge,
     right: mapEdge,
     minHeight: 52,
-    paddingHorizontal: space.xl,
+    paddingHorizontal: space.xxl, // 양 끝이 반원이라 글자가 곡선에 붙지 않게
     flexDirection: "row",
     alignItems: "center",
     gap: space.md,

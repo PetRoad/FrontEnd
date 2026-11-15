@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
 import { MapPlate } from "@/components/common/MapPlate";
 import { FloatButton, Glass, GlassPlate, I, Icon, Logo, T } from "@/components/common/ui";
-import { CourseCard } from "@/components/course/CourseCard";
+import { CourseCard, CourseSkeleton } from "@/components/course/CourseCard";
 import { gutter, mapEdge, radius, shadow, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useRecommended } from "@/services/course";
@@ -186,10 +186,18 @@ export default function WalkHomeScreen() {
           </View>
         </GestureDetector>
 
-        {!data ? null : list.length === 0 ? (
-          <T v="bodySmall" muted style={{ paddingHorizontal: gutter }}>
-            아직 주변에 등록된 코스가 없어요. 첫 코스를 만들어보세요.
-          </T>
+        {!data ? (
+          at !== null && !error && <CourseSkeleton />
+        ) : list.length === 0 ? (
+          <View style={s.empty}>
+            <Icon name={I.map} size={32} color={c.textTertiary} />
+            <T v="bodyMain" center>
+              아직 주변에 등록된 코스가 없어요
+            </T>
+            <T v="bodySmall" muted center>
+              오늘 걸은 길을 코스로 등록하면{"\n"}우리 동네 첫 추천 코스가 돼요
+            </T>
+          </View>
         ) : (
           <GestureDetector gesture={listPan}>
             <GestureDetector gesture={listScroll}>
@@ -227,5 +235,7 @@ const s = StyleSheet.create({
   handle: { paddingTop: 10, paddingBottom: 14, paddingHorizontal: gutter },
   grabber: { alignSelf: "center", width: 36, height: 5, borderRadius: 3, marginBottom: space.md },
   listPeek: { gap: space.md, paddingHorizontal: gutter, paddingBottom: space.lg, alignItems: "flex-start" },
+  // 반쯤 열린 시트에서 보이는 영역(PEEK - MIN) 가운데
+  empty: { height: PEEK - MIN, alignItems: "center", justifyContent: "center", gap: space.xs, paddingHorizontal: gutter, paddingBottom: space.lg },
   listOpen: { gap: space.md, paddingHorizontal: gutter, paddingBottom: space.huge },
 });
