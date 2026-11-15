@@ -44,7 +44,6 @@ export default function CourseDetailScreen() {
       title: "코스를 삭제할까요?",
       message: "삭제한 코스는 되돌릴 수 없어요. 산책일지 기록은 남아요.",
       ok: "삭제",
-      destructive: true,
       // 먼저 돌아가고, 실패하면 목록에 그대로 남은 채로 알린다
       onOk: () => {
         router.back();

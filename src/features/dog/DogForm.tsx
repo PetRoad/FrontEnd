@@ -17,7 +17,7 @@ import { dotDate, isoDate } from "@/utils/format";
 const SIZES = ["소형", "중형", "대형"] as const;
 const SIZE_WEIGHTS = { 소형: "(1~10kg)", 중형: "(10~25kg)", 대형: "(25kg 이상)" };
 
-// confirmLeave: 고친 내용이 있는데 뒤로 가면 수정을 취소할지 묻는다(마이 반려견 프로필 수정)
+// confirmLeave: 고친 내용이 있는데 뒤로 가면 저장할지 묻는다(마이 반려견 프로필 수정)
 type Props = { initial?: Dog | null; submitLabel: string; onSubmit: (dog: Dog) => Promise<void>; header?: ReactNode; confirmLeave?: boolean };
 
 // iOS 펼친 달력은 위쪽 연월 휠을 돌릴 때도 onChange가 온다. 휠은 연월만 바꾸고 일은 그대로 둔다
@@ -50,6 +50,13 @@ export function DogForm({ initial, submitLabel, onSubmit, header, confirmLeave }
     onError: (e) => Alert.alert("반려견 정보를 저장하지 못했어요.", errorMessage(e)),
   });
 
+  const submit = () => {
+    if (!name.trim()) return Alert.alert("이름을 입력해주세요.");
+    if (!breed) return Alert.alert("견종을 골라주세요.");
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(birth)) return Alert.alert("생년월일을 선택해주세요.");
+    save.mutate({ name: name.trim(), breed: breed.trim(), size, birth, photo });
+  };
+
   // 저장 중에는 묻지 않는다. 저장이 끝나면 화면이 스스로 뒤로 간다
   const edited =
     name !== (initial?.name ?? "") ||
@@ -60,12 +67,12 @@ export function DogForm({ initial, submitLabel, onSubmit, header, confirmLeave }
   const [leaving, setLeaving] = useState(false);
   usePreventRemove(!!confirmLeave && edited && !leaving && !save.isPending, ({ repeat }) =>
     confirm({
-      title: "수정을 취소할까요?",
-      message: "바꾼 내용은 저장되지 않아요.",
-      ok: "수정 취소",
-      cancel: "계속 수정",
-      destructive: true,
-      onOk: () => {
+      title: "변경 내용을 저장할까요?",
+      message: "저장하지 않으면 바꾼 내용이 사라져요.",
+      ok: "저장",
+      cancel: "저장 안 함",
+      onOk: submit, // 저장이 끝나면 화면이 스스로 뒤로 간다
+      onCancel: () => {
         setLeaving(true);
         repeat();
       },
@@ -86,13 +93,6 @@ export function DogForm({ initial, submitLabel, onSubmit, header, confirmLeave }
     } else {
       setPicking(!picking);
     }
-  };
-
-  const submit = () => {
-    if (!name.trim()) return Alert.alert("이름을 입력해주세요.");
-    if (!breed) return Alert.alert("견종을 골라주세요.");
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(birth)) return Alert.alert("생년월일을 선택해주세요.");
-    save.mutate({ name: name.trim(), breed: breed.trim(), size, birth, photo });
   };
 
   // 사진만, 정사각형으로 잘라서. 이 방식은 iOS에서 사진 보관함 권한을 묻지 않는다

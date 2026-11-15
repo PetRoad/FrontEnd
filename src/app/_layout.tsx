@@ -8,6 +8,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import { font } from "@/constants/theme";
 import { useStackOptions } from "@/hooks/useTheme";
 import { useUserStore } from "@/stores/userStore";
+import { ConfirmHost } from "@/utils/confirm";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -55,6 +56,7 @@ export default function RootLayout() {
             <Stack.Screen name="my/likes" options={{ title: "좋아요한 코스" }} />
           </Stack.Protected>
         </Stack>
+        <ConfirmHost />
       </QueryProvider>
     </GestureHandlerRootView>
   );

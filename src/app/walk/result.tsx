@@ -52,7 +52,6 @@ export default function WalkResultScreen() {
       title: '기록을 버릴까요?',
       message: '버린 산책은 되돌릴 수 없어요.',
       ok: '버리기',
-      destructive: true,
       onOk: () => {
         useWalkStore.getState().discard();
         router.dismissAll();

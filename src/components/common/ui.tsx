@@ -91,6 +91,7 @@ export function T({ v = "body", w, muted, color, center, numberOfLines, style, c
   return (
     <Text
       numberOfLines={numberOfLines}
+      lineBreakStrategyIOS="hangul-word" // 한글을 글자가 아니라 어절 단위로 줄바꿈
       style={[
         typography[v],
         w && { fontFamily: font[w] },
@@ -161,13 +162,15 @@ type Tone = "primary" | "secondary" | "plain";
 
 // primary: 화면당 하나뿐인 주 행동(로고색 채움) / secondary: 보조 행동(따뜻한 회색 틴트) / plain: 가장 약한 행동(버리기, 전환)
 // 눌림은 투명도 대신 한 단계 진한 색. 비활성은 회색 면 + 흰 글자
-export function Btn({ title, onPress, icon, disabled, loading, style, tone = "secondary" }: PressProps & { tone?: Tone }) {
+// compact: 모달에서 나란히 쓸 때. 톤과 상관없이 높이 52, 17pt로 맞춘다. 덜 누르는 왼쪽(secondary)은 글씨를 설명글 색으로 낮춘다
+export function Btn({ title, onPress, icon, disabled, loading, style, tone = "secondary", compact }: PressProps & { tone?: Tone; compact?: boolean }) {
   const c = useTheme();
   const look = {
     primary: { bg: c.primary, down: c.primaryPressed, fg: c.onPrimary, h: 56, text: typography.bodyMain },
     secondary: { bg: c.primarySoft, down: c.primarySoftPressed, fg: c.primaryDeep, h: 52, text: typography.bodyMain },
     plain: { bg: "transparent", down: c.surfaceMuted, fg: c.textSecondary, h: 44, text: [typography.body, { fontFamily: font.medium }] },
   }[tone];
+  if (compact) Object.assign(look, { h: 52, text: [typography.bodyMain, { fontSize: 17 }], ...(tone === "secondary" && { fg: c.textSecondary }) });
   const off = disabled && tone !== "plain";
   const fg = off ? c.surface : disabled ? c.textTertiary : look.fg;
   return (
@@ -185,7 +188,7 @@ export function Btn({ title, onPress, icon, disabled, loading, style, tone = "se
 }
 
 // 로고색 주 버튼
-export function Plate(props: PressProps) {
+export function Plate(props: PressProps & { compact?: boolean }) {
   return <Btn {...props} tone="primary" />;
 }
 
