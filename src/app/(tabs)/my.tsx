@@ -8,6 +8,7 @@ import { DogAvatar } from "@/features/dog/DogAvatar";
 import { WithdrawModal } from "@/features/user/WithdrawModal";
 import { useTheme } from "@/hooks/useTheme";
 import { logout } from "@/services/auth";
+import { versionLabel } from "@/services/updates";
 import { useStats } from "@/services/user";
 import { useUserStore } from "@/stores/userStore";
 import { ageFromBirth, floorKm } from "@/utils/format";
@@ -83,6 +84,10 @@ export default function MyScreen() {
           </T>
         </Pressable>
       </View>
+      {/* 업데이트가 들어왔는지 앱 안에서 확인하는 용도. 맨 아래 작게 */}
+      <T v="caption" muted center>
+        {versionLabel()}
+      </T>
       <WithdrawModal visible={withdrawing} onClose={() => setWithdrawing(false)} />
     </Page>
   );
