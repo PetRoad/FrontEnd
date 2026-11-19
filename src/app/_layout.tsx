@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -7,16 +7,22 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import QueryProvider from "@/providers/QueryProvider";
 import { font } from "@/constants/theme";
 import { useStackOptions } from "@/hooks/useTheme";
+import { restore } from "@/services/auth";
 import { useUserStore } from "@/stores/userStore";
 import { ConfirmHost } from "@/utils/confirm";
 
 SplashScreen.preventAutoHideAsync();
+
+// 자동 로그인은 폰트와 함께 앱을 켜자마자 시작한다. 서버가 느려도 5초 넘게 스플래시에 묶이지 않게 하고,
+// 그 뒤에 복원이 끝나면 onboarded가 바뀌어 guard가 알아서 산책 홈으로 보낸다
+const restoring = Promise.race([restore().catch(() => {}), new Promise((r) => setTimeout(r, 5000))]);
 
 // 걷는 중 기록이 날아가지 않도록 스와이프 뒤로가기를 막는 화면
 const guarded = { gestureEnabled: false, headerBackVisible: false };
 
 export default function RootLayout() {
   const onboarded = useUserStore((s) => s.onboarded);
+  const [restored, setRestored] = useState(false);
   const stackOptions = useStackOptions();
   // Expo Go는 config plugin으로 폰트를 넣을 수 없어 실행 중에 불러온다
   const [loaded, error] = useFonts({
@@ -27,10 +33,15 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (loaded || error) SplashScreen.hideAsync();
-  }, [loaded, error]);
+    restoring.then(() => setRestored(true));
+  }, []);
 
-  if (!loaded && !error) return null;
+  const ready = (loaded || !!error) && restored;
+  useEffect(() => {
+    if (ready) SplashScreen.hideAsync();
+  }, [ready]);
+
+  if (!ready) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
