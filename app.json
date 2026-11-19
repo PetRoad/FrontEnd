@@ -53,7 +53,9 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "산책 경로를 기록하고 내 위치를 지도에 보여주려고 위치를 사용해요."
+          "locationWhenInUsePermission": "산책 경로를 기록하고 내 위치를 지도에 보여주려고 위치를 사용해요.",
+          "locationAlwaysAndWhenInUsePermission": "산책 중 화면이 꺼져도 경로를 이어서 기록하려고 위치를 사용해요.",
+          "isIosBackgroundLocationEnabled": true
         }
       ]
     ],

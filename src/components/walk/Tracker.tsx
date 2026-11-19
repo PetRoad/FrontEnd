@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useKeepAwake } from "expo-keep-awake";
 import * as Location from "expo-location";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -9,6 +8,7 @@ import { MapPlate } from "@/components/common/MapPlate";
 import { FloatButton, Glass, GlassPlate, I, Num, T } from "@/components/common/ui";
 import { font, mapEdge, radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
+import { startTracking } from "@/services/track";
 import { useWalkStore } from "@/stores/walkStore";
 import type { Course } from "@/types/course";
 import { confirm } from "@/utils/confirm";
@@ -16,9 +16,6 @@ import { follow } from "@/utils/follow";
 import { clock } from "@/utils/format";
 
 const CONTROLS = 56; // 하단 사진·종료 버튼 높이
-// ponytail: GPS 튐은 이 두 값으로만 거른다. 실제로 걸어보고 거리가 부풀면 값을 조정하고, 그래도 안 되면 필터를 붙인다
-const MIN_STEP_M = 5; // 이만큼 움직여야 새 점을 받는다
-const MAX_ERROR_M = 30; // 오차가 이보다 큰 점은 버린다
 
 // 자유 산책 / 코스 따라 걷기 공용 진행 화면. 지도가 화면 전체, 위에 코스 정보 카드
 export function Tracker({ course }: { course?: Course }) {
@@ -26,26 +23,21 @@ export function Tracker({ course }: { course?: Course }) {
   const insets = useSafeAreaInsets();
   const walk = useWalkStore((s) => s.current);
 
-  // 화면이 꺼지면 GPS 기록도 멈추므로(앱이 앞에 있을 때만 받음) 산책 중엔 켜 둔다
-  useKeepAwake();
-
+  // 화면이 꺼지거나 다른 앱으로 넘어가도 경로는 계속 기록된다(services/track). 이 화면을 떠나면 멈춘다
   useEffect(() => {
     const id = setInterval(useWalkStore.getState().tick, 1000);
-    let sub: Location.LocationSubscription | undefined;
+    let stop: (() => void) | undefined;
     let gone = false;
     (async () => {
       const { granted } = await Location.requestForegroundPermissionsAsync();
       if (!granted) return Alert.alert("위치 권한이 필요해요.", "설정에서 위치를 허용해야 걸은 길을 기록할 수 있어요.");
-      sub = await Location.watchPositionAsync({ accuracy: Location.Accuracy.High, distanceInterval: MIN_STEP_M }, ({ coords }) => {
-        if (coords.accuracy != null && coords.accuracy > MAX_ERROR_M) return;
-        useWalkStore.getState().move({ latitude: coords.latitude, longitude: coords.longitude });
-      });
-      if (gone) sub.remove(); // 구독이 열리기 전에 화면을 떠난 경우
+      stop = await startTracking();
+      if (gone) stop(); // 기록이 시작되기 전에 화면을 떠난 경우
     })();
     return () => {
       gone = true;
       clearInterval(id);
-      sub?.remove();
+      stop?.();
     };
   }, []);
 
@@ -67,7 +59,6 @@ export function Tracker({ course }: { course?: Course }) {
     });
 
   // 시스템 카메라로 한 장 찍어 산책에 붙인다. 취소하면 아무것도 안 한다
-  // ponytail: 안드로이드는 카메라 화면으로 넘어간 동안 위치 기록이 멈출 수 있다(iOS는 앱 위 모달이라 계속 기록). 안드로이드 출시 전 백그라운드 위치로 보강
   const shoot = async () => {
     const { granted } = await ImagePicker.requestCameraPermissionsAsync();
     if (!granted) return Alert.alert("카메라 권한이 필요해요.", "설정에서 카메라를 허용해야 산책 중 사진을 찍을 수 있어요.");

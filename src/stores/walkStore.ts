@@ -6,6 +6,7 @@ import { meters } from "@/utils/location";
 
 type WalkState = {
   current: Walk | null; // 진행 중이거나 결과 화면에서 대기 중인 산책
+  startedAt: number; // 산책을 시작한 시각(ms). 걸은 시간은 여기서부터 잰다
   start: (title: string, courseId?: string) => void;
   tick: () => void;
   move: (p: LatLng) => void;
@@ -20,9 +21,14 @@ const update = (s: WalkState, patch: (w: Walk) => Partial<Walk>) =>
 
 export const useWalkStore = create<WalkState>()((set) => ({
   current: null,
+  startedAt: 0,
   start: (title, courseId) =>
-    set({ current: { id: `w${Date.now()}`, title, date: todayIso(), distanceKm: 0, durationSec: 0, photos: [], courseId, route: [] } }),
-  tick: () => set((s) => update(s, (w) => ({ durationSec: w.durationSec + 1 }))),
+    set({
+      current: { id: `w${Date.now()}`, title, date: todayIso(), distanceKm: 0, durationSec: 0, photos: [], courseId, route: [] },
+      startedAt: Date.now(),
+    }),
+  // 1초씩 더하지 않고 시작 시각과의 차이로 잰다. 화면이 꺼진 동안은 타이머가 멈춰서 더하면 그만큼 빠진다
+  tick: () => set((s) => update(s, () => ({ durationSec: Math.floor((Date.now() - s.startedAt) / 1000) }))),
   // GPS 점 하나 = 경로에 추가 + 직전 점과의 거리만큼 누적
   move: (p) =>
     set((s) =>
