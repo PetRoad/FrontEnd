@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import QueryProvider from "@/providers/QueryProvider";
+import "@/services/track"; // 백그라운드 위치 작업은 앱을 불러올 때 등록해야 한다
 import { font } from "@/constants/theme";
 import { useStackOptions } from "@/hooks/useTheme";
 import { useUserStore } from "@/stores/userStore";
