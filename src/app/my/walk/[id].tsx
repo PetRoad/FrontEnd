@@ -6,8 +6,10 @@ import { PhotoGrid } from "@/components/walk/PhotoGrid";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { errorMessage } from "@/services/api";
+import { useCourse } from "@/services/course";
 import { deleteWalk, useWalks } from "@/services/walk";
 import { confirm } from "@/utils/confirm";
+import { follow } from "@/utils/follow";
 import { dotDate, floorKm } from "@/utils/format";
 
 export default function WalkDetailScreen() {
@@ -15,6 +17,8 @@ export default function WalkDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: walks, isPending } = useWalks();
   const walk = walks?.find((w) => w.id === id);
+  // 따라 걷기 기록은 코스가 채워진 모습으로 보여준다. 코스를 못 받으면(삭제 등) 걸은 GPS 선
+  const course = useCourse(walk?.courseId).data?.route;
 
   if (isPending) return <Page />;
   if (!walk) {
@@ -46,7 +50,12 @@ export default function WalkDetailScreen() {
         </T>
       </View>
 
-      <MapPlate style={s.map} route={walk.route} />
+      <MapPlate
+        style={s.map}
+        route={course ? undefined : walk.route}
+        course={course}
+        done={course && follow(course, walk.route ?? []).done}
+      />
 
       <View style={[s.band, { backgroundColor: c.primarySoft }]}>
         <Stat value={floorKm(walk.distanceKm)} unit="km" label="거리" size={32} />

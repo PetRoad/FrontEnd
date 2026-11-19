@@ -69,14 +69,15 @@ type Props = {
   marker?: boolean; // 내 위치 점을 띄우고, 지도가 준비되면 한 번 내 위치로 옮긴다
   follow?: boolean; // 걷는 동안 지도가 나를 따라온다
   route?: LatLng[]; // 걸은 길. 있으면 처음에 경로 전체가 보이게 맞춘다
-  course?: LatLng[]; // 따라 걷는 코스. 회색으로 깔리고, 그 위를 걸은 길이 덮으면서 채워진다
+  course?: LatLng[]; // 따라 걷는 코스. 회색으로 깔린다
+  done?: LatLng[][]; // 코스 중 지나간 구간(utils/follow). 회색 위에 같은 굵기로 덮어 채워지듯 보인다
   pins?: Pin[]; // 코스 시작 위치마다 찍는 마커
   picked?: string; // 고른 마커의 id. 핀 모양으로 바뀐다
   onPick?: (id?: string) => void; // 마커를 누르면 그 id, 지도 빈 곳을 누르면 undefined
   ref?: RefObject<MapView | null>;
 };
 
-export function MapPlate({ style, marker, follow, route, course, pins, picked, onPick, ref }: Props) {
+export function MapPlate({ style, marker, follow, route, course, done, pins, picked, onPick, ref }: Props) {
   const c = useTheme();
   const own = useRef<MapView>(null);
   const map = ref ?? own;
@@ -110,8 +111,9 @@ export function MapPlate({ style, marker, follow, route, course, pins, picked, o
           else if (marker) here().then((p) => p && map.current?.animateToRegion({ ...p, ...NEAR }));
         }}
       >
-        {/* 코스를 먼저 깔고 걸은 길을 그 위에 조금 더 굵게 그린다. 코스대로 걸으면 회색이 덮여 채워지고, 벗어나면 옆으로 삐져나온다 */}
+        {/* 코스를 회색으로 깔고, 지나간 구간을 같은 자리에 색으로 덮는다 */}
         {course && course.length > 1 && <Polyline coordinates={course} strokeColor={c.courseDim} strokeWidth={5} lineCap="round" />}
+        {done?.map((d, i) => <Polyline key={i} coordinates={d} strokeColor={c.route} strokeWidth={5} lineCap="round" />)}
         {route && route.length > 1 && <Polyline coordinates={route} strokeColor={c.route} strokeWidth={6} lineCap="round" />}
         {pins?.map((p) => p.start && <CoursePin key={p.id} pin={p} at={p.start} on={p.id === picked} onPress={() => pressPin(p.id)} />)}
       </MapView>
