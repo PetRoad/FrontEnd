@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -12,13 +12,14 @@ import { FloatButton, Glass, GlassPlate, I, Icon, Logo, T } from "@/components/c
 import { CourseCard, CourseSkeleton } from "@/components/course/CourseCard";
 import { gutter, mapEdge, radius, shadow, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
-import { useRecommended } from "@/services/course";
+import { useCourse, useRecommended } from "@/services/course";
 import { useUserStore } from "@/stores/userStore";
 import { useWalkStore } from "@/stores/walkStore";
 import { here, placeName } from "@/utils/location";
 
 const MIN = 91; // 닫힌 시트: 손잡이 + 제목 + 부제만 남는다 (handle 스타일 높이 합)
 const PEEK = MIN + 228 + 16; // 반쯤 열린 시트: 가로 코스 카드 한 줄까지
+const CARD_W = 232; // 가로 코스 카드 폭
 const START_GAP = 56 + space.md; // 산책 시작 버튼 높이 + 시트와의 간격
 const OPEN_RATIO = 0.75; // 전체로 열어도 화면의 75%까지만 덮는다
 const SPRING = { damping: 26, stiffness: 260, mass: 0.9 };
@@ -72,6 +73,26 @@ export default function WalkHomeScreen() {
     if (to !== "open") scrollY.set(0); // 다시 열면 목록이 맨 위부터 새로 그려진다
     setState(to);
   };
+  // 지도에서 마커를 눌러 고른 코스. 마커가 핀으로 바뀌고, 시트를 반쯤 열어 그 카드를 보여준다. 지도 빈 곳을 누르면 풀린다
+  const [picked, setPicked] = useState<string>();
+  const pick = (id?: string) => {
+    setPicked(id);
+    if (id && state !== "peek") snap("peek");
+  };
+  // 고른 코스의 경로는 상세에서 받아 지도에 그리고, 위쪽 바와 반쯤 열린 시트 사이에 전체가 보이게 맞춘다
+  const path = useCourse(picked).data?.route;
+  useEffect(() => {
+    if (!path?.length) return;
+    map.current?.fitToCoordinates(path, {
+      edgePadding: { top: insets.top + 96, right: 48, bottom: PEEK + START_GAP + space.xl, left: 48 },
+      animated: true,
+    });
+  }, [path, insets.top]);
+  // 전체 목록에서 골랐으면 가로 목록으로 바뀐 뒤에 옮긴다
+  useEffect(() => {
+    const i = data?.courses.findIndex((x) => x.id === picked) ?? -1;
+    if (i >= 0 && !open) listRef.current?.scrollTo({ x: i * (CARD_W + space.md), animated: true });
+  }, [picked, open, data, listRef]);
   // 탭: 닫힘 → 반 → 전체 → 반
   const next: Record<Snap, Snap> = { closed: "peek", peek: "open", open: "peek" };
 
@@ -150,7 +171,7 @@ export default function WalkHomeScreen() {
         y.set(state === "open" ? Math.round(h * (1 - OPEN_RATIO)) : h - (state === "closed" ? MIN : PEEK));
       }}
     >
-      <MapPlate ref={map} style={s.map} marker />
+      <MapPlate ref={map} style={s.map} marker pins={list} picked={picked} onPick={pick} route={path} />
 
       <View style={[s.topBar, { paddingTop: insets.top + space.sm }]}>
         <Glass r={radius.pill} style={s.regionPill}>
@@ -214,7 +235,7 @@ export default function WalkHomeScreen() {
                 contentContainerStyle={open ? s.listOpen : s.listPeek}
               >
                 {list.map((course) => (
-                  <CourseCard key={course.id} course={course} width={open ? undefined : 232} />
+                  <CourseCard key={course.id} course={course} width={open ? undefined : CARD_W} picked={course.id === picked} />
                 ))}
               </Animated.ScrollView>
             </GestureDetector>

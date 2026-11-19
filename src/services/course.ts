@@ -22,6 +22,8 @@ type ApiSummary = {
   difficulty: ApiDifficulty;
   likeCount: number;
   liked: boolean;
+  startLat: number;
+  startLng: number;
   tags: string[] | null;
   creatorDogBreed: string | null;
   creatorDogAge: number | null;
@@ -54,6 +56,7 @@ const fromSummary = (c: ApiSummary): Course => ({
   tags: c.tags ?? [],
   breed: c.creatorDogBreed ?? undefined,
   dogAge: c.creatorDogAge ?? undefined,
+  start: { latitude: c.startLat, longitude: c.startLng },
 });
 
 const fromDetail = (c: ApiDetail): Course => ({

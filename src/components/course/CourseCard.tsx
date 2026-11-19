@@ -22,7 +22,8 @@ export const dogLine = (c: Course) => [c.breed, c.dogAge !== undefined && `${c.d
 
 // 모든 카드가 같은 순서: 커버 / 코스명 / 거리·난이도·좋아요 / 견종·나이
 // 가로 카드(width 지정) 높이 228 = 테두리 2 + 안쪽 여백 8 + 커버 112 + 본문 106. 바뀌면 산책 홈 PEEK도 맞춘다
-export function CourseCard({ course, width }: { course: Course; width?: number }) {
+// picked: 지도에서 마커를 눌러 고른 코스. 테두리를 로고색으로 바꾼다
+export function CourseCard({ course, width, picked }: { course: Course; width?: number; picked?: boolean }) {
   const c = useTheme();
   const { liked } = course;
 
@@ -31,7 +32,7 @@ export function CourseCard({ course, width }: { course: Course; width?: number }
       accessibilityRole="button"
       accessibilityLabel={`${course.name}, ${floorKm(course.distanceKm)}킬로미터, 난이도 ${course.difficulty}, 좋아요 ${course.likes}`}
       onPress={() => router.push({ pathname: "/course/[id]", params: { id: course.id } })}
-      style={({ pressed }) => [s.card, { backgroundColor: c.surface, borderColor: c.borderSubtle, width, opacity: pressed ? 0.85 : 1 }]}
+      style={({ pressed }) => [s.card, { backgroundColor: c.surface, borderColor: picked ? c.primary : c.borderSubtle, width, opacity: pressed ? 0.85 : 1 }]}
     >
       <PhotoTile label={course.cover ?? "커버 이미지"} style={[s.cover, { height: width ? 112 : 160 }]} />
       <View style={s.body}>

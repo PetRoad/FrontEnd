@@ -17,6 +17,7 @@ export const palette = {
   borderStrong: "#CCCCCC",
   borderSubtle: "#EFEFEF",
   error: "#D93636", // 입력 오류. 흰 바탕 대비 4.5:1 이상
+  like: "#F2434F", // 지도 마커의 좋아요 표시 하트. 지도 위에서 눈에 띄는 빨강
   route: "#9A6412", // 지도 위 내가 걸은 길. 코스선(회색)과 구분되도록 기존 색 유지
   courseDim: "#9A9A96", // 아직 안 걸은 코스 구간. 지도 타일 위에서도 보이는 중간 회색
   userDot: "#007AFF", // OS가 그리는 내 위치 점 색. 범례에서 같은 색을 쓰려고 적어 둔 값
