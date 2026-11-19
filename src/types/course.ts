@@ -14,5 +14,6 @@ export type Course = {
   breed?: string; // 코스를 만든 사람의 반려견
   dogAge?: number; // 생년월일이 없으면 비어 있다
   mine?: boolean; // 상세에서만 온다
+  start?: LatLng; // 코스 시작 위치. 추천 목록에서만 온다
   route?: LatLng[]; // 코스 경로. 상세에서만 온다
 };
