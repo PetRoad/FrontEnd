@@ -13,7 +13,7 @@ import { useWalkStore } from "@/stores/walkStore";
 import type { Course } from "@/types/course";
 import { confirm } from "@/utils/confirm";
 import { follow } from "@/utils/follow";
-import { clock } from "@/utils/format";
+import { clock, distance, spokenDistance } from "@/utils/format";
 
 const CONTROLS = 56; // 하단 사진·종료 버튼 높이
 
@@ -66,7 +66,7 @@ export function Tracker({ course }: { course?: Course }) {
     if (!r.canceled) useWalkStore.getState().addPhoto(r.assets[0].uri);
   };
 
-  const km = walk.distanceKm.toFixed(2);
+  const walked = distance(walk.distanceKm);
   const bottom = insets.bottom + space.lg;
 
   return (
@@ -86,8 +86,8 @@ export function Tracker({ course }: { course?: Course }) {
         accessible
         accessibilityLabel={
           course
-            ? `${course.name}, ${course.distanceKm}킬로미터 중 ${km}킬로미터 걸었어요`
-            : `자유산책, ${clock(walk.durationSec)}, ${km}킬로미터 걸었어요`
+            ? `${course.name}, ${spokenDistance(course.distanceKm)} 중 ${spokenDistance(walk.distanceKm)} 걸었어요`
+            : `자유산책, ${clock(walk.durationSec)}, ${spokenDistance(walk.distanceKm)} 걸었어요`
         }
         r={radius.pill}
         tint={c.primary}
@@ -97,11 +97,11 @@ export function Tracker({ course }: { course?: Course }) {
           {course ? course.name : "자유산책"}
         </T>
         <Num color={c.onPrimary} style={{ fontFamily: font.medium }}>
-          {course ? `${km}km` : clock(walk.durationSec)}
+          {course ? walked : clock(walk.durationSec)}
         </Num>
         <View style={[s.divider, { backgroundColor: c.onPrimary }]} />
         <Num bold color={c.onPrimary}>
-          {course ? `${course.distanceKm.toFixed(2)}km` : `${km}km`}
+          {course ? distance(course.distanceKm) : walked}
         </Num>
       </Glass>
 

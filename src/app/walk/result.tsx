@@ -19,7 +19,7 @@ import { saveWalk } from '@/services/walk';
 import { useWalkStore } from '@/stores/walkStore';
 import { confirm } from '@/utils/confirm';
 import { follow } from '@/utils/follow';
-import { clock, dotDate } from '@/utils/format';
+import { clock, distanceParts, dotDate } from '@/utils/format';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { Alert, StyleSheet, View } from 'react-native';
@@ -75,8 +75,7 @@ export default function WalkResultScreen() {
         {/* 거리를 가장 크게, 산책 시간은 아랫줄 맨 앞 */}
         <View style={[s.band, { backgroundColor: c.primary }]}>
           <Stat
-            value={walk.distanceKm.toFixed(2)}
-            unit="km"
+            {...distanceParts(walk.distanceKm)}
             label="거리"
             size={56}
             color={c.onPrimary}

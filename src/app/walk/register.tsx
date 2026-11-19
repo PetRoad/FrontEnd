@@ -12,7 +12,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useWalkStore } from "@/stores/walkStore";
 import type { Difficulty } from "@/types/course";
 import type { Walk } from "@/types/walk";
-import { ageFromBirth } from "@/utils/format";
+import { ageFromBirth, distance } from "@/utils/format";
 
 const TAGS = [
   "그늘많음", "공원", "물가", "숲길", "흙길", "평지", "오르막", "계단",
@@ -87,7 +87,7 @@ export default function CourseRegisterScreen() {
             title="거리"
             detail={
               <Num size={16} color={c.textSecondary}>
-                {walk.distanceKm.toFixed(2)} km
+                {distance(walk.distanceKm)}
               </Num>
             }
           />

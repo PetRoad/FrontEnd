@@ -11,7 +11,7 @@ import { logout } from "@/services/auth";
 import { versionLabel } from "@/services/updates";
 import { useStats } from "@/services/user";
 import { useUserStore } from "@/stores/userStore";
-import { ageFromBirth, floorKm } from "@/utils/format";
+import { ageFromBirth, distanceParts } from "@/utils/format";
 
 export default function MyScreen() {
   const c = useTheme();
@@ -19,6 +19,7 @@ export default function MyScreen() {
   const insets = useSafeAreaInsets();
   const { dog, region, email } = useUserStore();
   const { data: stats } = useStats();
+  const total = stats && distanceParts(stats.totalDistanceMeters / 1000);
 
   return (
     // iOS는 contentInsetAdjustmentBehavior가 상단 안전영역을 자동으로 더해준다
@@ -55,7 +56,7 @@ export default function MyScreen() {
             <Stat value={stats ? String(stats.walkCount) : "-"} unit="번" label="함께 걸은 횟수" size={24} />
           </View>
           <View style={[s.cell, { backgroundColor: c.surfaceMuted }]}>
-            <Stat value={stats ? floorKm(stats.totalDistanceMeters / 1000) : "-"} unit="km" label="함께 걸은 거리" size={24} />
+            <Stat value={total ? total.value : "-"} unit={total?.unit ?? "km"} label="함께 걸은 거리" size={24} />
           </View>
         </View>
       </Pressable>

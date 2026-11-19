@@ -10,7 +10,7 @@ import { useCourse } from "@/services/course";
 import { deleteWalk, useWalks } from "@/services/walk";
 import { confirm } from "@/utils/confirm";
 import { follow } from "@/utils/follow";
-import { dotDate, floorKm } from "@/utils/format";
+import { distanceParts, dotDate } from "@/utils/format";
 
 export default function WalkDetailScreen() {
   const c = useTheme();
@@ -58,7 +58,7 @@ export default function WalkDetailScreen() {
       />
 
       <View style={[s.band, { backgroundColor: c.primarySoft }]}>
-        <Stat value={floorKm(walk.distanceKm)} unit="km" label="거리" size={32} />
+        <Stat {...distanceParts(walk.distanceKm)} label="거리" size={32} />
         <Stat value={String(Math.round(walk.durationSec / 60))} unit="분" label="산책 시간" size={32} />
         {walk.completion !== undefined && <Stat value={String(walk.completion)} unit="%" label="코스 완주율" size={32} />}
       </View>
