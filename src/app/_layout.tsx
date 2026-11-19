@@ -11,6 +11,7 @@ import { useStackOptions } from "@/hooks/useTheme";
 import { restore } from "@/services/auth";
 import { useUserStore } from "@/stores/userStore";
 import { ConfirmHost } from "@/utils/confirm";
+import "@/services/updates"; // 새 업데이트를 확인해 바로 적용
 
 SplashScreen.preventAutoHideAsync();
 
