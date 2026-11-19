@@ -14,9 +14,11 @@ import { PhotoGrid } from '@/components/walk/PhotoGrid';
 import { radius, space } from '@/constants/theme';
 import { useTheme } from '@/hooks/useTheme';
 import { errorMessage } from '@/services/api';
+import { useCourse } from '@/services/course';
 import { saveWalk } from '@/services/walk';
 import { useWalkStore } from '@/stores/walkStore';
 import { confirm } from '@/utils/confirm';
+import { follow } from '@/utils/follow';
 import { clock, dotDate } from '@/utils/format';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
@@ -34,6 +36,8 @@ export default function WalkResultScreen() {
     },
     onError: (e) => Alert.alert('기록을 저장하지 못했어요.', errorMessage(e)),
   });
+  // 따라 걷기는 걷는 동안처럼 코스가 채워진 모습으로 보여준다
+  const course = useCourse(walk?.courseId).data?.route;
   if (!walk) return null;
   // 자유산책만 이름·대표 사진을 정한다. 따라 걷기는 코스 이름 그대로
   const free = !walk.courseId;
@@ -115,7 +119,12 @@ export default function WalkResultScreen() {
         )}
 
         <Section title="걸은 경로">
-          <MapPlate style={s.map} route={walk.route} />
+          <MapPlate
+            style={s.map}
+            route={course ? undefined : walk.route}
+            course={course}
+            done={course && follow(course, walk.route ?? []).done}
+          />
         </Section>
 
         <Section

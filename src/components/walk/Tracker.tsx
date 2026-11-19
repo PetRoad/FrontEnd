@@ -12,6 +12,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { useWalkStore } from "@/stores/walkStore";
 import type { Course } from "@/types/course";
 import { confirm } from "@/utils/confirm";
+import { follow } from "@/utils/follow";
 import { clock } from "@/utils/format";
 
 const CONTROLS = 56; // 하단 사진·종료 버튼 높이
@@ -48,6 +49,9 @@ export function Tracker({ course }: { course?: Course }) {
     };
   }, []);
 
+  // 따라 걷기: 걸은 GPS 점으로 코스 중 지나간 구간과 완주율을 구한다. GPS 점이 새로 들어올 때마다 다시 계산
+  const progress = course?.route ? follow(course.route, walk?.route ?? []) : undefined;
+
   if (!walk) return null;
 
   const end = () =>
@@ -57,7 +61,7 @@ export function Tracker({ course }: { course?: Course }) {
       ok: "마치기",
       cancel: "계속 걷기",
       onOk: () => {
-        useWalkStore.getState().finish(course?.distanceKm);
+        useWalkStore.getState().finish(progress?.completion);
         router.replace("/walk/result");
       },
     });
@@ -76,7 +80,15 @@ export function Tracker({ course }: { course?: Course }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: c.background }}>
-      <MapPlate style={StyleSheet.absoluteFill} marker follow route={walk.route} course={course?.route} />
+      {/* 따라 걷기는 GPS 선을 그리지 않고 회색 코스를 채운다. GPS 오차로 선이 코스 옆에 그려지지 않게 */}
+      <MapPlate
+        style={StyleSheet.absoluteFill}
+        marker
+        follow
+        route={progress ? undefined : walk.route}
+        course={course?.route}
+        done={progress?.done}
+      />
 
       {/* 한 줄 바: 왼쪽 코스 이름, 오른쪽 수치. 따라 걷기는 걸은 거리 | 코스 전체, 자유산책은 시간 | 걸은 거리 */}
       <Glass
@@ -118,7 +130,7 @@ export function Tracker({ course }: { course?: Course }) {
   );
 }
 
-// 지도에 실제로 그려지는 것만 적는다: 남은 코스 회색, 내가 걸은 길 갈색(코스 위를 덮으며 채워진다),
+// 지도에 실제로 그려지는 것만 적는다: 남은 코스 회색, 걸은 코스 갈색(회색 위를 덮으며 채워진다),
 // 내 위치는 OS가 그리는 파란 점(마커를 직접 그리지 않고 OS 것을 쓴다 - 방향·정확도 원이 공짜로 따라온다)
 function Legend({ bottom }: { bottom: number }) {
   const c = useTheme();
@@ -133,7 +145,7 @@ function Legend({ bottom }: { bottom: number }) {
       <View style={s.legendRow}>
         <View style={[s.swatch, s.swatchLine, { backgroundColor: c.route }]} />
         <T v="caption" w="medium">
-          내가 걸은 길
+          걸은 코스
         </T>
       </View>
       <View style={s.legendRow}>

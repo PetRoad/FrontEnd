@@ -11,7 +11,7 @@ type WalkState = {
   move: (p: LatLng) => void;
   addPhoto: (uri: string) => void;
   edit: (patch: Partial<Pick<Walk, "title" | "cover">>) => void;
-  finish: (courseKm?: number) => void;
+  finish: (completion?: number) => void;
   discard: () => void;
 };
 
@@ -35,8 +35,7 @@ export const useWalkStore = create<WalkState>()((set) => ({
   // 기기 캐시 폴더의 uri. 저장할 때 서버에 올리고 받은 주소로 바꾼다(saveWalk)
   addPhoto: (uri) => set((s) => update(s, (w) => ({ photos: [...w.photos, uri] }))),
   edit: (patch) => set((s) => update(s, () => patch)),
-  // ponytail: 완주율 임시값 = 걸은 거리 ÷ 코스 거리. 기획 §17대로 경로 매칭 알고리즘이 정해지면 교체
-  finish: (courseKm) =>
-    set((s) => update(s, (w) => (courseKm ? { completion: Math.min(100, Math.round((w.distanceKm / courseKm) * 100)) } : {}))),
+  // 따라 걷기면 완주율(utils/follow)을 함께 남긴다
+  finish: (completion) => set((s) => update(s, () => (completion === undefined ? {} : { completion }))),
   discard: () => set({ current: null }),
 }));
