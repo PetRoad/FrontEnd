@@ -53,7 +53,7 @@ export async function api<T>(path: string, { method = "GET", body }: Options = {
 // 그래서 동시에 401이 여러 개 나도 재발급은 한 번만 하고 모두 그 결과를 기다린다
 let refreshing: Promise<boolean> | null = null;
 
-function refresh() {
+export function refresh() {
   refreshing ??= (async () => {
     const { refreshToken } = useUserStore.getState();
     if (!refreshToken) return false;
