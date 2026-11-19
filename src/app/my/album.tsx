@@ -7,7 +7,7 @@ import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useWalks } from "@/services/walk";
 import type { Walk } from "@/types/walk";
-import { dotDate, km, minutes, monthLabel } from "@/utils/format";
+import { distance, dotDate, minutes, monthLabel } from "@/utils/format";
 
 type Item = { walk: Walk; photo: string };
 
@@ -46,7 +46,7 @@ export default function AlbumScreen() {
             </Num>
             <T w="semibold">{sel.walk.title}</T>
             <T v="bodySmall" muted>
-              {km(sel.walk.distanceKm)} · {minutes(sel.walk.durationSec)}
+              {distance(sel.walk.distanceKm)} · {minutes(sel.walk.durationSec)}
             </T>
             <Btn
               title="산책일지 보기"

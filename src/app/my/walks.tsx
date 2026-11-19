@@ -5,7 +5,7 @@ import { radius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { errorMessage } from "@/services/api";
 import { useWalks } from "@/services/walk";
-import { dotDate, floorKm } from "@/utils/format";
+import { distance, dotDate } from "@/utils/format";
 
 export default function WalksScreen() {
   const c = useTheme();
@@ -41,7 +41,7 @@ export default function WalksScreen() {
               detail={
                 <View style={s.detail}>
                   <Num size={16} bold>
-                    {floorKm(w.distanceKm)}km
+                    {distance(w.distanceKm)}
                   </Num>
                   <Num size={13} color={c.textSecondary}>
                     {Math.round(w.durationSec / 60)}분

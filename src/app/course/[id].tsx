@@ -10,7 +10,7 @@ import { ApiError, errorMessage } from "@/services/api";
 import { deleteCourse, toggleLike, useCourse } from "@/services/course";
 import { useWalkStore } from "@/stores/walkStore";
 import { confirm } from "@/utils/confirm";
-import { floorKm } from "@/utils/format";
+import { distanceParts } from "@/utils/format";
 
 export default function CourseDetailScreen() {
   const c = useTheme();
@@ -61,10 +61,10 @@ export default function CourseDetailScreen() {
           <View style={s.facts}>
             <View style={s.km}>
               <Num size={28} bold>
-                {floorKm(course.distanceKm)}
+                {distanceParts(course.distanceKm).value}
               </Num>
               <Num size={15} color={c.textSecondary}>
-                km
+                {distanceParts(course.distanceKm).unit}
               </Num>
             </View>
             <DifficultyMark difficulty={course.difficulty} />

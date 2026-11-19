@@ -6,7 +6,7 @@ import { I, Icon, Num, PhotoTile, T, Tag } from "@/components/common/ui";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import type { Course, Difficulty } from "@/types/course";
-import { floorKm } from "@/utils/format";
+import { distanceParts, spokenDistance } from "@/utils/format";
 
 // 난이도는 카드에서 가장 중요한 태그라 primarySoft로 둔다
 export function DifficultyMark({ difficulty }: { difficulty: Difficulty }) {
@@ -30,7 +30,7 @@ export function CourseCard({ course, width, picked }: { course: Course; width?: 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${course.name}, ${floorKm(course.distanceKm)}킬로미터, 난이도 ${course.difficulty}, 좋아요 ${course.likes}`}
+      accessibilityLabel={`${course.name}, ${spokenDistance(course.distanceKm)}, 난이도 ${course.difficulty}, 좋아요 ${course.likes}`}
       onPress={() => router.push({ pathname: "/course/[id]", params: { id: course.id } })}
       style={({ pressed }) => [s.card, { backgroundColor: c.surface, borderColor: picked ? c.primary : c.borderSubtle, width, opacity: pressed ? 0.85 : 1 }]}
     >
@@ -42,10 +42,10 @@ export function CourseCard({ course, width, picked }: { course: Course; width?: 
         <View style={s.line}>
           <View style={s.km}>
             <Num size={16} bold>
-              {floorKm(course.distanceKm)}
+              {distanceParts(course.distanceKm).value}
             </Num>
             <Num size={13} color={c.textSecondary}>
-              km
+              {distanceParts(course.distanceKm).unit}
             </Num>
           </View>
           <DifficultyMark difficulty={course.difficulty} />
