@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import type { LatLng } from "react-native-maps";
+import { LIMIT } from "@/constants/config";
 import { queryClient } from "@/providers/QueryProvider";
 import { api, upload } from "@/services/api";
 import { SIZE } from "@/services/user";
 import { useUserStore } from "@/stores/userStore";
 import type { Course, Difficulty } from "@/types/course";
 import type { Walk } from "@/types/walk";
+import { thin } from "@/utils/route";
 
 const DIFFICULTY = { 쉬움: "EASY", 보통: "NORMAL", 어려움: "HARD" } as const satisfies Record<Difficulty, string>;
 type ApiDifficulty = (typeof DIFFICULTY)[Difficulty];
@@ -139,7 +141,7 @@ export async function createCourse(walk: Walk, c: NewCourse) {
       startLat: route[0].latitude,
       startLng: route[0].longitude,
       tags: c.tags,
-      points: route.map((p) => ({ lat: p.latitude, lng: p.longitude })),
+      points: thin(route, LIMIT.coursePoints).map((p) => ({ lat: p.latitude, lng: p.longitude })),
     },
   });
   await refresh();

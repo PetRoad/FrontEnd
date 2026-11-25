@@ -5,6 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useMutation } from "@tanstack/react-query";
 import { usePreventRemove } from "expo-router";
 import { Field, I, Icon, Num, Page, PhotoTile, Plate, Segmented, T } from "@/components/common/ui";
+import { LIMIT } from "@/constants/config";
 import { radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { errorMessage } from "@/services/api";
@@ -126,7 +127,7 @@ export function DogForm({ initial, submitLabel, onSubmit, header, confirmLeave }
         </T>
       </Pressable>
       <View style={{ gap: space.lg }}>
-        <Field label="이름" value={name} onChangeText={setName} placeholder="콩이" />
+        <Field label="이름" value={name} onChangeText={setName} placeholder="콩이" maxLength={LIMIT.dogName} />
         <View style={{ gap: space.sm }}>
           <T v="bodySmall" w="medium" muted>
             견종

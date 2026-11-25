@@ -6,6 +6,7 @@ import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MapPlate } from "@/components/common/MapPlate";
 import { FloatButton, Glass, GlassPlate, I, Num, T } from "@/components/common/ui";
+import { LIMIT } from "@/constants/config";
 import { font, mapEdge, radius, space } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { startTracking } from "@/services/track";
@@ -60,6 +61,7 @@ export function Tracker({ course }: { course?: Course }) {
 
   // 시스템 카메라로 한 장 찍어 산책에 붙인다. 취소하면 아무것도 안 한다
   const shoot = async () => {
+    if (walk.photos.length >= LIMIT.photos) return Alert.alert(`사진은 ${LIMIT.photos}장까지 남길 수 있어요.`);
     const { granted } = await ImagePicker.requestCameraPermissionsAsync();
     if (!granted) return Alert.alert("카메라 권한이 필요해요.", "설정에서 카메라를 허용해야 산책 중 사진을 찍을 수 있어요.");
     const r = await ImagePicker.launchCameraAsync({ mediaTypes: ["images"], quality: 0.8 });

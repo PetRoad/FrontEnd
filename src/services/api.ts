@@ -74,11 +74,24 @@ export function refresh() {
   return refreshing;
 }
 
+type Purpose = "DOG_PROFILE" | "WALK_PHOTO" | "COURSE_COVER";
+
 // SDK 58의 fetch(expo/fetch)는 RN식 { uri, name, type }를 받지 않는다. Blob을 구현한 expo-file-system File로 보낸다
 // ponytail: 웹은 앨범 사진이 blob uri라 안 올라간다. 웹을 지원할 때 picker의 asset.file을 넘기도록
-export async function upload(uri: string, purpose: "DOG_PROFILE" | "WALK_PHOTO" | "COURSE_COVER") {
+async function send(uri: string, purpose: Purpose) {
   const form = new FormData();
   form.append("file", new File(uri));
   const { url } = await api<{ url: string }>(`/api/uploads?purpose=${purpose}`, { method: "POST", body: form });
   return url;
+}
+
+// 저장에 실패해 다시 누르면 이미 올린(올리는 중인) 사진은 그 주소를 다시 쓴다. 다른 계정으로 로그인하면 새로 올린다
+const uploaded = new Map<string, Promise<string>>();
+
+export function upload(uri: string, purpose: Purpose) {
+  const key = [useUserStore.getState().email, purpose, uri].join(" ");
+  const sent = uploaded.get(key) ?? send(uri, purpose);
+  uploaded.set(key, sent);
+  sent.catch(() => uploaded.delete(key));
+  return sent;
 }
